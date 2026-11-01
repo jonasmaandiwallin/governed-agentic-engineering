@@ -9,7 +9,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.6"
+  template_version: "v0.7"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/instance-appendix.md"
 This license covers the template as published. The file you write from it is your own
@@ -73,7 +73,7 @@ This file binds the GAE standards to one installation. It is written during adop
 | Release tag | `<gae-standards-vX.Y>`, or `none — before a release` |
 | Commit the tag points at | `<full commit hash>` |
 | Before a release: source repository and full commit hash | `<repository>`, `<full commit hash>`, or `does not apply — installed from a tag` |
-| `SHA256SUMS` | `every file matched, <date>`, or `none existed — copied with git archive and checked against the commit's tree` |
+| `SHA256SUMS` | `release and copies matched, folder lists equal, hook executable, <date>` (ADOPTION.md step 0, Checking a release), or `none existed — copied with git archive and checked against the commit's tree` |
 
 ### Architecture contract and checkpoints
 
@@ -133,6 +133,8 @@ This file binds the GAE standards to one installation. It is written during adop
 | Fixer | | | B | |
 
 **Profile B's dispatched specification round** (ADOPTION.md step 11). Record its round limit here: ______.
+
+**The [reviewer]'s round limit** (ADOPTION.md step 4, Default for review rounds): ______.
 
 Separation check: [contract author] ≠ [contract auditor]; the [reviewer] reviews no change of its own (GAL §9.2 rule 5); the verifier never runs on the implementer's model (GIP §2).
 
@@ -255,6 +257,8 @@ One row per agent, with each of the checklist's rows marked as one of: done (wit
 | Retry limit | |
 | Batch threshold | |
 | Context limit | |
+
+**Test growth (ADOPTION.md step 4, Measuring test growth).** The form of the id a test carries for the criterion or invariant it binds: ______. The line in a post's report that records the verifier's counts: ______.
 
 ---
 
@@ -441,7 +445,9 @@ The mismatch answer (Handoff Standard §6 p. 1) and the forms of the closure ver
 
 ## Registered deviations
 
-A place where this installation does not follow a standard as written. Each entry names the rule, the reason and the issue reported upstream (ADOPTION.md step 13). Adding one is a change to this file and bumps `version`.
+A place where this installation does not follow a standard as written. Each entry names the rule, the standard and section it goes beyond, the reason, and the issue reported upstream (ADOPTION.md step 13) or the item in the release's `KNOWN-ISSUES.md` that already carries it. Adding one is a change to this file and bumps `version`.
+
+Start with the rows of ADOPTION.md step 5, Rules ahead of the standards, that this installation uses, one entry each.
 
 ## Changelog
 

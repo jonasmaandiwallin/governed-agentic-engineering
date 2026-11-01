@@ -14,7 +14,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.1"
+  template_version: "v0.2"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/contracts/system-architecture.md"
 This license covers the template as published. The file you write from it is your own
@@ -57,7 +57,7 @@ This contract says how the system is built. What the system is for and how the w
 
 ## Core Assertions
 
-1. **Standards.** The system adopts the GAE standards <list with versions>, copied unchanged from the release `<tag>`. The instance appendix `<path>` binds them; this contract does not restate them. Changing a version is the owner's decision and a new version of this contract.
+1. **Standards.** The system adopts the GAE standards <list, by name>, copied unchanged from a tagged release. The instance appendix `<path>` binds them and names the release and each standard's version (§ Source of the standards, § Standards); this contract restates neither. Moving to a new release is the owner's decision and changes the appendix. This contract gets a new version only on the triggers ADOPTION.md step 12 point 5 names: a changed standard body that one of its rules rests on, or a standard adopted or dropped.
 2. **Layers.** <The layers (for example system and engagement) and which way a reference between them may run. Nothing in the system layer points into an engagement layer.>
 3. **Stores.** <The store per layer and per data owner (ADOPTION.md step 5). Contracts live in git and are mirrored to the store at every merge.>
 4. **Agents.** <Each agent, its role (GAL §3), its platform and profile, and its boundary by reference to the boundary contract `<path>`.>

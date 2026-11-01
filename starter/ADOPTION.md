@@ -1,6 +1,6 @@
 ---
 title: "GAE starter — adoption procedure"
-version: "v0.8"
+version: "v0.9"
 status: "draft"
 author: "Tooling & Architecture"
 framework:
@@ -27,7 +27,7 @@ ai_disclosure:
     reason: "The document cites no external source."
   - role: review
     status: complete
-    scope: "Adversarial review of the starter kit at v0.8, this procedure and its templates, against the standards, in two rounds before release; the database templates tested on PostgreSQL 16."
+    scope: "Adversarial review of the starter kit at v0.8 in two rounds before its release; the changes in v0.9 in two more rounds, including the release check's commands run on a clean copy of the previous release; the database templates tested on PostgreSQL 16."
     evidence: "The reference installation's review records, not published."
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -73,13 +73,37 @@ Bind the checkpoints, with these definitions and their conditions, in the archit
 You need all of the following:
 
 - A repository you can read, write and commit to, and a shell.
-- A tagged release of the standards in `governance/standards/` and of this starter in `governance/gae-starter/`, unchanged. Verify every file against the release's `SHA256SUMS` before you read further, and record the tag and its commit in the appendix's § Source of the standards. A file that does not match is not read: stop and tell the owner. Never correct a standard while copying it. Read the release's `KNOWN-ISSUES.md` and tell the owner which items bear on the system.
+- A tagged release of the standards in `governance/standards/` and of this starter in `governance/gae-starter/`, unchanged. Check the release before you read further and the copies after you make them (§ Checking a release, below), and record the tag and its commit in the appendix's § Source of the standards. A file that does not match is not read: stop and tell the owner. Never correct a standard while copying it. Read the release's `KNOWN-ISSUES.md` and tell the owner which items bear on the system.
 
   **Before a release exists**, the owner can name a commit in the standards' source repository instead. Copy the two folders at that commit with `git archive`, verify every copied file against the commit's tree (`git ls-tree` gives each blob's hash; `git hash-object` gives the copy's), and record the repository and the full commit hash in place of the tag. § Source of the standards says that no `SHA256SUMS` existed.
 - One named owner.
 - A description of the system to be built.
 
 If any of these is missing, stop and ask the owner for it. The owner's name, and the language you write to them in, are the first two things you ask when they were not given.
+
+**Checking a release.** `SHA256SUMS` lists every file of the release by its path in the release: `standards/…`, `starter/…` and `KNOWN-ISSUES.md`. The copies stand under other paths, so the check runs twice. The commands below are for a POSIX shell; the files they write (`installed.sums`, `listed.txt`, `present.txt`) are scratch, kept outside the repository or deleted after.
+
+1. **The release, before anything is read.** From the root of the fetched tag, run `sha256sum -c SHA256SUMS` (on macOS, `shasum -a 256 -c SHA256SUMS`). Every line answers OK.
+2. **The copies, after copying.** From the installation's root, map the paths and check the result:
+
+   ```
+   sed -n -e 's#  standards/#  governance/standards/#p' \
+          -e 's#  starter/#  governance/gae-starter/#p' <release>/SHA256SUMS > installed.sums
+   sha256sum -c installed.sums
+   ```
+
+   `sed -n … p` writes only the lines it mapped, so `KNOWN-ISSUES.md`, which is read and not copied, drops out. Every line of `installed.sums` answers OK. On macOS, the second command is `shasum -a 256 -c installed.sums`.
+3. **What the check does not see, checked on its own.**
+   - *An entry the release does not list.* The check reads only the listed files, so a file or a symbolic link added to either folder passes unseen, and a listed file replaced by a link to the same bytes passes the checksum. The release holds only regular files and directories. Compare the lists of regular files, then list everything else; both `diff` and the last `find` print nothing:
+
+     ```
+     cut -c67- installed.sums | sort > listed.txt
+     find governance/standards governance/gae-starter -type f | sort > present.txt
+     diff listed.txt present.txt
+     find governance/standards governance/gae-starter ! -type f ! -type d
+     ```
+
+   - *A file's mode.* A checksum reads the bytes, not the mode. `templates/hooks/write-only-under.sh` is executable in the release, and the platform runs it as a command; `test -x governance/gae-starter/templates/hooks/write-only-under.sh` succeeds. `templates/database/mirror.sh` is run with `bash` and needs no mode.
 
 Moving an installation to a later release is step 12.
 
@@ -122,7 +146,7 @@ Write the answers, with the date, into § Installation of the instance appendix 
 - **Registry**, if question 2 named values that may change without a code change.
 - **Truth Chain**, if question 3 named sources that a rule rests on. Always, for a knowledge corpus.
 
-**Binding the Truth Chain's levels in a knowledge corpus.** The [constitution] is the installation's own principles: what the system is for and how its work is done. It belongs to the owner and stays with the installation. A client's or employer's strategy is not the [constitution]: it is a [contract] in that client's store, which the work for that client follows. The [implementation] is the deliverables the agents produce. Work people do outside the system on the strength of a deliverable is outside the chain; what comes back from it is new evidence. With these bindings the Truth Chain needs no deviation.
+**Binding the Truth Chain's levels in a knowledge corpus.** The [constitution] is the installation's own principles: what the system is for and how its work is done. It belongs to the owner and stays with the installation. A client's or employer's strategy is not the [constitution]: it is a [contract] in that client's store, which the work for that client follows. The [implementation] is the deliverables the agents produce. Work people do outside the system on the strength of a deliverable is outside the chain; what comes back from it is new evidence. The binding of [implementation] goes beyond the standards, which define it as code: register it as a deviation (step 5, Rules ahead of the standards).
 - **Any other standard in the release:** read its §1 and ask whether the system has the thing that standard governs.
 
 **Left-out standards.** List each one in the appendix with the reason. A placeholder of a selected standard can point into a standard that was left out (for example Contract Standard's [registry] when Registry is not selected). Bind it to `none` and give the reason.
@@ -156,18 +180,27 @@ Bind each role in GAL §3 § Roles to an agent.
 
 - The language towards the operator is free and is asked at intake (GAL §6.6).
 - The language of a deliverable is set per output contract.
-- Wording in another language that is data, not a rule (a brand phrase, a quotation from a source), stands as a marked quotation: in straight double quotes followed by its ISO 639-1 code in brackets, `"…" [xx]`. The [reviewer]'s language check counts any other text in another language as a finding.
+- Wording in another language that is data, not a rule (a brand phrase, a quotation from a source), stands as a marked quotation: in straight double quotes followed by its ISO 639-1 code in brackets, `"…" [xx]`. The [reviewer]'s language check counts any other text in another language as a finding. The marked quotation is a registered deviation (step 5, Rules ahead of the standards).
 - An installation that writes its corpus in another language does so as an explicit owner decision, with this paragraph put to the owner. It then binds its modal verbs (MUST, MUST NOT, SHOULD, MAY), a glossary from each term to its identifier in code, and an id per normative rule that tests and code refer to.
 - Bind [corpus language] and the quotation form in the appendix. Language and every other installation choice is bound in the appendix only, never in an agent file: an agent file reads the binding, never the value.
 
-**Default for review rounds.** Bind these as the appendix's round limits (GIP §5.1 and the contract round), and the same for the [reviewer]:
+**Default for review rounds.** Bind these as the appendix's round limits (GIP §5.1 and the contract round), and the same for the [reviewer]. Five of them go beyond the standards and are registered as deviations, each a row in step 5, Rules ahead of the standards: closing with open findings at the round limit, the `yes` that holds over fixes, the advisory finding routed to its surface, the reading round, and the bounded round for a factual error.
 
-- At most two rounds of review on one change. After the second without a `yes`, the owner decides whether to close with the open findings carried by a backlog item or to run a third.
+- At most two rounds of review on one change. After the second without a `yes`, the owner decides whether to close with the open findings carried by a backlog item or to run a third. A contract is the exception: it does not become canonical without an approving full audit of its current version (Contract §8.4), so closing a contract round means it stays out of the canonical corpus.
 - A `yes` holds over later changes that only fix findings the same round named: they need no new round.
 - An advisory finding never starts a round and never becomes a backlog item of its own. It goes to the item that next changes the same surface (the same file or contract), and is taken there.
 - A change that only rewords, adding or removing no rule, takes one reading round.
 - A factual error found after approval (a statement that does not match what is built) is corrected before canonical in one bounded extra round that the owner decides. The round covers only the changed places and what depends on them, the owner attests the new lines before it, and it does not count as a third round, because it does not reopen the text.
-- A post's tests bind its acceptance criteria and invariants, not every observation from a review. A verifier mutation that survives where the specification is silent goes to the [architect] as a specification question, not into a new test. A rule in text does not hold the suite back on its own; measure assertions per acceptance criterion now and then, and list test files that bind no criterion.
+- A post's tests bind its acceptance criteria and invariants, not every observation from a review. A verifier mutation that survives where the specification is silent goes to the [architect] as a specification question, not into a new test.
+
+**Measuring test growth.** A rule in text does not hold a test suite back on its own: in the second installation the suite kept growing with the rule above in place. So the rule is measured, at every merge of a post:
+
+1. **Each test names what it binds.** A post's specification gives each acceptance criterion and invariant an id (for example `AC-3`). Each test carries the id it binds in its name or in a comment on the line before it, in the form the appendix binds, so that a search finds it.
+2. **The verifier counts, per post:** the criteria and invariants in the specification; the assertions added, per id; and the tests added that carry no id.
+3. **The counts are recorded** in the post's report, at the [report path], and the appendix names the line.
+4. **The rule is broken when** a merged post adds a test that carries no id, or adds assertions to an id whose criterion the post did not change. Either is a finding to the [architect], which names the gap in the specification the test closes or has the test removed.
+
+Bind the id form and the report line in the appendix. The rest of the suite's history is read from the reports, so nothing else is kept.
 
 ### Platform profiles — owner decides
 
@@ -232,6 +265,27 @@ The appendix also points to the architecture contract (step 6) once it exists.
 - **Identifiers have no fixed length.** An identifier format names a minimum number of digits, never an exact one.
 - **Installation-only rules go in the appendix.** A rule that only this installation needs is written in the appendix, never in a standard.
 
+**Rules ahead of the standards.** This document gives some rules that its standards do not yet carry. Each one the installation uses is a registered deviation: an entry in the appendix's § Registered deviations that names the rule, the standard and section it goes beyond, and the item in the release's `KNOWN-ISSUES.md` that carries it upstream. A registered deviation is not a pass (GAL §9.2 rule 2); it says where the installation knowingly differs, until a release of the standard carries the rule.
+
+| Rule | Step | Goes beyond |
+|---|---|---|
+| [implementation] bound to the agents' deliverables in a knowledge corpus | 3 | Truth Chain §1.1 and Registry §1.1, which define [implementation] as code |
+| The dispatched specification round in profile B | 4 | Handoff Standard §1.1, where the [operator] carries every handoff; GAL §4.6, where a step agent does a step of a build loop for a session agent |
+| At the round limit, the owner may close a post or a change the [reviewer] reviews with the open findings carried by a backlog item | 4 | GIP §5.1 and §8, where the owner decides at a hard stop whether the post continues, is split or goes back to dispatch, and the merge is not the owner's; GAL §9.5, which passes only with no row `weakened` or `lost` |
+| A `yes` holds over later changes that only fix findings the same round named | 4 | GAL §9.2 rule 3, where an attestation lapses when any of its inputs changes; for a contract, Contract §8.2 and §8.4, where an audit of an earlier version is no basis for promotion and the full audit is on the current version |
+| An advisory finding goes to the item that next changes the same surface | 4 | Backlog §4.2, where a finding routed to an item that does not exist is not disposed of |
+| A change that only rewords takes one reading round | 4 | GAL §9.5, which runs the full review once per agent over the whole pre-state and post-state |
+| A factual error found after approval is corrected in one bounded extra round over the changed places only | 4 | GAL §9.2 rule 3 and §9.5, where the [reviewer]'s approval lapses with the change and a review reads the whole pre-state and post-state; for a contract, Contract §8.2 and §8.4, as in the row above |
+| The marked quotation `"…" [xx]` | 4 | Contract §7.3, which permits no mixed-language text in a body outside its exemptions |
+| A store kept as an append-only table in a database | 5 | Backlog §1 and §6, Registry §5, Truth Chain §4 and GEM §2.1, where the file is the record |
+| The bootstrap deviation for the first post | 10 | GIP §3 (no code on main without a queue post that passed its gate) and §5.1 (no build loop without a runnable suite) |
+| In a knowledge corpus, a deliverable produced before the contract for its surface is merged, marked *before contract* | 10 | Truth Chain §2.3, where an [implementation] never contains logic that no [contract] or task specification with a passed gate specifies |
+| Who writes `last_audit` when the auditor cannot reach git | 11 | Contract §8.4, where the [auditor] writes it |
+| Prohibitions that stand with the rule they bound, with Prohibited Behavior and Failure Modes left out | 11, where the appendix binds it | Contract §4.1 and §4.3, which let a contract leave out only a section that does not apply |
+| A reference by a unique, indexed key instead of the full title | 11, where the appendix binds it | Contract §4.10 |
+
+A bootstrap-line start in profile B (step 8) is registered too, but as a departure from the installation's own binding of profile B, not from a standard: no standard requires the platform to hold the limits of an agent that owns its session.
+
 ## 6. The architecture contract — CP1
 
 The architecture contract is the installation's first contract, written first because everything built rests on it. It is a contract, so it stands at level 2 of Truth Chain's order, below the constitution (Truth Chain §2.1). It says what the system is, and it points up to the standards and the appendix and down to the domain contracts. Without it, a descriptive document fills the role without being a contract, and the system is built against a text nobody reviewed. Write it from `templates/contracts/system-architecture.md` to `contracts/governance/system-architecture.md` (or the path the corpus design below gives it).
@@ -239,7 +293,7 @@ The architecture contract is the installation's first contract, written first be
 It stands on the standards and the intake, and depends on no other contract until the constitution exists. It holds:
 
 - the system's purpose in the owner's words (from the intake);
-- which GAE standards are adopted, at which versions, and that the appendix binds them;
+- which GAE standards are adopted, and that the appendix binds them. The release and the versions stand in the appendix only (§ Source of the standards, § Standards), so that an upgrade changes the appendix and not this contract (step 12);
 - the layers and which way references between them may run, and the store per layer and data owner;
 - the agents, with roles, platforms and boundaries (by reference to the boundary contract);
 - the read connection (step 8);
@@ -284,7 +338,7 @@ For each agent from step 4, write:
 - **A core file** that follows GAL §4.1, with the start template from step 7 and the header of GAL §5.
 - **Modules or skills** where a bounded procedure needs one (GAL §5.2).
 - **A session-close module or skill** (GAL §4.4) and **a handoff module or skill** (Handoff Standard).
-- **An entry in the boundary contract** stating what the agent may read, write and run (Boundary Standard). The Boundary Standard requires an entry before an agent first runs and keeps a retired agent's entry, marked as retired (§2), and changes a boundary by changing the entry (§3). That the entry changes in the same change as the agent's reach is this kit's rule, not the standard's. If the installation has a skeleton check, the boundary contract is among its inputs.
+- **An entry in the boundary contract** stating what the agent may read, write and run (Boundary Standard). The Boundary Standard requires an entry before an agent first runs and keeps a retired agent's entry, marked as retired (§2), and changes a boundary by changing the entry (§3). That the entry changes in the same change as the agent's reach is this kit's rule, not the standard's. If the installation has a skeleton check, the boundary contract is among its inputs. From setup, the boundary contract also carries the standing rule for an upgrade (step 12), with its exception in every place that repeats the prohibition.
 
 **Templates for profile B** (in `gae-starter/templates/`):
 
@@ -349,7 +403,7 @@ Hand the appendix and every core to the [reviewer] in a separate session, for th
 5. Governed values, each from its contract (step 5).
 6. The measurements the setup left open (for example the connector's reach and the licence terms).
 
-A deliverable produced before the contract for its surface is merged is marked *before contract* and cites no contract version. That keeps a departure from the order visible instead of forbidden, so the owner can choose to deliver anyway.
+A deliverable produced before the contract for its surface is merged is marked *before contract* and cites no contract version. That keeps a departure from the order visible instead of forbidden, so the owner can choose to deliver anyway. In a knowledge corpus this is a registered deviation (step 5, Rules ahead of the standards).
 
 **The critical path.** Governance work is limited to the critical path to the next checkpoint and, after CP5, to the first deliverable: the contract infrastructure and the domain contracts that delivery needs. Triage the backlog at each checkpoint: what is done is closed, advisory findings go to their surface (step 4), the rest is parked. Without this, a review that yields four or five advisory findings per change, each becoming an item, grows the backlog faster than it closes.
 
@@ -373,11 +427,11 @@ A deliverable produced before the contract for its surface is merged is marked *
 4. A verdict that asks for changes resumes the author with the report's path. The appendix sets a limit on rounds, and at that limit the work goes to the owner.
 5. The owner attests the approved contract before it becomes canonical. This is the owner's second stop.
 
-**Order between the appendix and a contract.** An appendix change that a contract rests on — a section a contract may leave out, a reference form, a priority in the taxonomy — goes as a governance change merged before the contract. The contract's change has that merge as a premise. Appendix changes never ride along in a contract's change.
+**Order between the appendix and a contract.** An appendix change that a contract rests on — a section a contract may leave out, a reference form, a priority in the taxonomy — goes as a governance change merged before the contract. A section left out although it applies (its rules stand with the rules they bound) and a reference form other than the full title go beyond the Contract Standard, and are registered as deviations in the same change (step 5, Rules ahead of the standards). The contract's change has that merge as a premise. Appendix changes never ride along in a contract's change.
 
 **In a knowledge corpus**, three bindings of the Contract Standard are settled in the appendix before the first domain contract:
 
-- **Who writes `last_audit`** when the reviewer cannot reach git: the agent that writes the repository, from the review report in the store, in the same commit.
+- **Who writes `last_audit`** when the reviewer cannot reach git: the agent that writes the repository, from the review report in the store, in the same commit. This is a registered deviation (step 5, Rules ahead of the standards).
 - **An empty `evidence_ids` at start:** the contract says in its text what it rests on (owner decisions, with dates), so that empty is not read as no basis; the ids are added in a new version when the sources are registered.
 - **`layer`**, where the installation binds it to the data layer (system or engagement) instead of a content axis. Record the binding and whether the Contract Standard's text allows it.
 
@@ -389,14 +443,21 @@ Every session closes per GAL §4.4, with a retro entry and, where work remains, 
 
 ## 12. Moving to a new release
 
-The copies in `governance/standards/` and `governance/gae-starter/` are never edited, so the agent that writes the repository may not touch them by its boundary entry. Give the boundary contract one standing rule for the one write an upgrade needs: replacing both folders with a release's files, byte-identical, at an owner decision that names the tag. Then:
+The copies in `governance/standards/` and `governance/gae-starter/` are never edited, so the agent that writes the repository may not touch them by its boundary entry. An upgrade needs one write that this forbids: replacing both folders with a release's files.
 
-1. Fetch the new tag, never a branch, and check every file against its `SHA256SUMS` before reading. Read its `KNOWN-ISSUES.md`.
-2. For each standard, compare its body with the copy installed. A body that is unchanged moves only the version. A changed body is read against every binding of that standard in the appendix, and against the registered deviations.
-3. Replace the two folders.
-4. Update every place that binds a version, in one change: the appendix (`binds_release`, § Source of the standards, the standards table), the architecture contract's list of standards (a new version of that contract, with its own review and attestation), and any other file the appendix lists as binding a version.
-5. Mirror the result, and record the upgrade in the decision log with each changed file's old and new version.
-6. Report what did not fit as an issue upstream (step 13).
+**The standing rule comes first.** The boundary contract carries one standing rule for that write: the agent that writes the repository may replace both folders with a tagged release's files, byte-identical, at an owner decision that names the tag, and only when the release check passes (step 0, Checking a release). Written at setup with the boundary contract (step 8), it is in force before the first upgrade. An installation that lacks it merges it in a change of its own before the upgrade begins. Written on the upgrade's own branch, it is not in force when the copy is made, and the owner's decision has to be recorded as an exception after all.
+
+**Every place that repeats the prohibition** carries the rule's exception, in the same change as the rule: the boundary contract's entry for that agent, any machine-readable declaration of write areas that a hook or a check reads, and the agent's own core where it restates what it may not write. A place left out still forbids the write.
+
+Then:
+
+1. The owner decides the upgrade, naming the tag, and the decision log records it.
+2. Fetch the tag, never a branch, and run the release check on it before reading (step 0, Checking a release, point 1). Read its `KNOWN-ISSUES.md`.
+3. For each standard, compare its body with the copy installed. A body that is unchanged moves only the version. A changed body is read against every binding of that standard in the appendix, against the registered deviations, and against the architecture contract.
+4. Replace the two folders, and check the copies (step 0, Checking a release, points 2 and 3).
+5. In the same change as the copies, update every place that binds the release or a version: the appendix (`binds_release`, § Source of the standards, § Standards) and any other file the appendix lists as binding one. The architecture contract names no version (step 6), so an upgrade does not change it. It changes only when point 3 finds a changed body that one of its rules rests on, or when a standard is adopted or dropped. That change is a contract change with its own review and attestation, merged after the upgrade, because it rests on the new copies (step 11, Order between the appendix and a contract); the decision log names it as pending until it is merged. An architecture contract that still lists versions moves them to the appendix in its next version.
+6. Mirror the result, and record the upgrade in the decision log with each changed file's old and new version.
+7. Report what did not fit as an issue upstream (step 13).
 
 ## 13. Report upstream
 

@@ -1,6 +1,6 @@
 ---
 title: "GAE starter"
-version: "v0.5"
+version: "v0.6"
 status: "draft"
 author: "Tooling & Architecture"
 framework:
@@ -27,7 +27,7 @@ ai_disclosure:
     reason: "The document cites no external source."
   - role: review
     status: complete
-    scope: "Adversarial review of the starter kit at v0.8, its procedure and its templates, against the standards, in two rounds before release; the database templates tested on PostgreSQL 16."
+    scope: "Adversarial review of the starter kit at v0.8 in two rounds before its release; the changes in v0.9 in two more rounds; the database templates tested on PostgreSQL 16."
     evidence: "The reference installation's review records, not published."
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -55,7 +55,7 @@ Open your coding agent in your repository, paste the link to the GAE repository 
 
 1. fetches a tagged release, never `main`;
 2. checks every file against the release's `SHA256SUMS` before reading it, and tells you which items in the release's `KNOWN-ISSUES.md` bear on your system;
-3. copies `standards/` to `governance/standards/` and `starter/` to `governance/gae-starter/`, unchanged;
+3. copies `standards/` to `governance/standards/` and `starter/` to `governance/gae-starter/`, unchanged, and checks the copies at those paths (`ADOPTION.md` step 0);
 4. follows `governance/gae-starter/ADOPTION.md`, and asks you what the procedure leaves to you.
 
 You never copy anything yourself. If the agent cannot reach the network, it asks you to download the release and put the two folders in place; the check against `SHA256SUMS` runs the same way.
@@ -96,7 +96,7 @@ Every tool the standards describe starts as *not built*. Each one carries the fa
 
 ## Moving to a new release
 
-When a new release is tagged, the agent follows `ADOPTION.md` step 12: it checks the new tag, compares each standard's body with your copy, replaces the copies, and updates every place that binds a version, in one change you attest.
+When a new release is tagged, the agent follows `ADOPTION.md` step 12. Your boundary contract already allows the one write an upgrade needs, at your decision naming the tag. The agent checks the new tag, compares each standard's body with your copy, replaces the copies, and updates your instance appendix in the same change. Your architecture contract changes only on the triggers step 12 point 5 names: a changed standard body that one of its rules rests on, or a standard adopted or dropped.
 
 ## Feedback
 

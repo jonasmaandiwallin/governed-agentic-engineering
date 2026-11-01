@@ -5,13 +5,15 @@ Copyright (c) 2026 Jonas Maandi Wallin
 This repository is dual-licensed by file kind:
 
   * Text — the standards under standards/, the starter kit under starter/ including its
-    templates, and the documents at the root — is licensed under the Creative Commons
-    Attribution 4.0 International License (CC BY 4.0). Every text file carries this in
-    its own header (license: "CC-BY-4.0"). Attribute to Jonas Maandi Wallin and link to
-    this repository.
+    templates, except the code files below, and the documents at the root — is licensed
+    under the Creative Commons Attribution 4.0 International License (CC BY 4.0). Every
+    text file carries this in its own header (license: "CC-BY-4.0"). Attribute to Jonas
+    Maandi Wallin and link to this repository.
 
-  * Code — the hook scripts under starter/templates/hooks/ and any other script in this
-    repository — is licensed under the MIT License. Every code file carries an SPDX line.
+  * Code — the hook script under starter/templates/hooks/, the database templates under
+    starter/templates/database/ (configuration.sql, mirror.sql, mirror.sh) and any other
+    script in this repository — is licensed under the MIT License. Every code file carries
+    an SPDX line.
 
 A file you write from one of the templates is your own work and does not inherit either
 license. The standards you copy into your installation stay under CC BY 4.0.

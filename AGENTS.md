@@ -16,7 +16,9 @@ GAE was developed by Jonas Maandi Wallin through the engineering of Runapp, its 
 
 ## What this is
 
-GAE (Governed Agentic Engineering) is a family of standards for building software with AI agents. Agents write the specification and the code, and both kinds of agent follow the same rules. A contract is the source of truth, and the implementation is built from it. The agents build the system; they do not run it, and the system stays deterministic.
+GAE (Governed Agentic Engineering) is a family of standards for building with AI agents. Agents write the specification and the code, and both kinds of agent follow the same rules. A contract is the source of truth, and the implementation is built from it. In a product, the agents build the system and do not run it, so the system stays deterministic. In a knowledge corpus, the agents' governed work (research, evidence, analyses) is itself the deliverable. `starter/ADOPTION.md` step 2 describes both shapes, and an installation can be both.
+
+The standards are early work, each with its own `status` and `version`; they were developed in one installation and tried in a second, both set up by the originator. `KNOWN-ISSUES.md` lists what is known to be missing or wrong. It is the file to read before deciding to install.
 
 The standards, in `standards/`:
 
@@ -46,7 +48,7 @@ Install only when the person who owns the target repository asks for it, and sho
 1. You need file, git and shell access to their repository. In a chat without access to a repository, explain that, and tell them to open a coding agent in their repository and give it this link.
 2. Fetch a tagged release, never `main`. Check every file against `SHA256SUMS` before you read it, and stop if a file does not match.
 3. Read `KNOWN-ISSUES.md` in the same release, and tell the person which of its items bear on what they are building.
-4. Copy `standards/` to `governance/standards/` and `starter/` to `governance/gae-starter/`, unchanged.
+4. Copy `standards/` to `governance/standards/` and `starter/` to `governance/gae-starter/`, unchanged and with their file modes, and check the copies at those paths (`ADOPTION.md` step 0, Checking a release).
 5. Follow `governance/gae-starter/ADOPTION.md` from step 0.
 
 The templates are written and tested for Claude Code. On another coding agent, the procedure binds the same classes in the instance appendix and records what the platform lacks.

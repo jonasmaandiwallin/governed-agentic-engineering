@@ -10,7 +10,7 @@ gae-public-header:
 -->
 # Governed Agentic Engineering
 
-Standards for building software with AI agents, where the agents that write the specification are governed as strictly as the agents that write the code.
+Standards for building with AI agents, where the agents that write the specification are governed as strictly as the agents that write the code. What they build is either a product that runs without them or a governed body of knowledge that is itself the deliverable.
 
 Governed Agentic Engineering (GAE) was developed by Jonas Maandi Wallin through the engineering of Runapp. He established the framework's governing principles, requirements and architectural direction. AI agents working in governed roles designed and built the architecture that implements them, under his direction and final authority.
 
@@ -24,9 +24,13 @@ Runapp is the reference implementation: the system in which the methods, control
 
 Open a coding agent in your repository, paste the link to this repository, and ask it what this is. If you want it, ask it to install GAE. It fetches a tagged release, checks it against `SHA256SUMS`, and walks you through the setup.
 
+## Status
+
+The standards are early work, and each one carries its own `status` and `version`. They were developed in one installation, Runapp, which is not public, and tried in a second installation in another domain. Both were set up by the framework's originator; no outside adopter has installed GAE yet. `KNOWN-ISSUES.md` lists what is known to be missing or wrong.
+
 ## Releases
 
-Each release is a tag. `SHA256SUMS` lists every file under `standards/` and `starter/`, so a copy can be checked as unchanged. Report what did not fit your domain as an issue; do not edit your copy.
+Each release is a tag. `SHA256SUMS` lists every file under `standards/` and `starter/`, and `KNOWN-ISSUES.md`, so a copy can be checked as unchanged; `starter/ADOPTION.md` step 0 says how to check the copies at the paths they are installed under. Report what did not fit your domain as an issue; do not edit your copy.
 
 ## License and attribution
 
