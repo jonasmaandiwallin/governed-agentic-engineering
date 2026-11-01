@@ -45,7 +45,8 @@ Install only when the person who owns the target repository asks for it, and sho
 
 1. You need file, git and shell access to their repository. In a chat without access to a repository, explain that, and tell them to open a coding agent in their repository and give it this link.
 2. Fetch a tagged release, never `main`. Check every file against `SHA256SUMS` before you read it, and stop if a file does not match.
-3. Copy `standards/` to `governance/standards/` and `starter/` to `governance/gae-starter/`, unchanged.
-4. Follow `governance/gae-starter/ADOPTION.md` from step 0.
+3. Read `KNOWN-ISSUES.md` in the same release, and tell the person which of its items bear on what they are building.
+4. Copy `standards/` to `governance/standards/` and `starter/` to `governance/gae-starter/`, unchanged.
+5. Follow `governance/gae-starter/ADOPTION.md` from step 0.
 
 The templates are written and tested for Claude Code. On another coding agent, the procedure binds the same classes in the instance appendix and records what the platform lacks.
