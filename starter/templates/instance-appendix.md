@@ -9,7 +9,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.5"
+  template_version: "v0.6"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/instance-appendix.md"
 This license covers the template as published. The file you write from it is your own
@@ -57,11 +57,46 @@ This file binds the GAE standards to one installation. It is written during adop
 | 3. External sources a rule rests on | | |
 | 4. Products and repositories; shared specification? | | |
 | 5. Operators, and who may confirm what | | |
-| 6. Platform per agent; locale for text to the operator | | |
+| 6. Platform per agent; language towards the operator; language per kind of deliverable | | |
 | 7. Code already in the repository, and whether it is brought in | | |
 | 8. Data owners, where each owner's data is stored, consent and licence terms | | |
 | Owner decisions that differ from ADOPTION.md's defaults, with the reason | | |
 | Tools built from the start by owner decision, with the reason (ADOPTION.md step 5) | | |
+| Items of the starting backlog struck, with the reason (ADOPTION.md step 10) | | |
+
+### Source of the standards (ADOPTION.md steps 0 and 12)
+
+`binds_release` in the frontmatter carries the tag; this table carries the rest. Step 12 updates both.
+
+| Row | Binding |
+|---|---|
+| Release tag | `<gae-standards-vX.Y>`, or `none — before a release` |
+| Commit the tag points at | `<full commit hash>` |
+| Before a release: source repository and full commit hash | `<repository>`, `<full commit hash>`, or `does not apply — installed from a tag` |
+| `SHA256SUMS` | `every file matched, <date>`, or `none existed — copied with git archive and checked against the commit's tree` |
+
+### Architecture contract and checkpoints
+
+| Row | Binding |
+|---|---|
+| Architecture contract (ADOPTION.md step 6) | `<path>`, version, attested `<date>` |
+| Contract inventory | `<path>` |
+| Checkpoints CP0–CP7: where their definitions and conditions stand | the architecture contract § <section>; in the database: `<table>` |
+| The overview's view and read connection (ADOPTION.md step 8) | `<schema>.system_overview`; connector `<installation> System Overview` |
+
+### Languages and configuration (ADOPTION.md steps 4 and 5)
+
+| Row | Binding |
+|---|---|
+| [corpus language] | English, or the owner decision and its bindings (modal verbs, glossary, rule ids) |
+| Quotation form for text in another language | `"…" [xx]` (ISO 639-1) |
+| Language of each kind of deliverable | per output contract: `<path>` |
+| Configuration store and its keys | `<schema>.config_entries`, view `<schema>.config`, write function `<schema>.set_config` (from `templates/database/configuration.sql`); keys: overview address, engagement references, expected tools per agent |
+| Who writes configuration rows | boundary contract `<entry>` |
+| Mirror: directories mirrored, store, the job that runs it, check in the start receipt | directories `<agents/ .claude/ governance/ contracts/>`; `<schema>.mirror_files` and `<schema>.mirror_status` (from `templates/database/mirror.sql`); job `<CI job>` running `templates/database/mirror.sh` at every merge |
+| Bootstrap files and the check in the start receipt | `agents/bootstrap/<agent>.md` (from `templates/bootstrap.md`) |
+| Owner role of the governance tables (runs migrations; no agent and no connector runs as it, so the append-only triggers hold) | `<role>` |
+| Identifier format | at least `<n>` digits, no fixed length |
 
 ### Standards
 
@@ -97,7 +132,7 @@ This file binds the GAE standards to one installation. It is written during adop
 | Implementer | | | B | |
 | Fixer | | | B | |
 
-**Profile B's dispatched specification round** (ADOPTION.md step 9). Record its round limit here: ______.
+**Profile B's dispatched specification round** (ADOPTION.md step 11). Record its round limit here: ______.
 
 Separation check: [contract author] ≠ [contract auditor]; the [reviewer] reviews no change of its own (GAL §9.2 rule 5); the verifier never runs on the implementer's model (GIP §2).
 
@@ -171,7 +206,7 @@ Separation check: [contract author] ≠ [contract auditor]; the [reviewer] revie
 
 ### Session Start Protocol template (GAL §4.2–§4.3)
 
-One template per agent kind, written out with this installation's paths, commands and operator. Without a [session-start function], say here that the gates are protocol the model executes (GAL §8.2, Who compares).
+One template per agent kind, written out with this installation's paths, commands and operator. Without a [session-start function], say here that the gates are protocol the model executes (GAL §8.2, Who compares). Profile A's template carries the mirror check, the configuration read and the bootstrap check, each with its receipt line (ADOPTION.md step 7).
 
 ### Session close (GAL §4.4)
 
@@ -233,7 +268,7 @@ One row per agent, with each of the checklist's rows marked as one of: done (wit
 | [registry] | as above |
 | [evidence registry] | |
 | [implementation unit] | |
-| [corpus language] | |
+| [corpus language] | as in § Languages and configuration |
 | [change log] | |
 | [index] | |
 | [audit report path] | |
@@ -242,6 +277,8 @@ One row per agent, with each of the checklist's rows marked as one of: done (wit
 **Domain taxonomy.** List every valid domain and layer combination, in reading order.
 
 **Fields and sections.** List any added frontmatter fields, any permitted additional H2 sections, and the exempt change classes.
+
+**In a knowledge corpus** (ADOPTION.md step 11), bind before the first domain contract: who writes `last_audit` when the [auditor] cannot reach git; how a contract with empty `evidence_ids` at start says what it rests on; and what `layer` is bound to (a content axis, or the data layer: system or engagement).
 
 | Tool | Binding |
 |---|---|
@@ -368,6 +405,7 @@ The mismatch answer (Handoff Standard §6 p. 1) and the forms of the closure ver
 | Placeholder | Binding |
 |---|---|
 | [constitution] | |
+| [implementation] | as above where the Registry Standard is selected; otherwise bind it here |
 | [evidence registry] | as above |
 | [research record] | |
 | [advisory] | |
@@ -376,6 +414,7 @@ The mismatch answer (Handoff Standard §6 p. 1) and the forms of the closure ver
 | Tool | Binding |
 |---|---|
 | [evidence sync] | |
+| [completeness gate] | as in § GIP |
 | [link check] | |
 | [citation check] | |
 | [provenance check] | |
@@ -402,7 +441,7 @@ The mismatch answer (Handoff Standard §6 p. 1) and the forms of the closure ver
 
 ## Registered deviations
 
-A place where this installation does not follow a standard as written. Each entry names the rule, the reason and the issue reported upstream (ADOPTION.md step 10). Adding one is a change to this file and bumps `version`.
+A place where this installation does not follow a standard as written. Each entry names the rule, the reason and the issue reported upstream (ADOPTION.md step 13). Adding one is a change to this file and bumps `version`.
 
 ## Changelog
 

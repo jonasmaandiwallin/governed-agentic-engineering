@@ -1,6 +1,6 @@
 ---
 title: "GAE starter"
-version: "v0.4"
+version: "v0.5"
 status: "draft"
 author: "Tooling & Architecture"
 framework:
@@ -26,9 +26,9 @@ ai_disclosure:
     status: not-applicable
     reason: "The document cites no external source."
   - role: review
-    status: pending
-    scope: "Adversarial review of the released package as a whole."
-    evidence: null
+    status: complete
+    scope: "Adversarial review of the starter kit at v0.8, its procedure and its templates, against the standards, in two rounds before release; the database templates tested on PostgreSQL 16."
+    evidence: "The reference installation's review records, not published."
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
 path: "starter/README.md"
@@ -54,7 +54,7 @@ This starter sets GAE up in your own repository, for your own domain. You need n
 Open your coding agent in your repository, paste the link to the GAE repository and ask it to install GAE. The agent:
 
 1. fetches a tagged release, never `main`;
-2. checks every file against the release's `SHA256SUMS` before reading it;
+2. checks every file against the release's `SHA256SUMS` before reading it, and tells you which items in the release's `KNOWN-ISSUES.md` bear on your system;
 3. copies `standards/` to `governance/standards/` and `starter/` to `governance/gae-starter/`, unchanged;
 4. follows `governance/gae-starter/ADOPTION.md`, and asks you what the procedure leaves to you.
 
@@ -82,13 +82,21 @@ What we are building:
 
 ## What you get
 
+The setup runs as eight checkpoints, from the intake (CP0) to the first real deliverable (CP7). You attest each one before the next starts, so you see at every stop that what is being built is what you meant. The first thing written is an **architecture contract**: what your system is, attested by you before anything is built.
+
 The setup session writes the following:
 
+- the **architecture contract** and a **contract inventory** of the contracts your system will need;
 - an **instance appendix**, which binds every placeholder in the standards to your names, files and tools;
 - one **core file** per agent, with its start and close procedures;
-- the stores the standards need: backlog, decision log, retro log, handoffs, version registry and boundary contract.
+- the stores the standards need: backlog, decision log, retro log, handoffs, version registry and boundary contract;
+- a **starting backlog**, opened in order, so that what is skipped is visible.
 
 Every tool the standards describe starts as *not built*. Each one carries the failure that would make it worth building. The installation runs on files and instructions until such a failure actually happens.
+
+## Moving to a new release
+
+When a new release is tagged, the agent follows `ADOPTION.md` step 12: it checks the new tag, compares each standard's body with your copy, replaces the copies, and updates every place that binds a version, in one change you attest.
 
 ## Feedback
 

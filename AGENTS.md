@@ -33,7 +33,7 @@ The standards, in `standards/`:
 
 Each standard names no installation. An installation binds the standards to its own names, files and tools in one document of its own, the instance appendix.
 
-`starter/` holds what an installation is set up from: `ADOPTION.md`, the procedure; templates for the instance appendix, an agent core and a step agent; and a write hook.
+`starter/` holds what an installation is set up from: `ADOPTION.md`, the procedure; templates for the architecture contract, the contract inventory, the instance appendix, an agent core, a step agent and a chat agent's bootstrap file; database templates for the configuration store and the mirror; and a write hook.
 
 ## When someone asks what this is
 

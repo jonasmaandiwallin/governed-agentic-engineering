@@ -10,7 +10,7 @@ gae-public-header:
 -->
 # Known issues
 
-This file lists what is known to be missing or wrong in the standards and the starter kit of this release, so that nothing is hidden by it. Both are unchanged since `gae-standards-v0.1`.
+This file lists what is known to be missing or wrong in the standards and the starter kit of this release, so that nothing is hidden by it. The standards are unchanged since `gae-standards-v0.1`; the starter kit's `ADOPTION.md` is at v0.8.
 
 The items were found in two places: the reference installation, Runapp, and a second installation set up from this starter kit, in a domain where the agents' knowledge work is the deliverable and the product has no code. Both were set up by the framework's originator.
 
@@ -26,7 +26,7 @@ Each item says what is missing and the direction a fix takes. A direction is a p
 
 ### Contract
 
-- **No type for the architecture contract.** The closed set of document types has no type for an installation's architecture contract, the contract that binds the standards and the instance appendix. *Direction:* a type for it.
+- **No type for the architecture contract.** The closed set of document types has no type for an installation's architecture contract, the contract that binds the standards and the instance appendix. The kit uses `contract`. `governance` is for the corpus's own standards, logs and process documents, and `framework` organises a set of contracts; neither says that a document binds the installation's standards and appendix and is reviewed against what is built. *Direction:* a type for it.
 - **An empty implementation scope is allowed.** A contract whose rules govern something built may leave its implementation scope empty, and a completeness check then has nothing to count. *Direction:* such a contract names its implementation, or states why it does not.
 - **The review basis for top documents is too narrow.** A full review of a constitution or an architecture contract reads the Contract Standard only. *Direction:* it also reads the Truth Chain's order and the instance appendix's intake.
 
@@ -41,61 +41,16 @@ Each item says what is missing and the direction a fix takes. A direction is a p
 
 ### GAL
 
-- **How an agent puts a decision to the owner is only partly covered.** GAL §9.3 (Approved-change list governance, p. 3) requires that an attestation carries its material and one yes/no question. Nothing requires that a decision question states what a yes will lead to, and the starter kit's core templates carry neither rule. *Direction:* that requirement in GAL, and both rules in the core templates.
+- **How an agent puts a decision to the owner is only partly covered.** GAL §9.3 (Approved-change list governance, p. 3) requires that an attestation carries its material and one yes/no question. Nothing in GAL requires that a decision question states what a yes will lead to. The starter kit's procedure and its core template carry the rule; the standard does not. *Direction:* the requirement in GAL.
 - **The agent split is not measured.** GAE divides work between agents by role. Whether a split beats one agent with modules, and how many tools an agent can hold before its choice of tool degrades, has not been measured. *Direction:* measure on fixed end-to-end cases before changing the split; merge tightly coupled agents first, and keep a split only where the merged version is measurably worse.
 
 ## 2. Starter kit
 
-What follows is not yet in `ADOPTION.md` v0.7 or the templates.
+`ADOPTION.md` v0.8 runs the setup as eight checkpoints, starts with an architecture contract and a corpus design, carries a starting backlog, the contract flow, profile A's mirror and configuration, the language default and an upgrade step. The kit has templates for profile A's bootstrap file, configuration store and mirror; the database templates are for PostgreSQL only. What follows is still missing.
 
-### The order of the setup
-
-- **Contracts come too late.** The procedure goes from the instance appendix to the agents and the first work. Missing: the architecture contract first; a step that designs the corpus (domains and layers, one folder per domain, an index with a reading order); the owner's domain decisions written as the first contracts; and a template for the contract inventory.
-- **Contracts and deliverables.** A contract says how something is produced; a deliverable is what is produced. Contracts live in git, also where the knowledge lives in a database.
-- **No series of checkpoints.** The procedure has an owner attestation of the appendix and two owner stops in the first contract round. It does not run the setup as a series of checkpoints, each with a visible result and an owner attestation, so that the owner can see that what is built is what was intended.
-- **No starting backlog and no critical path.** The procedure says only "open the first backlog items". Missing: the kit's own starting backlog, and the rule that governance work is limited to the critical path to the first delivery.
-- **Advisory findings become items of their own.** The default for review rounds in v0.7 sends an advisory finding to the backlog. That is wrong: an advisory finding goes to the next change of the same surface, and never becomes an item of its own.
-
-### Upgrades
-
-- **No procedure for moving to a new release.** Step 0 covers the first copy of a release. Moving an installation to a later tag is not described: fetching it, checking it against `SHA256SUMS`, replacing the copies, and updating every place that binds a version, in the instance appendix and in the contracts. Because the copies are never to be edited, the agent that writes the repository may not touch them, and the second installation's first upgrade needed a recorded owner exception to replace them. *Direction:* an upgrade step in the procedure, with the list of places that bind a version, and a standing rule in the boundary contract for the one write an upgrade needs.
-
-### The contract flow
-
-- An appendix change that a contract rests on is merged before the contract.
-- A factual error found after approval is corrected in one bounded extra round that the owner decides, limited to the changed lines.
-- An architecture contract written after the build is reviewed against what was built before it becomes canonical.
-- A governed value is created only after the contract that states it. The rule stands in the Registry Standard (§4.1); the kit's setup steps do not point to it yet.
-- In a knowledge corpus, three bindings of the Contract Standard need to be foreseen: who writes the audit record when the reviewer cannot reach git; what an empty evidence list at start means; and whether the layer can be bound to the data layer.
-
-### Specification agents in chat (profile A)
-
-- Steps for setting up the chat projects, and the order between the first post and the first chat session.
-- A database connector's reach limited to the installation.
-- **Reading through a repository sync.** v0.7 ("Profile A without a server") offers the chat platform's repository sync as the way to read the core and the standards. That is wrong: the synced copy is not refreshed at session start and is often read only in excerpts. *Direction:* agent files, standards, contracts and the appendix mirrored to the installation's store by whole directory, read only from the mirror, with no repository sync in the chat projects, and a mirror check in the start receipt.
-- A database connector in a chat app can cancel a write silently. Agents write text through narrow database functions, not raw updates.
-- The bootstrap holds only what never changes. Everything that changes is configuration, written as data in the system layer through a narrow write function, and shown in the start receipt. A bootstrap check in the start receipt.
-- No client or engagement names in the installation's own files.
-- *Open:* in profile A the database cannot tell one agent from another or from the owner, so the boundary between chat agents stands in text only. A connector per role, with a database role that has only that role's write functions, is the direction to examine.
-
-### Language
-
-- The default in v0.7 binds the corpus language to the language the owner attests in. That is wrong. *Direction:* English across the governance surface; the language of a deliverable set per output contract; a quotation in another language marked `"…" [xx]` with its ISO 639-1 code. Language and other installation choices are bound in the appendix only, never in an agent module.
-
-### The implementation side
-
-- The first post's specification is read for open interpretations before it is dispatched.
-- An implementer's interpretation where the specification is silent goes to the architect as a finding, instead of standing as a rule nobody decided.
-- What the owner's review of a large bootstrap post consists of.
-- A record still being written when a snapshot is taken.
-- Identifiers without a fixed length.
-- A change to what an agent runs or writes changes its entry in the boundary contract in the same change. The Boundary Standard (§7) requires this for a new, retired or changed role; the kit needs it for any change to what an agent runs or writes.
-- The kit does not point to GAL §9.3 (Approved-change list governance, p. 4), the rule for who reviews the reviewer's own files.
-- A test suite binds the acceptance criteria and invariants, not every observation from a review round.
-
-### A system overview
-
-- A live overview of the installation, reading through a read-only connection: what the system does for the owner, the agents, the flow and the checkpoints. It has been designed and tried, and is not yet a template.
+- **No template for the system overview.** Step 8 says what the overview shows, that it reads a view through a read-only connection and that the checkpoints' status is computed. The page is drawn by each installation; a template with fixed sections, design tokens and a data format, rendered by a script so that an agent fills data and never layout, has been designed and tried but is not in the kit.
+- **The boundary between chat agents stands in text.** In profile A the database cannot tell one agent from another or from the owner, so a narrow write function limits what is written but not who writes it. The read connection holds the limit for an agent that only reads. *Direction to examine:* a connector per role, each with a database role that has only that role's write functions.
+- **The measurement of test growth has no form.** Step 4 says a post's tests bind its acceptance criteria, not every observation, and orders assertions per acceptance criterion to be measured now and then. In the second installation the suite kept growing with the rule in place. What is missing is the measurement's form: what is counted, where it is recorded, how often, and what count shows the rule broken. *Direction:* that form, before anything more is specified.
 
 ## 3. Scale
 
@@ -109,4 +64,4 @@ Everything in this release has been measured with one installation per operator 
 
 - **Adoption by someone other than the originator.** Both installations were set up by the person who developed the framework. That a team or an outside adopter can install GAE from the starter kit alone has not been shown.
 - **The whitepapers** that explain the framework are not part of this release.
-- **Review of the release as a whole.** Each standard was reviewed when it changed. The adversarial review of the released package as a whole is pending, as the `ai_disclosure` block in each document says.
+- **Use of the starter kit as a whole.** Each standard was reviewed adversarially when it changed, and the v0.1 release — the headers, the release tooling and this file — in two rounds. The starter kit at v0.8, its procedure and its templates, was reviewed adversarially against the standards before this release, and its database templates were tested on PostgreSQL 16. No installation has yet been set up from v0.8 from start to end.

@@ -14,7 +14,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.1"
+  template_version: "v0.2"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/agent-core.md"
 This license covers the template as published. The file you write from it is your own
@@ -50,6 +50,10 @@ You work through the platform's own tools. No connector stands between you and t
 ## Behavior Rules
 
 <Agent-owned rules.>
+
+### Decisions to the owner
+
+A decision that is the owner's is put as one recommendation and one yes/no question, never as a menu. The same message carries the material to be judged — the diff or the rows, inline or as an exact path and lines — and what each row means in one sentence (GAL §9.3, Approved-change list governance, p. 3). The question says what a yes will lead to, so that a one-word answer is an informed one. A decision that is this agent's is made and carried out, and the reply says what was decided.
 
 ### Auto-Retro — Mandatory
 
