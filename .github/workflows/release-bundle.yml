@@ -1,0 +1,54 @@
+# Attaches gae-full.md to every published release: the repository's text in one file,
+# for a chat that cannot open links. Upload it to the chat and ask what GAE is.
+# The file is built from the release's own tag, so it never differs from the release.
+name: Release bundle
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to attach the bundle to (e.g. gae-standards-v0.4)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Build gae-full.md
+        run: |
+          set -euo pipefail
+          files=(README.md AGENTS.md KNOWN-ISSUES.md)
+          mapfile -t standards < <(ls standards/*.md | sort)
+          if [ "${#standards[@]}" -eq 0 ]; then echo "no standards found under standards/" >&2; exit 1; fi
+          files+=("${standards[@]}" starter/README.md starter/ADOPTION.md)
+          for f in "${files[@]}"; do
+            [ -s "$f" ] || { echo "missing or empty: $f" >&2; exit 1; }
+          done
+          commit=$(git rev-parse --short HEAD)
+          {
+            echo "# Governed Agentic Engineering — ${TAG}, all text in one file"
+            echo
+            echo "Generated from release ${TAG} (commit ${commit}) of https://github.com/${GITHUB_REPOSITORY}."
+            echo "It joins ${#files[@]} files: README, AGENTS, KNOWN-ISSUES, the ${#standards[@]} standards, and the starter kit's README and ADOPTION."
+            echo "The templates are in the repository under starter/templates/. Each file below keeps its own header with license and attribution; text is CC BY 4.0, code MIT (LICENSE)."
+            for f in "${files[@]}"; do
+              printf '\n\n---\n\n<!-- file: %s -->\n\n' "$f"
+              cat "$f"
+            done
+          } > gae-full.md
+          echo "gae-full.md: ${#files[@]} files, $(wc -c < gae-full.md) bytes, tag ${TAG} @ ${commit}"
+
+      - name: Attach to the release
+        run: gh release upload "$TAG" gae-full.md --clobber
