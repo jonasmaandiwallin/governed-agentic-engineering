@@ -2,7 +2,7 @@
 title: "Governed Agentic Engineering: Building Systems With Agents You Can Check"
 type: overview
 status: draft
-version: "v0.2"
+version: "v0.3"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -26,7 +26,7 @@ author_llm:
 ai_disclosure:
   - role: drafting
     status: complete
-    scope: "Text and structure of v0.1 (2026-10-19), and in v0.2 the new parts: the two shapes and the runtime boundary in § 2, the second installation in § 4, § 4 rewritten with a rule per figure, and § 6.2 on scale."
+    scope: "Text and structure of v0.1 (2026-10-19), and in v0.2 the new parts: the two shapes and the runtime boundary in § 2, the second installation in § 4, § 4 rewritten with a rule per figure, and § 6.2 on scale. In v0.3 the directions added to the three tracks of § 6.2: autonomy per class of work in a policy that code applies, a replay of the decision history before a class is given more room, several operators as several sources of events into one routing step, and a routing step that keeps no state of its own."
     evidence: "The document text itself."
     reason: null
   - role: technical-analysis
@@ -41,13 +41,13 @@ ai_disclosure:
     reason: null
   - role: fact-check
     status: complete
-    scope: "External references in § 5 checked against their primary sources by Research Pipeline: the nine sources of the first search on 2026-10-19; the ten further candidates, the harness study's longitudinal scope and the delegation paper on 2026-11-02, partly through the platform's research mode."
-    evidence: "Research Pipeline's reference reports of 2026-10-19 and 2026-11-02, one row per claim with the source's own text and who read it, the agent or the research mode."
+    scope: "External references in § 5 checked against their primary sources by Research Pipeline: the nine sources of the first search on 2026-10-19; the ten further candidates, the harness study's longitudinal scope and the delegation paper on 2026-11-02, partly through the platform's research mode. In v0.3 the two sources of § 6.2, the DeepSeek Harness article and the Anthropic text it cites, read on 2026-11-02: the article in the English text the editor pasted, since x.com refused automated fetching, and the Anthropic page directly."
+    evidence: "Research Pipeline's reference reports of 2026-10-19 and 2026-11-02, one row per claim with the source's own text and who read it, the agent or the research mode; for v0.3 a report with one row per claim about the two sources, the version each was read in, and the two rows that hold only in part."
     reason: null
   - role: review
     status: complete
-    scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
+    scope: "v0.2: adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other. v0.3: one reading round on the additions to § 6.2 and the matching items of the known issues: whether the text says more about its two sources than the source check bears, whether anything proposed stands as measured, whether the overview and the known issues agree, and what the release tool ships."
+    evidence: "v0.2 round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment. v0.3 round (2026-11-02): no blocking findings and two advisory ones, both corrected in the known issues after the round: the scale section named the routing step in fewer directions than it counted, and two of its sentences shared a run of ten or more words with § 6.2."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -240,22 +240,25 @@ The searches behind these statements covered the sources named and no others. Th
 
 ### 6.2 Scale
 
-Everything measured here was measured with one operator. The release lists three tracks as open. For each, this is what the method already has, what is missing, and the direction a solution takes. A direction is a proposal, not a measured result; this section does not claim that the method scales.
+Everything measured here was measured with one operator. The release lists three tracks as open. For each, this is what the method already has, what is missing, and the direction a solution takes. A direction is a proposal, not a measured result; this section does not claim that the method scales. Three of the directions name a routing step: an agent that classifies and dispatches incoming items but does no work itself. None has been built. The routing step is taken from a design the DeepSeek Harness team published in 2026: a long-lived router layer handles all human interaction and starts new tasks on isolated workers, while follow-up events on a task go straight to the worker that owns it. The routing step proposed here differs on one point. In that design the router session carries the working memory across tasks in its own context, with persistent state kept in a database; the routing step proposed here would carry nothing from one decision to the next and read the record each time, the stateless form of harness that Anthropic describes for its managed agents.
 
 **Autonomy: when a human checkpoint can go.**
 - *Has.* A mechanical check that has not stopped a real error within thirty days is removed. Since 2026-10-20 the reference installation also tells a gate from a sensor. A sensor is a read at the architect's session start that never stops work, and it is judged by whether it showed something no other step showed; a gate is judged by what it stopped.
 - *Missing.* The same evidence for a human checkpoint. The operator's confirmation is a flag the agent sets, not a log entry, and the emergency path has no log of its uses. So no checkpoint can be lowered on evidence.
-- *Direction.* Log every confirmation with its outcome: approved, changed or refused. Lower a checkpoint to a gate or a sample only when the log shows it has changed nothing over a set number of occasions.
+- *Direction.* Log every confirmation with its outcome: approved, changed or refused. Lower a checkpoint to a gate or a sample only when the log shows it has changed nothing over a set number of occasions. Grant autonomy per class of work rather than per checkpoint, in a policy that code applies. The line between classes runs between work that restores agreement with a contract as it stands, which an agent may start, and work that changes what a contract says, which waits for the owner's decision. A routing step may propose the class of an incoming item; the policy decides what that class allows, so a wrong classification cannot widen its own mandate. Before a class is given more room, replay the installation's decision log and handoffs as a test set: compare the proposed classification with what the operator actually did, class by class, and count the events where nothing should have happened as cases of their own.
+- *Not measured.* No class policy or replay has been run, and whether the history is consistent enough to serve as the answer key is not known.
 
 **Parallel sessions and several operators.**
 - *Has.* Declared dependencies between contracts; the Wave Standard's explicit edges and its rule that unread is not done; a commit tool that stages only the files a session names; and a queue in which an implementation session claims and releases a post.
 - *Missing.* The contracts a change affects are found by the audit, after the work is routed, and in the reference installation that has happened. The specification agents work in one shared copy, one at a time: enough with a single operator, a queue as soon as there are more (the release's known issues, § 3). With several operators, nothing says who decides when two of them decide about the same cluster of contracts.
-- *Direction.* Compute the affected set from the dependency graph before work is routed, and carry it with the work. Lock per cluster of dependencies rather than per working copy, so that sessions whose clusters do not overlap can run at once, each on its own branch, merged through the gates. Give decision rights per cluster, with the same escalation to a person that an open question takes today.
+- *Direction.* Compute the affected set from the dependency graph before work is routed, and carry it with the work. Lock per cluster of dependencies rather than per working copy, so that sessions whose clusters do not overlap can run at once, each on its own branch, merged through the gates. Give decision rights per cluster, with the same escalation to a person that an open question takes today. Let several operators become several sources of events into one routing step and one truth chain, not several truths; the routing step is where the affected set above is computed, when an item is triaged.
 
 **Context.**
 - *Has.* The method already keeps state outside the context window. Modules are loaded when needed. Registries are read through tools rather than whole. A resume brief and a handoff carry what was not measured to the next session. Learnings are recalled at decision points, and sub-agents read broadly and return a conclusion. Implementation sessions stop hard at 60 % of their context and report the stop with their post. Specification sessions in chat begin their close at about 70 %, a figure the model estimates for itself, since nothing in chat measures it.
 - *Missing.* The standards do not state context control as a principle, and nothing measures how much context a session spends on a task.
-- *Direction.* Context control as a stated principle, with the mechanisms above as its instances, and the two limits described as what they are: one measured, one estimated.
+- *Direction.* Context control as a stated principle, with the mechanisms above as its instances, and the two limits described as what they are: one measured, one estimated. A routing step, if one is added, is another instance: it keeps no state of its own and reads the corpus and the database at every decision, so that its choices can be audited, it can be replaced, and the record stays in the truth chain rather than in a long-lived agent.
+
+**Sources.** Qiao, Y. (2026-11-01). *Exploring Super-agent Design: Towards a More Autonomous Agent System*. DeepSeek Harness, X article, machine-translated from a Chinese original. https://x.com/DeepSeekHarness/status/2116857257245987236 · Martin, L., Cemaj, G. & Cohen, M. (2026-04-08). *Scaling Managed Agents: Decoupling the brain from the hands*. Anthropic. https://www.anthropic.com/research/managed-agents
 
 ---
 
