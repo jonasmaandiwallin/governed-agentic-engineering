@@ -1,9 +1,9 @@
 ---
 document_title: "Backlog Standard"
-version: "v0.6"
+version: "v0.8"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-01"
+last_updated: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -131,12 +131,13 @@ Before an ID is asked for, the backlog is searched for the finding's own names: 
 
 - **An open item carries the problem or its class.** The finding is added to that item as a new dated section. No ID is asked for.
 - **A closed item names the same defect.** It is read before anything is opened. Either it solved the problem, and nothing is opened, or it dropped it, and it is reopened (§4.5) rather than a new ID handed out.
-- **Nothing carries it.** An ID is asked for from the [allocator]. The new item's body names the search that was run (§2.3).
+- **Nothing carries it.** An ID is asked for from the [allocator]. The new item's body names the search that was run (§2.3). A finding of the advisory class may instead go to the next change of its surface (§4.2, third point).
 
 ### 4.2 Carrying
 
 - A finding that a review, a session or a tool routes to "a follow-up item" is disposed of only when the receiving item holds it, by ID and with its text or a pointer to it. A finding routed to an item that does not exist was not disposed of.
 - The [instance appendix] may require a part moved from one item to another to stay in the giver with the ID of the item that took it, so that the giver's closure (§4.3) accounts for it.
+- **The advisory class.** The [instance appendix] may name a class of findings that a review marks as needing no change before the reviewed item closes. Such a finding may be routed to the next change of the surface it concerns — the file or files it names — instead of an item of its own, but only when the search of §4.1 has run in full, open and closed items alike, and found neither an open item that carries it nor a closed item that names the same defect. A closed item that names it is read and handled under §4.1's second point — it solved the problem, or it is reopened (§4.5) — never by this route. It is held, by its text or a pointer, in an open item that collects that class for that surface, or in the open item that next changes the surface; the first point applies to it unchanged. The [instance appendix] names the collecting items. An item that changes a surface reads, when it takes up the change, the collecting items for that surface, and takes every finding held for it; its closure (§4.3) says for each whether it was done, moved to a named item or declared not to be done. A finding outside the class is never routed this way.
 
 ### 4.3 Closing
 

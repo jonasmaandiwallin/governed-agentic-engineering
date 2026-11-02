@@ -1,9 +1,9 @@
 ---
 document_title: "GIP — Governed Implementation Pipeline"
-version: "v0.3"
+version: "v0.5"
 status: "draft"
 created: "2026-09-29"
-last_updated: "2026-11-01"
+last_updated: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -46,6 +46,8 @@ GIP is the only way work reaches the implementation agents, as the Governed Agen
 
 **Scope.** GIP governs work that changes a product repository. Tools the [architect] writes for the governance system itself lie outside it and pass the architect's own gates.
 
+**A product as paths.** A product is a repository, or a set of path prefixes in a repository that the [tool appendix] declares — for example where a schema and its templates share a repository with the governance files. Where it is a set of paths, every rule in this standard that names a product repository applies to those paths: the write gate refuses an agent's writes under them, the merge check checks every change under them, and a change outside them is not a change to the product. [task specification path] then lies outside the prefixes, so the [architect]'s commit of a task specification (§4.3) is not a write under the gate; and where this standard names the [architect]'s repository (§4.3, §7), it means the files of the same repository outside the prefixes. The [tool appendix] names, per product, its repository and, where it is paths, the prefixes.
+
 **Prerequisite.** The contract loop requires contracts that can be measured. The values a contract governs stand in a [registry] and are referenced by key, and its invariants, enforcement rules and prohibitions — its *normative statements* — are stated so that the [completeness gate] can count whether the code consumes and tests them ([contract standard]). A contract that cannot be measured cannot be declared done by the contract loop; one that the completeness gate cannot read — a normative statement written as prose where the [contract standard] asks for a list — is reported as a finding (§7) and not built. Work without such a contract runs the task loop, where the task specification's acceptance criteria take the contract's place.
 
 **Five properties.** Sections 2 to 7 each serve at least one of them. Section 8 collects what the [owner] decides and carries no rule of its own.
@@ -86,7 +88,7 @@ Rules that hold across the table:
 
 ## 3. The gate
 
-No code reaches the main branch of a product repository without a queue post whose gate has passed (§4). The rule holds for every session in the repository, whether dispatched or started by hand: the gate guards the repository, not the agents. The bypasses that made the gate necessary were work started beside the queue, not agents breaking a rule.
+No code reaches the main branch of a product repository without a queue post whose gate has passed (§4), with one exception that lapses at its merge: the first post, below. The rule holds for every session in the repository, whether dispatched or started by hand: the gate guards the repository, not the agents. The bypasses that made the gate necessary were work started beside the queue, not agents breaking a rule.
 
 The gate stands at three places.
 
@@ -103,9 +105,11 @@ The gate stands at three places.
 - **Trace:** every use writes a line with its reason to the [bypass log]. The [architect]'s session start reports the bypasses since its last session.
 - **Afterwards:** the work is always brought into GIP — a queue post, and review of what was already done — so that all code on the main branch has in the end passed through a build loop.
 
+**The first post.** A first post that builds what the gate itself needs — the [queue], a runnable suite, the store the [architect] writes to — cannot pass the gate or a baseline (§5.1). It is not a use of the emergency path, which is for a gate that exists. The [tool appendix] names that one post, says what replaces each requirement it cannot meet — for example, the tester's new checks are the first baseline and are red before implementation — and records who dispatched it and where the dispatch is logged. Every step of §5 that can run, runs. The replacement lapses when the post is merged: the post is then entered in the [queue] with its merge commit, its receipts and the [tool appendix]'s record of what replaced each requirement, who dispatched it and where the dispatch is logged, so that the entry is told apart from a post whose gate passed. It is the one entry the [architect] makes without a passed gate (§6), and from then on the gate holds without exception. A second post never takes this path.
+
 ## 4. Step 1 — dispatch (Code Dispatch Protocol)
 
-The [architect] runs dispatch, the Code Dispatch Protocol (CDP). Its output is a queue post: the only thing a session agent can build from. Only the architect adds posts to the [queue], and only with a passed gate (§6). The architect never writes instructions to a step agent; the dispatch goes to the session agent, which runs the build loop the post names.
+The [architect] runs dispatch, the Code Dispatch Protocol (CDP). Its output is a queue post: the only thing a session agent can build from. Only the architect adds posts to the [queue], and only with a passed gate (§6); the first post's entry (§3) is the one exception. The architect never writes instructions to a step agent; the dispatch goes to the session agent, which runs the build loop the post names.
 
 ### 4.1 Two entries, one path
 
@@ -163,7 +167,7 @@ A queue post names the task, its specification, its entry — contract or specif
 
 Work that several contracts share — a [registry] value read by more than one of them — is dispatched once, in the task of the contract that owns it. The others are measured again after that task is merged.
 
-The dispatch to the session agent follows the [handoff standard] and names the queue post. The question "was the protocol followed?" is not asked: a post without a passed gate does not exist.
+The dispatch to the session agent follows the [handoff standard] and names the queue post. The question "was the protocol followed?" is not asked: a post without a passed gate does not exist. The first post (§3) is dispatched without a post, and its entry is made at its merge.
 
 ## 5. Step 2 — the build
 
@@ -182,8 +186,8 @@ Both loops run the same steps. **A** — the tester writes the checks. **A.5** �
 - **A crashed step runs again.** Its partial result is discarded. The session agent never substitutes its own review for a verifier's; a session that cannot run a pending review stops with the review pending.
 - **Staging.** Only named files are staged — the changed code and the checks — never everything in the tree.
 - **No escape hatches.** A skipped or pending check, a suppressed type error or a disabled lint rule in the change fails the build. The [tool appendix] lists the patterns.
-- **Hard stops** end the post before any merge and go to the [owner]: RED-BASELINE, NEEDS-MANUAL-REVIEW, the review-round limit reached without a pass, a build or test failure beyond the retry limit, a missing prerequisite — one the task names, or the switch a reserved part is to be built behind (§5.2) — and the session's context limit. The owner decides whether the post continues, is split, or goes back to dispatch. A finding stops its contract and goes to the [architect] (§7).
-- **Merge.** The session agent merges when every condition holds: an approved step receipt for A, A.5, B and C.5, the full suite green, continuous integration green on the pull request, and no hard stop. No one else is asked (§8).
+- **Hard stops** end the post before any merge and go to the [owner]: RED-BASELINE, NEEDS-MANUAL-REVIEW, the review-round limit reached without a pass, a build or test failure beyond the retry limit, a missing prerequisite — one the task names, or the switch a reserved part is to be built behind (§5.2) — and the session's context limit. The owner decides whether the post continues, is split, or goes back to dispatch. At the review-round limit, and where the [tool appendix] allows it, the owner may instead accept the post with the open findings of that review carried — the verifier's findings in the step whose receipt carries the acceptance. Each is held by a backlog item, by its text or a pointer, and the item names the post, the step that found the finding and its class. The acceptance stands in that step's receipt beside the verifier's own verdict, which is never changed: the receipt keeps the verdict the verifier gave and adds the owner's acceptance, the reference of the decision that made it and who entered it. A [finding token] (§7) is never carried, and a post with an open [finding token] is not merged on an acceptance. A failing check is never carried — the full suite and continuous integration must still be green — and every other condition of the merge below holds unchanged. A finding stops its contract and goes to the [architect] (§7).
+- **Merge.** The session agent merges when every condition holds: an approved step receipt for A, A.5, B and C.5 — or, for a review step, one whose verifier's verdict stands beside the owner's acceptance (Hard stops, above) — the full suite green, continuous integration green on the pull request, and no hard stop. No one else is asked (§8).
 - **Runs in a row.** The [owner] can let a session agent take posts in a row without a word between them, once the most recent posts, as many as the batch threshold, ran with both reviews passing and continuous integration green. The owner sets the batch threshold. Any hard stop ends the series.
 
 ### 5.2 The contract loop (Contract Implementation Loop, CIL)
@@ -216,13 +220,13 @@ The task loop is the contract loop with the task specification's acceptance crit
 
 ## 6. The queue as proof
 
-The [queue] is proof, not a note. A post in it always means that the gate was passed, and a post that is done always means that a reported run made it so.
+The [queue] is proof, not a note. A post in it always means that the gate was passed, and a post that is done always means that a reported run made it so. The one exception is the first post's entry (§3), which carries the record of what replaced the gate; a second entry without a passed gate breaks this section.
 
-- **Who writes.** Only the [architect] adds posts, and only with a passed gate (§4). A session agent claims a post, reports a run, reports a finding and reports a merge, through the [report path] — nothing else. No session writes the queue by any other route.
-- **The step receipts.** Every step of a build leaves its receipt with the post (§5.1). Each value in it is filled by whoever knows it: the platform names the agent and the model that ran, the agent's file gives its path and version, and the agent gives only its verdict (GAL §6.5).
+- **Who writes.** Only the [architect] adds posts, and only with a passed gate (§4), or for the first post at its merge (§3). A session agent claims a post, reports a run, reports a finding and reports a merge, through the [report path] — nothing else. No session writes the queue by any other route.
+- **The step receipts.** Every step of a build leaves its receipt with the post (§5.1). Each value in it is filled by whoever knows it: the platform names the agent and the model that ran, the agent's file gives its path and version, and the agent gives only its verdict (GAL §6.5). An owner's acceptance at the review-round limit stands beside that verdict and never replaces it (§5.1).
 - **Built, then done.** A post whose loop is finished — an approved receipt for every step, the full suite green, the pull request open — is built, not done. It is done when a merge commit on the main branch with green continuous integration is reported and checked, and, for contract work, when the [completeness gate] finds the contract complete after the merge (§5.2, step E). A built post keeps its claim. Before a session agent claims a new post, it takes the built posts in its repository: it merges one whose conditions in §5.1 hold and reports the merge; one whose continuous integration failed goes back into its loop (§5.1, Limits); one whose continuous integration still runs is reported and left.
 - **Who reports the merge.** The session agent, when the merge happens in its session. Otherwise the [architect], at its next session start, when the merge commit appears.
-- **Nothing is set directly.** No one sets a post done, and a post is never done on local evidence. A claimed post whose session ended without a report — a post not built — goes back to the queue.
+- **Nothing is set directly.** No one sets a post done, and a post is never done on local evidence. The first post's entry (§3) is made with its merge commit and its receipts, as a reported merge is. A claimed post whose session ended without a report — a post not built — goes back to the queue.
 - **A stopped post.** A post stopped by a finding is blocked until its contract re-enters (§7). A post stopped by a hard stop waits for the [owner] (§5.1).
 
 **At every session start the [architect] reports, as detection:** the reports not yet read; each change merged since its last session, read against its task specification — a deviation becomes a backlog item or a revert; the commits on the main branch without a queue post (§3); and the uses of the emergency path (§3).
@@ -241,7 +245,8 @@ The build never changes the specification. What it learns about the specificatio
 
 A hard stop is the only thing in the pipeline that waits for the [owner]. Everything else runs on conditions a machine can check. This section collects the owner's decisions; each rule stands in the section it names.
 
-- **Hard stops** (§5.1): whether the post continues, is split, or goes back to dispatch.
+- **Hard stops** (§5.1): whether the post continues, is split, or goes back to dispatch; at the review-round limit, where the [tool appendix] allows it, whether the post is accepted with the open findings of that review carried, never a [finding token].
+- **The first post** (§3): which post builds what the gate needs, and what replaces each requirement it cannot meet, as the [tool appendix] records it.
 - **The emergency path** (§3): only the owner uses it.
 - **Runs in a row** (§5.1): the owner lets a session agent take posts in a row, and sets the batch threshold.
 - **Not the owner's:** the merge, which the session agent makes on its conditions (§5.1); the choice of build loop, which the queue post makes (§4.5); the routing of a finding, which §7 makes.

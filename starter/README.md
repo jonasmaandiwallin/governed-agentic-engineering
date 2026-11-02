@@ -1,6 +1,6 @@
 ---
 title: "GAE starter"
-version: "v0.6"
+version: "v0.7"
 status: "draft"
 author: "Tooling & Architecture"
 framework:
@@ -27,7 +27,7 @@ ai_disclosure:
     reason: "The document cites no external source."
   - role: review
     status: complete
-    scope: "Adversarial review of the starter kit at v0.8 in two rounds before its release; the changes in v0.9 in two more rounds; the database templates tested on PostgreSQL 16."
+    scope: "Adversarial review of the starter kit at v0.8 in two rounds before its release; the changes in v0.9 in two more rounds; the database templates tested on PostgreSQL 16. The system overview templates of v0.10 tested on PostgreSQL 16 and in a browser engine and reviewed in two rounds; the changes in v0.11 reviewed with the standards they follow, in two rounds."
     evidence: "The reference installation's review records, not published."
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"

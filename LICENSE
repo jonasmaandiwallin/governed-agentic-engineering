@@ -11,8 +11,10 @@ This repository is dual-licensed by file kind:
     Maandi Wallin and link to this repository.
 
   * Code — the hook script under starter/templates/hooks/, the database templates under
-    starter/templates/database/ (configuration.sql, mirror.sql, mirror.sh) and any other
-    script in this repository — is licensed under the MIT License. Every code file carries
+    starter/templates/database/ (configuration.sql, mirror.sql, mirror.sh), the system
+    overview templates under starter/templates/system-overview/ (overview.html,
+    overview.sql, render.sh) and any other script in this repository — is licensed under
+    the MIT License. Every code file carries
     an SPDX line.
 
 A file you write from one of the templates is your own work and does not inherit either

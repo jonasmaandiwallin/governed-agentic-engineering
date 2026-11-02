@@ -9,7 +9,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.7"
+  template_version: "v0.9"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/instance-appendix.md"
 This license covers the template as published. The file you write from it is your own
@@ -95,6 +95,7 @@ This file binds the GAE standards to one installation. It is written during adop
 | Who writes configuration rows | boundary contract `<entry>` |
 | Mirror: directories mirrored, store, the job that runs it, check in the start receipt | directories `<agents/ .claude/ governance/ contracts/>`; `<schema>.mirror_files` and `<schema>.mirror_status` (from `templates/database/mirror.sql`); job `<CI job>` running `templates/database/mirror.sh` at every merge |
 | Bootstrap files and the check in the start receipt | `agents/bootstrap/<agent>.md` (from `templates/bootstrap.md`) |
+| System overview: view, standards' directory in the mirror, who writes checkpoints, attestations and section text, the page and its address | view `<schema>.system_overview` (from `templates/system-overview/overview.sql`); standards under `<governance/standards/>`; boundary contract `<entry>`, attestations by the owner only; page `<path>` rendered by `templates/system-overview/render.sh` with a deny file kept at `<path outside the repository>`; live address in configuration key `system_overview_url` |
 | Owner role of the governance tables (runs migrations; no agent and no connector runs as it, so the append-only triggers hold) | `<role>` |
 | Identifier format | at least `<n>` digits, no fixed length |
 
@@ -258,6 +259,14 @@ One row per agent, with each of the checklist's rows marked as one of: done (wit
 | Batch threshold | |
 | Context limit | |
 
+**Options GIP leaves to this appendix.** Taken or not taken, each with its binding:
+
+| Option | Binding |
+|---|---|
+| A product as paths (GIP §1): per product, its repository and, where it is paths, the prefixes; [task specification path] outside them | |
+| The first post (GIP §3): the one post, what replaces each requirement it cannot meet, who dispatched it, where the dispatch is logged | |
+| Accepting a post with the review's open findings carried at the review-round limit (GIP §5.1, §8) | |
+
 **Test growth (ADOPTION.md step 4, Measuring test growth).** The form of the id a test carries for the criterion or invariant it binds: ______. The line in a post's report that records the verifier's counts: ______.
 
 ---
@@ -338,6 +347,8 @@ The mismatch answer (Handoff Standard §6 p. 1) and the forms of the closure ver
 | [status check] | |
 
 **What counts as infrastructure that two or more agents consume** (Backlog Standard §4.3, Review). List it here.
+
+**The advisory class** (Backlog Standard §4.2, third point). Taken or not taken. Where taken: the class of findings, and the collecting items per surface that an item reads when it takes up a change of that surface: ______.
 
 ---
 
