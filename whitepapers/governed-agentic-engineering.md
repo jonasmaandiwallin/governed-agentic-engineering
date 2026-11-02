@@ -1,0 +1,291 @@
+---
+title: "Governed Agentic Engineering: Building Systems With Agents You Can Check"
+type: overview
+status: draft
+version: "v0.2"
+date: "2026-11-02"
+author: "Tooling & Architecture"
+framework:
+  name: "Governed Agentic Engineering (GAE)"
+  originator: "Jonas Maandi Wallin"
+editor: "Jonas Maandi Wallin"
+contact: "https://www.linkedin.com/in/jonasmaandiwallin"
+author_llm:
+  - model: "Claude Opus 5.5"
+    model_id: "claude-opus-5-5"
+    roles: [drafting, technical-analysis, editing]
+    source: platform
+  - model: "Claude Opus 5.5"
+    model_id: "claude-opus-5-5"
+    roles: [fact-check]
+    source: handoff
+  - model: "Claude Fable 5.1"
+    model_id: "claude-fable-5-1"
+    roles: [review]
+    source: handoff
+ai_disclosure:
+  - role: drafting
+    status: complete
+    scope: "Text and structure of v0.1 (2026-10-19), and in v0.2 the new parts: the two shapes and the runtime boundary in § 2, the second installation in § 4, § 4 rewritten with a rule per figure, and § 6.2 on scale."
+    evidence: "The document text itself."
+    reason: null
+  - role: technical-analysis
+    status: complete
+    scope: "Figures in § 4 measured in the reference installation at corpus commit bac7817, engine commit acba054 and its database as loaded on 2026-11-02, each with the rule that reproduces it; the runtime boundary in § 2 read in the engine, iOS app and ChatGPT app at commits acba054, 8090c02 and 47ea542; the context limits in § 6.2 read in the implementation coordinator's definition and the architect's session-close procedure; the origin classification in § 2 and § 4 built on 2026-10-19 from the repository's history, decision log, retro log and work items, and not recounted."
+    evidence: "§ 4 gives the measuring point and a rule for each figure; § 2 and § 6.2 say what was read."
+    reason: null
+  - role: editing
+    status: complete
+    scope: "v0.2: sentences close to a standard's wording replaced by the framework's own words and a pointer (§ 1, § 2); § 3.7 brought in line with the first post of the implementation pipeline; § 5 widened from nine to nineteen prior-art candidates and the harness study scoped to its longitudinal sample; Limitations and What Comes Next brought up to date with the release of the standards and the starter kit; the map pointed at the release."
+    evidence: "The diff against v0.1."
+    reason: null
+  - role: fact-check
+    status: complete
+    scope: "External references in § 5 checked against their primary sources by Research Pipeline: the nine sources of the first search on 2026-10-19; the ten further candidates, the harness study's longitudinal scope and the delegation paper on 2026-11-02, partly through the platform's research mode."
+    evidence: "Research Pipeline's reference reports of 2026-10-19 and 2026-11-02, one row per claim with the source's own text and who read it, the agent or the research mode."
+    reason: null
+  - role: review
+    status: complete
+    scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    reason: null
+license: "CC-BY-4.0"
+repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
+path: "whitepapers/governed-agentic-engineering.md"
+package: gae
+release: public
+audience: "External — no IP disclosure. Readable without NDA."
+describes:
+  - path: standards/gal-standard.md
+    version: "v1.76"
+  - path: standards/boundary-standard.md
+    version: "v0.3"
+  - path: standards/handoff-standard.md
+    version: "v0.3"
+  - path: standards/gip-standard.md
+    version: "v0.5"
+  - path: standards/truth-chain-standard.md
+    version: "v0.5"
+  - path: standards/contract-standard.md
+    version: "v0.6"
+  - path: standards/registry-standard.md
+    version: "v0.4"
+  - path: standards/gem-standard.md
+    version: "v0.10"
+  - path: standards/backlog-standard.md
+    version: "v0.8"
+  - path: standards/wave-standard.md
+    version: "v0.3"
+---
+
+# Governed Agentic Engineering: Building Systems With Agents You Can Check
+
+Part of Governed Agentic Engineering (GAE), a framework developed by Jonas Maandi Wallin through the engineering of Runapp, its reference implementation.
+
+*Getting agents to do things turned out to be the easy part. The hard part was building a system in which you could tell whether they had done the right things. This overview describes the framework that came out of that work — what it governs, the ideas it rests on, what has been measured, and what has not.*
+
+---
+
+## 1 — The Question: Can You Tell Whether the Agents Did the Right Thing?
+
+Coding agents can now produce working software quickly. A growing part of the industry talks about software factories: systems in which agents write most of the code and people direct, review and decide. The discussion has mostly been about speed, cost and the quality of the code.
+
+A different question decides whether such a factory can be trusted with a real system: **how does anyone know that what the agents built is what should have been built?**
+
+Three things make that question hard.
+
+**The specification is written by agents too.** In a system of any size, agents draft more than the code. They draft the requirements, the contracts and the parameter values the code is built from. A wrong rule in the specification survives every check on the code, because the code does exactly what it was told. Yet the controls the field has built — tests, review, sandboxes — sit mostly around the agents that write code. The agents that write the specification are usually governed by a person reading what they wrote.
+
+**A check can pass without looking.** An agent can write a test, read the code, adjust the test and report green, and nothing in its output shows which of those steps happened. A rule written into an agent's instructions is read by the same model it is meant to constrain. A gate that reads no input finds nothing to object to. Each of these looks like control, and each of them stops nothing.
+
+**Agents forget, and systems drift.** Every session starts with an empty context. What one session learned has to be written somewhere the next one finds it, and decisions taken months apart must still agree. Without that, a system built by agents becomes a pile of locally reasonable choices that no longer fit together.
+
+GAE is an answer to that question, developed while building one real system with agents and kept honest by measuring what it actually holds.
+
+---
+
+## 2 — What It Is: A Governed Factory
+
+Governed agentic engineering (GAE) is a set of standards for building with AI agents. In it the specification is the source of truth, and every agent — the ones that write the specification as much as the ones that write code — works inside rules that a tool can check.
+
+**Two shapes.** What the agents build takes one of two shapes. A *product* is software that runs without them; the reference installation, a running-coach platform, is one. A *knowledge corpus* is a governed body of knowledge — analyses, plans, decisions and their sources — in which the agents' work is itself the deliverable. The standards were written on a product. The starter kit sets up both shapes, and where the standards still assume code, the release's list of known issues says so: the Truth Chain and Registry Standards define the implementation as code.
+
+**In a product: build-time agents, runtime determinism.** Agents build the system. Every decision the product takes for its users is made by deterministic code that reads governed contracts and governed values, so the same inputs give the same decision. In the reference installation those are training decisions: classifying the runner's state, setting load, granting escalation. A model may run at runtime only outside that decision layer. The reference installation uses one in three places, read in its code at the commits named in § 4:
+
+- **Wording.** A language model writes the text a runner reads, from a snapshot of a decision already made; the snapshot is all it is given. A filter checks the text. Text that fails is generated again a bounded number of times and then replaced by fixed copy, and legal text never passes through the model.
+- **Search.** A question typed into the search over the knowledge articles is turned into an embedding to find matching articles. It retrieves; it decides nothing.
+- **A chat assistant.** In the app for ChatGPT, the runner's own assistant holds the conversation and calls the engine's functions. Three of them change the plan — creating one, pausing it and confirming a missed session — and they are declared to the platform as calls with consequences. The plan that results is computed by the engine, not by the model.
+
+A model chooses words, finds articles or decides when to call. What the plan contains stays in deterministic code.
+
+In a knowledge corpus there is no runtime to keep the agents out of, because their deliverables are the product. The same discipline moves to the deliverable: it rests on a contract and on the sources it cites, as code does in a product.
+
+Everything the agents produce — specifications, values, code, checks, deliverables — passes through gates before it becomes part of the system, and everything in the system can be traced back to the specification that required it and the evidence that specification cites.
+
+**The way of working: specify first, harden by failure.** The founding architecture was specified before the system was built: separated roles, with the author of a specification never its approver; an order of authority that decides which document wins a conflict; a canonical format for contracts; and registries for governed values and for the evidence behind them. Running the system then hardened that architecture, and most of the verification and dispatch controls were introduced in response to observed failures — a check that passed on a stub, a session that bypassed the pipeline, a parser that silently dropped records, a review series that would not end. Each failure was named, traced and turned into a rule, a tool or a gate, and the rule records the failure it came from. An origin table kept in the reference installation classifies 37 load-bearing parts this way (§ 4).
+
+**The family of standards.** At the centre is the Governed Agent Lifecycle (GAL), which says how an agent is built, started, verified and closed. Under the same name stand the Governed Implementation Pipeline (GIP), which takes work from a governed specification to the agents that write code; Governed Engineering Memory (GEM), the decision log, the retro log and what learns from them; and the verification architecture of gates, audit, independent derivation and adversarial review. GAL §1.1 draws the hierarchy.
+
+Beside them stand the standards for what the agents work on: the Contract Standard (the document format), the Truth Chain Standard (the order of authority and the links to evidence), the Registry Standard (governed values), the Boundary and Handoff Standards (who may do what, and how work passes between agents), and the Backlog and Wave Standards (what is to be done, and in what order). The standards are the reference. This overview and the papers it points to explain why the rules are what they are; they do not restate them.
+
+---
+
+## 3 — The Load-Bearing Ideas
+
+Each idea below is the subject of one companion paper.
+
+### 3.1 The specification agent is governed as strictly as the coding agent
+
+The authority to define what is correct, the ability to implement it and the authority to verify it lie with different roles. A specification agent drafts a contract; a different agent audits it against a fixed standard; neither of them writes the code; and the author never approves its own document. Gaps the build finds go back to the contract as gaps, rather than being filled by whoever noticed them. *Agent Roles and Orchestration.*
+
+### 3.2 One document format for agents and people
+
+A specification that a person reads correctly and an agent reads differently is two specifications. The contracts follow one format — typed sections in a fixed order, declared relations and precedence, structured metadata — so that the same text gives both readers the same answer and a tool can check whether it does. *The Canonical Standard.*
+
+### 3.3 The contract is the source of truth
+
+When the specification and the code disagree, a fixed order of authority decides, without judgement, which one is right. Code cites contracts, contracts cite governed values, and values cite evidence; evidence proposes and governance decides. *Contracts as the Source of Truth.*
+
+### 3.4 Infrastructure holds the rules, and says which rules it holds
+
+An instruction is read by the model it constrains. So the rules that matter are held by infrastructure — the tools an agent can call, the places it may write, the checks that run before a commit lands — and every rule states whether a tool holds it or only the agent's instructions do. *Harness Engineering.*
+
+### 3.5 Loops are designed, bounded and owned
+
+Agents work in loops whether anyone designs them or not. A designed loop has named parts — sensor, evaluator, decision, actuator, invariant — owned by different roles, a bound on its rounds, and an exit to a person. *Loop Engineering.*
+
+### 3.6 Verification is a role, not a step
+
+A passing check says either that the work is right or that the check did not look. Each level of verification — mechanical gates, semantic audit, empirical tests against a model of the domain, and derivation by an independent tool against an answer written down in advance — is held by someone other than the author, and every claim carries a record of what was measured and what was not. *Verification Architecture.*
+
+### 3.7 Work reaches the builders through a gate
+
+Between a governed specification and governed code stands a gate. A unit of work enters the queue only with a verified record that its specification passed audit, a scope that is measured rather than listed, and a specification that does not point or speculate. A new installation has one exception: the first post, which builds what the gate itself needs, and whose queue entry records what replaced each requirement it could not meet. After it the only way past the gate is the emergency path, which the owner may use when the gate itself does not work and which the standard requires to leave a trace (GIP Standard §3); in the reference installation that trace is not yet built (*Spec-Governed Dispatch*, § 6). The specification governs the work for as long as the work exists. *Spec-Governed Dispatch.*
+
+### 3.8 Structure is explicit
+
+Relations between contracts, between values and evidence, between modules, and between units of work are graphs with declared edges. One side writes an edge; everything else is derived. In the reference installation a tool refuses some edges that point nowhere — a dependency on a deprecated contract, an evidence ID with no entry, an order edge to a missing node — and only reports others, such as a dependency on a document outside the contract corpus (*Graph Architecture*, § 3.3). *Graph Architecture.*
+
+### 3.9 Code carries no governed numbers
+
+Every governed value lives once, in a registry, with its source and its confidence. A threshold written into both a specification and the code is two thresholds the moment one changes. *Numberless Code.*
+
+### 3.10 Memory is governed, not just kept
+
+Decisions and lessons are written in forms a parser can count, tools report what they did not carry, and recurring patterns become work items whose fix can be shown not to have held. *Context, Coherence and Memory.*
+
+---
+
+## 4 — Measured and Shown
+
+Every figure below was read from the reference installation, Runapp, at one measuring point: corpus commit `bac7817` (2026-11-02), engine commit `acba054`, and the database as loaded on 2026-11-02. The runtime boundary in § 2 was read at the same engine commit, the iOS app at `8090c02` and the app for ChatGPT at `47ea542`. Each figure gives the rule that reproduces it. The companion papers carry the detailed figures.
+
+**Scale.**
+- 11,340 commits, from the first, dated 2026-02-28, to the measuring commit, 247 days later. *(The commit count of the measuring commit's history.)*
+- 153 typed documents in the specification corpus, in nine domains: 135 in force and 18 deprecated. *(Documents that carry a document-type field, by their status and domain fields.)*
+- Ten standards govern the framework; six specification agents work under them.
+
+**Origin.** *(Origin table, built 2026-10-19 from the repository's history, decision log, retro log and work items; not recounted.)* Of 37 load-bearing parts of the framework, 15 were introduced in response to a named, dated failure; 2 are borderline; 19 were specified before the system was built and hardened later, 16 of them by named failures; and for 1 the origin is not recorded. The founding architecture appears in specification documents dated 2026-02-24 and 2026-02-25, before the first commit. The incident-born parts are mostly verification and dispatch controls.
+
+**Harness.** *(The tool server's source at the measuring commit.)* The server registers 61 tools. One of them runs scripts from a fixed list of 50 and refuses any other name. The commit tool for non-canonical files reports up to 15 named checks in its answer. *(Distinct check labels in the tool's status lines.)*
+
+**Verification at scale.** *(Decision log, retrospective entry for April–June 2026.)* A compliance loop over the contract corpus checked 97 contracts against their implementations and caught 514 checks that passed without testing what they claimed — in one contract, an entire suite of 53 green checks that tested a stub.
+
+**The factory floor.** *(The implementation queue, all posts made since the gate was introduced.)* 31 units of work passed the gate and entered the queue. 25 are done, each with a reported merge on the main branch whose check is recorded, and 6 were superseded. Their 282 step receipts include 14 test reviews that found gaps in the checks before any code was written and 3 code reviews that disproved the change. *(Receipts of the test-review and code-review steps, by verdict.)* The median time from entry to done is 2.9 hours.
+
+**Adversarial review.** 206 handoffs went from the reviewer back to the architect; 118 of them carry a closure verdict: 50 *yes*, 28 *partial* and 40 *no*. *(Handoff files whose name marks them as reviewer-to-architect; a verdict is the closure line opening with yes, partial or no.)* The same rule applied to the files up to 2026-10-19 gives v0.1's figures: 96 verdicts, 40, 25 and 31.
+
+**Memory.**
+- The retro log holds 1,550 entries in its file, and 39 more from implementation sessions' reports are stored beside them. *(An entry is a line that opens, after at most eight non-alphanumeric characters, with the word RETRO.)* The decision log holds 1,703 entries, the same number in the file and the database. *(A heading that opens with a full date.)*
+- Of the 1,589 retro entries in the database, 567 (35.7 %) name a pattern; there are 224 distinct names.
+- Pattern triage has opened 22 work items for patterns at the threshold, 10 of them closed, and 5 for regressions, all closed. 48 patterns carry a disposition: 23 fixed, 20 accepted and 5 dormant.
+- The most frequent pattern — taking a count on trust instead of measuring it — has 152 entries, from 2026-09-24 to 2026-11-02. A regression item opened on 2026-10-13 counted 44 entries after its fix of 2026-10-03. The pattern has since been accepted, with a date for review, and 18 more entries have followed.
+- A register of measurements that a session could not make holds 92 open entries; results have been recorded for 145.
+
+**A second installation.** A second installation was set up from the starter kit in another domain: a strategy and planning system for a marketing role, in which the agents' knowledge work is the delivered product and the record is a database rather than files. The standards were copied unchanged. What did not fit was reported upstream, and those findings stand in the release's known issues. The installation shows that the standards could carry an installation with no code in its product and with its record in a database, in a domain other than training. It does not show that the method transfers to anyone but the originator, or to a team, since the same person set it up. No figures from it are given here.
+
+What these figures show is that the framework runs on a real system, that its checks find real errors, and that its records say plainly where it has not worked — its most frequent pattern among them.
+
+---
+
+## 5 — Where This Sits in the Field
+
+GAE touches three current discussions.
+
+**Software factories.** Uber has described running a software factory at scale, in which agents author most pull requests and managed agents handle code review, CI repair and triage under human review and escalation. Its thesis is cost: a model of what sessions, turns and tokens cost, with quality measured afterwards by outcome signals such as revert rates. GAE addresses a different control question — whether the factory builds the right thing — and answers it with contracts and gates before the work lands rather than outcome measures after it. It also draws a boundary Uber's factory does not: Uber's managed agents work in operation, on call and on bugs, while in a GAE product no agent takes part in a decision when the system runs.
+
+**Spec-driven development.** A first search for this package read nine sources on how agents that write specifications are governed: Birgitta Böckeler's account of spec-driven development tools, GitHub's Spec Kit, AWS Kiro, BMAD-METHOD, MetaGPT, MARE, Bertrand Meyer's keynote and paper on agents for requirements, contracts and proofs, Warp's agents, and Simon Martinelli's AI Unified Process. Several already separate roles around specifications. Spec Kit has reviewer-owned checklists that the implementation may not silently self-approve; BMAD-METHOD runs reviews in a fresh context and puts a readiness gate before implementation; Warp has described separate agents for writing specifications, reviewing and triage, with changes to the agents' own skills reviewed as pull requests. A second search added ten candidates. The nearest of them are the framework for intelligent delegation by Tomašev, Franklin and Osindero, which treats roles, boundaries and contracts as part of delegation and asks for permissions as versioned policy, and Wang's VibeContract, in which a model generates contracts that developers validate and that drive the tests. These are partial predecessors of GAE's governance of specification agents.
+
+None of the nineteen combined two things that GAE requires together: that the specification's own rules and values cite evidence, and that someone other than the author reviews the specification before it becomes authoritative. The nearest on evidence, Google's OKF specification, attributes claims to sources but makes its trust tiers advisory.
+
+**Guardrails and harnesses.** A source-code study of eleven production coding-agent harnesses compared eight of them with snapshots from the study's earlier edition and found behavioural policy moving out of prompt prose and into configuration. The companion paper on harness engineering places GAE in that movement. GAE's particular contribution there is bookkeeping: every rule says what holds it.
+
+The searches behind these statements covered the sources named and no others. This overview does not claim that GAE, or any combination in it, is new.
+
+**Sources.** Medisetty, U. K. (2026-08-27). Running a Software Factory Efficiently at Uber Scale. https://www.uber.com/us/en/blog/efficient-software-factory/ · Böckeler, B. (2025-10-15), on spec-driven development tools, martinfowler.com, https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html · GitHub Spec Kit, documentation · AWS Kiro, documentation · BMAD-METHOD, repository and documentation · MetaGPT, arXiv:2308.00352 · MARE, arXiv:2405.03256 · Meyer, B. (2026). *Software Verification in the Age of Artificial Intelligence*, keynote, Swiss Testing Day, Zürich, 26 March 2026; and arXiv:2511.23159 · Segner, M. (2026-08-26), Claude blog post on Warp's agents, https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude · Martinelli, S. (2026-08-27), on the three levels of spec-driven development, https://martinelli.ch/the-three-levels-of-spec-driven-development-and-where-the-ai-unified-process-sits/ · Tomašev, Franklin & Osindero (2026-02-12). *Intelligent AI Delegation*. arXiv:2602.11865 · Wang, S. (2026). *VibeContract: The Missing Quality Assurance Piece in Vibe Coding*. arXiv:2603.15691 · Google Cloud, OKF specification, `okf/SPEC.md` in GoogleCloudPlatform/knowledge-catalog · Barbaste, Darrigol, Vu & Wiltberger (2026). *Harness Engineering*. arXiv:2609.00006
+
+---
+
+## 6 — Limitations
+
+### 6.1 What is not shown
+
+- **Two installations, one originator.** GAE was developed and measured on one system and tried in a second, in another domain. The same person set up both. Nothing here shows how it behaves when someone else adopts it, with a team, or on another agent platform.
+- **Not everything is incident-born.** The founding architecture was designed up front. The claim that failures shaped the framework holds for most of its controls, not for its foundations, and the origin of one part is not recorded.
+- **The logs are self-reported.** The retro log and much of the decision log are written by the agents about their own sessions. A rule removed for having caught nothing may have prevented errors no one wrote down.
+- **Several rules are held by instruction.** The companion papers list them: per-agent write surfaces in the specification repository, the read boundary of the agent that writes checks, the model split between builder and verifier. Each says so where it is described.
+- **Some loops do not converge yet.** The most frequent recurring pattern regressed after its fix and has been accepted rather than fixed again (§ 4).
+- **The standards assume a product in places.** The knowledge-corpus shape is set up by the starter kit, not yet by the standards (§ 2).
+- **No external evaluation.** The figures are the installation's own. No independent party has reproduced them.
+
+### 6.2 Scale
+
+Everything measured here was measured with one operator. The release lists three tracks as open. For each, this is what the method already has, what is missing, and the direction a solution takes. A direction is a proposal, not a measured result; this section does not claim that the method scales.
+
+**Autonomy: when a human checkpoint can go.**
+- *Has.* A mechanical check that has not stopped a real error within thirty days is removed. Since 2026-10-20 the reference installation also tells a gate from a sensor. A sensor is a read at the architect's session start that never stops work, and it is judged by whether it showed something no other step showed; a gate is judged by what it stopped.
+- *Missing.* The same evidence for a human checkpoint. The operator's confirmation is a flag the agent sets, not a log entry, and the emergency path has no log of its uses. So no checkpoint can be lowered on evidence.
+- *Direction.* Log every confirmation with its outcome: approved, changed or refused. Lower a checkpoint to a gate or a sample only when the log shows it has changed nothing over a set number of occasions.
+
+**Parallel sessions and several operators.**
+- *Has.* Declared dependencies between contracts; the Wave Standard's explicit edges and its rule that unread is not done; a commit tool that stages only the files a session names; and a queue in which an implementation session claims and releases a post.
+- *Missing.* The contracts a change affects are found by the audit, after the work is routed, and in the reference installation that has happened. The specification agents work in one shared copy, one at a time: enough with a single operator, a queue as soon as there are more (the release's known issues, § 3). With several operators, nothing says who decides when two of them decide about the same cluster of contracts.
+- *Direction.* Compute the affected set from the dependency graph before work is routed, and carry it with the work. Lock per cluster of dependencies rather than per working copy, so that sessions whose clusters do not overlap can run at once, each on its own branch, merged through the gates. Give decision rights per cluster, with the same escalation to a person that an open question takes today.
+
+**Context.**
+- *Has.* The method already keeps state outside the context window. Modules are loaded when needed. Registries are read through tools rather than whole. A resume brief and a handoff carry what was not measured to the next session. Learnings are recalled at decision points, and sub-agents read broadly and return a conclusion. Implementation sessions stop hard at 60 % of their context and report the stop with their post. Specification sessions in chat begin their close at about 70 %, a figure the model estimates for itself, since nothing in chat measures it.
+- *Missing.* The standards do not state context control as a principle, and nothing measures how much context a session spends on a task.
+- *Direction.* Context control as a stated principle, with the mechanisms above as its instances, and the two limits described as what they are: one measured, one estimated.
+
+---
+
+## 7 — What Comes Next
+
+- **An outside adopter.** The standards and the starter kit are released together. The next test of the method is an installation set up by someone other than its originator, from the kit alone.
+- **The known issues.** The release lists what is missing in the standards, each with a direction. A direction enters a standard only through a new release.
+- **The controls not yet built.** The companion papers list them, each with the measured failure that will trigger it.
+- **Prior art.** Searches for the parts not yet searched, the Wave Standard's ideas among them, before any claim about them is made.
+
+---
+
+## 8 — Map
+
+- **Companion white papers:**
+  - *Agent Roles and Orchestration: The Specification Agent's Mandate*
+  - *The Canonical Standard: One Document Format for Agents and People*
+  - *Contracts as the Source of Truth: The Truth Chain*
+  - *Harness Engineering: Infrastructure That Holds the Rules*
+  - *Loop Engineering: Designed Loops That Converge*
+  - *Verification Architecture: Four Levels, Independent by Design*
+  - *Spec-Governed Dispatch: The Factory Floor*
+  - *Graph Architecture: Explicit Structure Over Implicit Convention*
+  - *Numberless Code: Keeping Every Governed Value in One Registry*
+  - *Context, Coherence and Memory: How an Agent System Remembers What Its Agents Forget*
+  - *Case Study: Runapp*, on the reference installation
+- **The release:** the ten standards (GAL, GIP, GEM, Contract, Truth Chain, Registry, Boundary, Handoff, Backlog and Wave), the starter kit, which begins with its README, and the list of known issues, all in the GAE repository.
+- **Under NDA:** the anatomy of the agents' instructions with annotated excerpts; the specification of the reference installation's gates and tools; an analysis of its decision and retro logs.
+- **The other parts of the work:** Runapp, the system GAE was developed on, in the `runapp-platform` repository; and the simulator and the QDOT plan-quality model, used to investigate and validate what Runapp produces, in the `runapp-validation` repository.
+
+---
+
+*This document is part of the GAE documentation package. The standards it points to are the reference; where this overview and a standard differ, the standard holds.*
