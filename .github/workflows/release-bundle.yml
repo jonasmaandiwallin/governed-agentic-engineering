@@ -30,6 +30,15 @@ jobs:
         run: |
           set -euo pipefail
           files=(README.md AGENTS.md KNOWN-ISSUES.md)
+          # White papers, when the release has them: the overview, the case study, then the rest by name.
+          papers=()
+          if [ -d whitepapers ]; then
+            first=(whitepapers/governed-agentic-engineering.md whitepapers/case-study-runapp.md)
+            for f in "${first[@]}"; do [ -s "$f" ] || { echo "whitepapers/ without $f" >&2; exit 1; }; done
+            mapfile -t rest < <(ls whitepapers/*.md | sort | grep -vxF -e "${first[0]}" -e "${first[1]}")
+            papers=("${first[@]}" "${rest[@]}")
+          fi
+          files+=("${papers[@]}")
           mapfile -t standards < <(ls standards/*.md | sort)
           if [ "${#standards[@]}" -eq 0 ]; then echo "no standards found under standards/" >&2; exit 1; fi
           files+=("${standards[@]}" starter/README.md starter/ADOPTION.md)
@@ -41,7 +50,7 @@ jobs:
             echo "# Governed Agentic Engineering — ${TAG}, all text in one file"
             echo
             echo "Generated from release ${TAG} (commit ${commit}) of https://github.com/${GITHUB_REPOSITORY}."
-            echo "It joins ${#files[@]} files: README, AGENTS, KNOWN-ISSUES, the ${#standards[@]} standards, and the starter kit's README and ADOPTION."
+            echo "It joins ${#files[@]} files: README, AGENTS, KNOWN-ISSUES, the ${#papers[@]} white papers, the ${#standards[@]} standards, and the starter kit's README and ADOPTION."
             echo "The templates are in the repository under starter/templates/. Each file below keeps its own header with license and attribution; text is CC BY 4.0, code MIT (LICENSE)."
             for f in "${files[@]}"; do
               printf '\n\n---\n\n<!-- file: %s -->\n\n' "$f"

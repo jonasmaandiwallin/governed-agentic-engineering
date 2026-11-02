@@ -35,11 +35,13 @@ The standards, in `standards/`:
 
 Each standard names no installation. An installation binds the standards to its own names, files and tools in one document of its own, the instance appendix.
 
+`whitepapers/` holds twelve papers that explain the standards: an overview (`governed-agentic-engineering.md`), a case study of the reference implementation (`case-study-runapp.md`), and one paper per part. `README.md` § What to read maps each paper to the standards it explains. The papers explain the standards; the standards are the rules.
+
 `starter/` holds what an installation is set up from: `ADOPTION.md`, the procedure; templates for the architecture contract, the contract inventory, the instance appendix, an agent core, a step agent and a chat agent's bootstrap file; database templates for the configuration store and the mirror; templates for the system overview (its data, its page and the script that renders it); and a write hook.
 
 ## When someone asks what this is
 
-Explain it from this file and from `starter/README.md`. Read further in the standards if the question needs it.
+Explain it from this file, from `starter/README.md` and from the overview paper, `whitepapers/governed-agentic-engineering.md`. Read further in the papers or the standards if the question needs it.
 
 ## When someone asks you to install it
 
