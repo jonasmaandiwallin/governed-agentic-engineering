@@ -2,7 +2,7 @@
 title: "Harness Engineering: Infrastructure That Holds the Rules"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 3.3 and § 3.7 rewritten as explanation with pointers, where v0.1 restated the GIP and Boundary Standards closely; § 3.8 corrected for the reference installation's own exception to the module halt; the declared paths described as in force; § 5 brought in line with the checked harness study; Limitations and the map brought up to date with the release."
+    scope: "v0.2: § 3.3 and § 3.7 rewritten as explanation with pointers, where v0.1 restated the GIP and Boundary Standards closely; § 3.8 corrected for the reference installation's own exception to the module halt; the declared paths described as in force; § 5 brought in line with the checked harness study; Limitations and the map brought up to date with the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -135,7 +135,7 @@ So the flag is treated as what it is — a prompt to the agent, not a check — 
 
 ### 3.5 An empty read fails closed
 
-A guard that reads no configuration has nothing to object to. If it then passes everything, it is not a guard; it is a green light with a guard's name. The Boundary Standard therefore has a write guard that reads a missing or empty declaration fail closed or fail loudly (§6).
+A guard that reads no configuration has nothing to object to. If it then passes everything, it is not a guard; it is a green light with a guard's name. The Boundary Standard therefore makes a write guard whose declaration is absent or empty either refuse every write or fail visibly (§6).
 
 The same rule runs through the rest of the reference installation's harness. The commit tool refuses a declared path that matches no change, rather than making an empty commit. The search tool refuses to answer when it searched no file. An unread result is never reported as a clean one.
 

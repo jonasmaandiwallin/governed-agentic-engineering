@@ -2,7 +2,7 @@
 title: "Case Study: Runapp — Governed Agentic Engineering Applied"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: the operator's confirmations, the guards in the product repositories and the declared files of the commit tool brought up to date (§ 2, § 3.2); the parser rule in § 3.5 replaced by an explanation and a pointer to the memory standard; v0.1's eight-round series, which could not be reproduced, removed from § 3.4; § 5 widened from nine to nineteen prior-art candidates; Limitations shortened to what this case adds, with scale pointed at the overview and the release's known issues; the map pointed at the release."
+    scope: "v0.2: the operator's confirmations, the guards in the product repositories and the declared files of the commit tool brought up to date (§ 2, § 3.2); the parser rule in § 3.5 replaced by an explanation and a pointer to the memory standard; v0.1's eight-round series, which could not be reproduced, removed from § 3.4; § 5 widened from nine to nineteen prior-art candidates; Limitations shortened to what this case adds, with scale pointed at the overview and the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -186,7 +186,7 @@ Shortly after the loop, a post-mortem found that three registry keys had been im
 - Findings now carry an invariant and a test, not a fix (2026-09-16).
 - The series has a stop rule that a tool reads from the review's handoff, not one the reviewer remembers: no blocking finding in two consecutive rounds closes the series.
 - On 2026-09-18, series that end in advisory findings only got their own exit. Each advisory finding states whether it establishes a new rule or applies an existing one, and a finding that only applies an existing rule no longer opens another round.
-- On 2026-10-05 the reference installation set a limit: after two rounds without approval, the owner decides whether to close with the open findings carried forward or to ask for a third (*Verification Architecture*, § 3.5).
+- On 2026-10-05 the reference installation set a limit: after two rounds without approval, the next step is the owner's: close, with the open findings carried by other work items, or ask for a third round (*Verification Architecture*, § 3.5).
 
 **How long a series could run.** Before those rules, nothing bounded a series. The longest series of review rounds under one name ran to 35, on a work item closed on 2026-09-14. Across all series, 206 handoffs have gone from the reviewer back to the architect, and 118 of them carry a closure verdict: 50 *yes*, 28 *partial* and 40 *no* (§ 4 gives both rules).
 

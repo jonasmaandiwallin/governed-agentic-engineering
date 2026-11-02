@@ -2,7 +2,7 @@
 title: "Spec-Governed Dispatch: The Factory Floor"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 3.2–3.6 rewritten as explanation with pointers to the standard; the options the standard leaves to an installation — a product as paths, the first post, acceptance with open findings carried — named, with which the reference installation uses; the sibling search placed where it runs; a claim about the main branches corrected; Limitations brought up to date with the release's known issues; the map pointed at the release."
+    scope: "v0.2: § 3.2–3.6 rewritten as explanation with pointers to the standard; the options the standard leaves to an installation — a product as paths, the first post, acceptance with open findings carried — named, with which the reference installation uses; the sibling search placed where it runs; a claim about the main branches corrected; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -88,12 +88,12 @@ Each of these leaves the specification nominally in charge and practically ignor
 
 ## 2 — What It Is: Dispatch as a Gate, Build as a Loop
 
-In governed agentic engineering (GAE), all work that changes a product goes through one pipeline in two steps. A product is a repository, or a set of path prefixes in a repository that the installation declares; in the reference installation each product is a repository of its own.
+In governed agentic engineering (GAE), all work that changes a product goes through one pipeline in two steps. A product is either a whole repository or the path prefixes within one that the installation declares as the product; in the reference installation each product is a repository of its own.
 
 - **Step 1 — dispatch.** The architect turns a backlog item into a queue post. Before the post may exist, a set of checks runs and is written down as a gate record. The post names the task specification, the entry it came from, and the build loop it must run.
 - **Step 2 — build.** A session agent claims the post and runs the loop the post names, with its step agents: a contract loop for work driven by a contract, a task loop for work driven by acceptance criteria. The loop ends with a merge that is reported and checked.
 
-There are two ways into step 1. In the first, the architect takes a backlog item and dispatches it. In the second, a completeness gate lists the contracts that are not yet complete, and the architect dispatches the next one. Both run every check; neither is a shortcut.
+There are two ways into step 1. In the first, the architect takes a backlog item and dispatches it. In the second, the architect works through the contracts the completeness gate still reports as incomplete, one at a time. Both run every check; neither is a shortcut.
 
 The specification governs throughout. It decides what is built, it is what the checks are written from, it is what the build reports back against when it cannot follow it, and it is what the gate measures afterwards to decide whether the work is done. That is why the approach is called spec-governed rather than spec-first: the specification is not only a starting document for the task at hand, but the standing authority the code is measured against for as long as the code exists.
 
@@ -125,13 +125,13 @@ Two things it never carries. It never points to another file where a finding sho
 
 ### 3.5 What exists is read, not inferred
 
-Before a contract is dispatched, the architect reads the code that owns it and records whether the work is new, already covered, or partly covered with the gaps listed. A contract's name, or a file name that looks right, is not a reading. For a defect, the specification names the pattern and every other place in the code where it occurs, so that the post fixes the class and not one instance.
+Before a contract is dispatched, the architect reads the code that owns it and records whether the work is new, already covered, or partly covered with the gaps listed. A contract's name, or a file name that looks right, is not a reading. For a defect, the specification names the pattern and lists each place in the code that repeats it, so that the post fixes the class rather than one instance.
 
 GIP lets the session agent run that search when it claims the post, if the architect cannot reach the code. In the reference installation the architect searches at dispatch, and it is the only search of its kind.
 
 ### 3.6 Nothing reaches the code from a scan
 
-Where a defect was found — in a scan, a review or a build — is never where it is dispatched from (GIP §4.1). It becomes a backlog item and reaches the code through the first entry, with a gate record of its own. What a build sees beside its post — a gap in another contract, a defect outside its task — is reported, never fixed in the post. The build stays the size its gate measured.
+Where a defect was found — in a scan, a review or a build — is never where it is dispatched from (GIP §4.1). It is filed as a backlog item and enters by the first entry, with its own gate record. What a build sees beside its post — a gap in another contract, a defect outside its task — is reported, never fixed in the post. The build stays the size its gate measured.
 
 ### 3.7 The cheap way through is the normal way
 
@@ -139,9 +139,9 @@ A small fix goes through the same pipeline as a large one, as a short task speci
 
 ### 3.8 The post names the loop
 
-The session agent does not choose how to build. The queue post names the loop — contract or task — and the session agent starts that loop. Every step leaves a receipt with the post, and the post is done only when a merge on the main branch is reported and checked, and, for contract work, when the completeness gate finds the contract complete after the merge.
+The session agent does not choose how to build. The queue post names the loop — contract or task — and the session agent starts that loop. Every step leaves a receipt with the post, and the post counts as done only once its merge on the main branch has been reported and its check confirmed — for contract work, also once the completeness gate, run after the merge, finds nothing missing in the contract.
 
-A loop that reaches a hard stop ends, and the owner decides whether the post continues, is split or goes back to dispatch. GIP lets an installation also allow the owner, at a review limit, to accept the post with the review's open findings carried as backlog items. The reference installation does not allow it.
+A loop ends at a hard stop, and it is then the owner who chooses between continuing the post, splitting it and sending it back to dispatch. GIP lets an installation also allow the owner, at a review limit, to accept the post with the review's open findings carried as backlog items. The reference installation does not allow it.
 
 ### 3.9 What the gate misses is detected afterwards
 

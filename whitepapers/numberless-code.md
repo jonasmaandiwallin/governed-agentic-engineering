@@ -2,7 +2,7 @@
 title: "Numberless Code: Keeping Every Governed Value in One Registry"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Registry Standard closely; the class for values in use without demonstrated support added to § 3.3, which v0.1 did not name; § 4 recounted with a fresh code sweep; Limitations brought up to date with the release's known issues; the map pointed at the release."
+    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Registry Standard closely; the class for values in use without demonstrated support added to § 3.3, which v0.1 did not name; § 4 recounted with a fresh code sweep; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -88,7 +88,7 @@ Governed agentic engineering (GAE) keeps every value that a contract governs in 
 
 The registry has a database mirror that implementations read by key. The registry file is the record and the mirror is derived from it (Registry Standard §5).
 
-The Registry Standard is the reference for the entry, its references, its lifecycle and the tools around it, and the Contract Standard owns the rule that a contract cites a governed value by key (§7.2). This paper explains why the registry is built the way it is and does not restate those rules.
+The Registry Standard is the reference for the entry, its references, its lifecycle and the tools around it, while the rule that contracts refer to governed values by their key belongs to the Contract Standard (§7.2). This paper explains why the registry is built the way it is and does not restate those rules.
 
 ---
 
@@ -219,7 +219,7 @@ What we want to point to is not externalising values — that is common — but 
 - **The GAE overview** places the registry among the other parts of the framework.
 - **The release:** the standards, the starter kit and the list of known issues, in the GAE repository:
   - Registry Standard: the entry, its references, its lifecycle, the mirror and the tool classes
-  - Contract Standard: the rule that a contract cites a governed value by key, and the completeness gate
+  - Contract Standard: governed values referred to by key in a contract, and the completeness gate
   - Truth Chain Standard: what a contract that cites a deprecated key holds, and the link from a value to evidence
   - GEM Standard: the form of the log entry a change of value writes
 - **Related white papers:**

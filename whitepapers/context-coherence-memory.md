@@ -2,7 +2,7 @@
 title: "Context, Coherence and Memory: How an Agent System Remembers What Its Agents Forget"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -40,7 +40,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the GEM, Backlog and Wave Standards closely; the database's two records that cannot be rebuilt from the logs corrected; where the reference installation departs from the standard on naming and regressions stated; the session start's sensors and the register of inherited measurements added; § 4 recounted; Limitations brought up to date with the release's known issues; the map pointed at the release."
+    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the GEM, Backlog and Wave Standards closely; the database's two records that cannot be rebuilt from the logs corrected; where the reference installation departs from the standard on naming and regressions stated; the session start's sensors and the register of inherited measurements added; § 4 recounted; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -51,7 +51,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -121,7 +121,7 @@ The reference installation shows what happens when the rule is not bound in the 
 
 ### 3.3 Nothing lost silently
 
-Between the log and the agent that reads it stand several tools: a parser, a database, a function that selects the learnings for a task. Each can drop something, and a memory that drops an entry without saying so is worse than none, because the reader trusts it. Every tool in the chain therefore reports what it did not carry (GEM Standard §5.2, §8):
+Between the log and the agent that reads it stand several tools: a parser, a database, a function that selects the learnings for a task. Each of them can lose an entry, and a memory that loses one silently does more harm than having no memory, since whoever reads it takes it as complete. Every tool in the chain therefore reports what it did not carry (GEM Standard §5.2, §8):
 
 - a parser checks its count against a looser count of the log, so that an entry it failed to recognise still shows up;
 - a learnings function that cuts its answer says how many rows it cut and how to read them all;
@@ -133,7 +133,7 @@ Remembering friction is pointless if nothing changes. A named pattern is either 
 
 The interesting case is what happens after the fix. Once the countermeasure's item is closed, a later occurrence is a *regression*: evidence that the fix did not hold. The standard reopens the countermeasure's own item rather than opening a new one, because that item claimed to have solved the problem (§6.2). The reference installation's triage tool opens a new item instead, and its architect reopens the old one by hand in the same session; the installation records the departure.
 
-What the design forbids is the countermeasure that exists only as an intention. A countermeasure whose item does not exist leaves the pattern undisposed, and it keeps counting.
+What the design forbids is the countermeasure that exists only as an intention. Until a work item for the countermeasure exists, the pattern counts as undisposed and its count keeps rising.
 
 ### 3.5 Reading is measured
 
@@ -145,10 +145,10 @@ This makes two failures visible that are otherwise invisible: a learnings functi
 
 A backlog is a memory of intent, and it fails in two ways: it forgets something that is still open, or it remembers something as open that is already done. The Backlog Standard's answer has four parts:
 
-- **one source** — the item's own file is the record, and everything else is derived from it or written in the same operation;
+- **one source** — the record is the item's file, and everything else is derived from it or written in the same operation;
 - **one partition** — every status is either open or closed, and every tool that asks whether an item is open answers from that partition (§3);
 - **nothing filed twice** — a finding is searched for by its own names across open and closed items before a new item is opened, so that an item that already carries it takes it and a closed item that dropped it is reopened (§4.1);
-- **nothing dropped** — a finding routed to "a follow-up" is disposed of only when the receiving item holds it (§4.2).
+- **nothing dropped** — a finding sent on to "a follow-up" counts as handled only once the item it was sent to actually carries it (§4.2).
 
 The standard allows one controlled exception to the last part: a finding a review marks as needing no change before the item closes may wait for the next change of the file it concerns, held meanwhile in an item that collects such findings for that file, and taken by whoever next changes it (§4.2). The reference installation collects them per file in one item, or in the item of the planned pass that next changes that file.
 
@@ -230,7 +230,7 @@ A prior-art search for this package looked for these parts and found partial ana
 - **The memory holds only what agents notice, and only what they name.** An entry records the friction a session saw. About a third of the retro entries name a pattern, and an unnamed pattern cannot be counted. The installation has not bound the naming rule in its agents' retro block.
 - **A truncated answer counts only one kind of row.** When the learnings function cuts its answer, its last row says how many direct rows were cut, not how many found through related decisions; the standard asks for both.
 - **Derived copies lag.** The database mirror of the backlog is brought up to the files by a sync that runs when it is started. Between runs a reader of the database can see an item's old status. The file is the record, and the standards say so, but a reader has to know to look there.
-- **The record is assumed to be a file.** The standards make a file or a log the record. An agent that can write only a database has no form for it. The second installation, set up in a domain where the agents' knowledge work is the product, keeps its records in a database, which the starter kit allows as a registered deviation and the standards do not; the release's known issues give the direction.
+- **The record is assumed to be a file.** The standards make a file or a log the record. An agent that can write only a database has no form for it. The second installation, whose product is the agents' own knowledge work, keeps its records in a database, which the starter kit allows as a registered deviation and the standards do not; the release's known issues give the direction.
 - **Order has been shown on one wave.** One wave has run, and it is done. The standard's claims about long lines of work across many items rest on the failures it was built against, not yet on a long record of waves.
 - **The figures are the reference installation's.** They describe one system, built by one operator with a set of agents. A second installation by the same operator uses the same standards; whether the records pay off for someone else has not been measured.
 

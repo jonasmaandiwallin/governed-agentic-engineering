@@ -2,7 +2,7 @@
 title: "Graph Architecture: Explicit Structure Over Implicit Convention"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Wave Standard closely; the dependency rules attributed to the Contract Standard, which owns them; which edge checks block a commit in the reference installation stated; § 4 recounted, with the contract edges of the implementation graph split by whether the task came before or after the dispatch gate; an unattributed contrast removed from § 5; Limitations and What Comes Next brought up to date with the release's known issues; the map pointed at the release."
+    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Wave Standard closely; the dependency rules attributed to the Contract Standard, which owns them; which edge checks block a commit in the reference installation stated; § 4 recounted, with the contract edges of the implementation graph split by whether the task came before or after the dispatch gate; an unattributed contrast removed from § 5; Limitations and What Comes Next brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -124,7 +124,7 @@ A generated list is only as narrow as the rule that generates it. In the referen
 
 ### 3.3 An edge must point at something that exists and holds
 
-An edge to a node that does not exist is a defect in the node that holds it. So is an edge to a node that has been retired — a deprecated contract, a retracted study — unless the edge has been moved to whatever replaced it. The Truth Chain Standard states this for its links (§3.2) and the Wave Standard for the order graph (§3).
+A node that holds an edge to something that does not exist is defective. So is an edge to a node that has been retired — a deprecated contract, a retracted study — unless the edge has been moved to whatever replaced it. The Truth Chain Standard states this for its links (§3.2) and the Wave Standard for the order graph (§3).
 
 A dangling edge looks exactly like a valid one until something tries to follow it, so the rule sits with the tool, not with the author. Where the tool sits decides what the rule is worth. In the reference installation:
 
@@ -149,7 +149,7 @@ A dependency graph between contracts can have cycles without being wrong: two co
 
 ### 3.6 The graph is read, not kept
 
-Views of a graph — the reverse lists, the corpus index, the path of a line of work — are produced by a tool when they are needed, from the edges as they stand. The Wave Standard says it of the projection of a wave: a stored copy is a snapshot of the commit it was made from (§1, §6).
+Views of a graph — the reverse lists, the corpus index, the path of a line of work — are produced by a tool when they are needed, from the edges as they stand. The Wave Standard says it of the projection of a wave: a saved copy only shows the state at the commit it was taken from (§1, §6).
 
 This is the idea of § 3.2 applied to whole views rather than single lists. A plan that someone maintains by hand starts carrying status, and the status goes stale. A projection derived from the edges is as current as the edges. In the reference installation the sweep runs at the start of every session of the architect, where the order of work is decided.
 
@@ -203,7 +203,7 @@ What we want to point to is not graphs as such, but the discipline applied to al
 - **Some dangling edges only get reported.** An edge to a deprecated contract blocks the commit; an edge to a document outside the contract corpus, and a detected edge no author has confirmed, are reported by the architecture review and block nothing. The review runs at the architect's session start when the latest report is older than ten days.
 - **The evidence graph is read from a mirror.** The counts above are taken from the database, whose reverse lists are derived when the evidence is synced, not when a contract changes. Between syncs the mirror can lag the files.
 - **Unused evidence is not a defect by itself.** The 195 entries that nothing cites may be waiting for a contract, may support research that has not been written up, or may be candidates for retirement. The graph shows that they are unconnected; it does not say which.
-- **Evidence entries have no relations to each other.** Links run from code to contract, from contract to values and evidence, and from evidence to source. That one entry supports, contradicts or derives from another has no form in the standards, so two entries that appear to corroborate each other while resting on one study cannot be told apart by the graph. The release's known issues give the direction.
+- **Evidence entries have no relations to each other.** Links run from code to contract, from contract to values and evidence, and from evidence to source. The standards give no way to record that one entry supports another, contradicts it or is derived from it; the graph therefore cannot separate two entries that confirm each other from two that both rest on a single study. The release's known issues give the direction.
 - **The graphs are not joined.** No single traversal runs from a line of code through its contract to the evidence behind it: the index meant to join code to contracts is empty, code headers are not checked, and the tasks since the dispatch gate carry no contract. Each graph is sound enough on its own; the joins between them are where the gaps are.
 - **The order graph covers one line of work.** All its edges lie in the part-nodes of one item. Most of the backlog has no edges, so the sweep's statement that nothing is waiting says little outside that line.
 
@@ -214,7 +214,7 @@ What we want to point to is not graphs as such, but the discipline applied to al
 - A review of the large contract component: which edges are real dependencies and which are references that belong among the explicit exclusions.
 - Dependencies on documents outside the contract corpus, unconfirmed detected edges and code headers that name no contract in force, checked at commit like dependencies on deprecated contracts.
 - The index from code to contract filled, so that a traversal from code to evidence is a query.
-- In the standards, as directions in the release's known issues: a closed set of relations between evidence entries, with corroboration counted only across distinct sources — the structure the release calls a *governed evidence graph* once that change enters — and, for several operators, the set of affected contracts computed from the dependency graph before work is routed.
+- In the standards, as directions in the release's known issues: a closed set of relations between evidence entries, with corroboration counted only across distinct sources — the structure the release calls a *governed evidence graph* once that change enters — and, for several operators, the contracts a change touches, worked out from the dependency graph before the work is assigned.
 - Order edges written for the next lines of work as they start.
 
 ---

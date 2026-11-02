@@ -2,7 +2,7 @@
 title: "Verification Architecture: Four Levels, Independent by Design"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: sentences close to a standard's wording replaced by explanation and pointers (§ 3.1, § 3.3, § 3.4, § 3.8); the round limits marked as the installation's and the starter kit's; the register of measurements not yet made; the empirical level's version stamp dated; Limitations brought up to date with the release's known issues; the map pointed at the release."
+    scope: "v0.2: sentences close to a standard's wording replaced by explanation and pointers (§ 3.1, § 3.3, § 3.4, § 3.8); the round limits marked as the installation's and the starter kit's; the register of measurements not yet made; the empirical level's version stamp dated; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -95,7 +95,7 @@ Governed agentic engineering (GAE) verifies at four levels. Each answers a diffe
 | **Empirical** | Does it behave as the domain says it should? | Runs against a domain model, bound to a model version | A rule's effect measured in simulation across a population |
 | **Independent derivation** | Is the mathematical form what we claim it is? | External tools with no knowledge of the project, against a pre-registered question | A functional form's properties derived before the form is written into a contract |
 
-Alongside the four levels, the implementation pipeline has its own verifiers: a tester that writes checks from the contract or the acceptance criteria without reading the code, and a verifier that reviews those checks and then tries to disprove the change.
+Alongside the four levels, the implementation pipeline has its own verifiers: a tester that derives its checks from the contract or the acceptance criteria and does not look at the code, and a verifier that reviews those checks and then tries to disprove the change.
 
 Running through all of it is a discipline for claims. A response that states something new about the system ends with a line saying what was measured, with which tool, and what was not. What could not be measured is written down with who measures it and when, and stays on record until a result is recorded.
 
@@ -133,7 +133,7 @@ So a change to an agent's instructions passes both: the structural classes, and 
 
 A reviewer's finding carries an invariant — the property that does not hold — and one test case that shows it. In the reference installation, the fix is built against the invariant: the fixer enumerates the class the invariant covers, and adds a second test of its own that the finding did not name, from another member of that class. A fix that only handles the finding's example will be met by the same finding, in a new form, in the next round.
 
-On the code side the starter kit draws a further line: a post's tests bind its acceptance criteria and invariants, not every observation from a review. A mutation the verifier finds surviving where the specification is silent goes back to the architect as a question about the specification, not into a new test.
+On the code side the starter kit draws a further line: the tests of a post hold it to its acceptance criteria and invariants, and not to everything a review happened to notice. A mutation the verifier finds surviving where the specification is silent goes back to the architect as a question about the specification, not into a new test.
 
 Review rounds are bounded, and the bounds are each installation's. GAL itself sets none. In the reference installation, the adversarial review stops after two rounds without approval, and the owner then decides whether to close with the open findings carried forward or to ask for a third; a build review stops after three. GIP lets an installation allow the owner to accept a build with the open findings carried; the reference installation does not. The starter kit binds two rounds by default, for the contract audit as well.
 

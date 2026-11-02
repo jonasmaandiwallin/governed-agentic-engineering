@@ -2,7 +2,7 @@
 title: "Contracts as the Source of Truth: The Truth Chain"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Truth Chain Standard closely; the rules on declared and generated dependencies attributed to the Contract Standard, which owns them; the knowledge-corpus shape and the release's known issues added; § 4 recounted; § 5 brought in line with the checked Design by Contract reference; Limitations and the map brought up to date."
+    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Truth Chain Standard closely; the rules on declared and generated dependencies attributed to the Contract Standard, which owns them; the knowledge-corpus shape and the release's known issues added; § 4 recounted; § 5 brought in line with the checked Design by Contract reference; Limitations and the map brought up to date. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -186,7 +186,7 @@ What we want to point to is not contracts as such, but the combination: a fixed 
 - **Evidence strength does not travel up.** A contract may rest on low-tier evidence without saying so, and the coverage count that summarises a contract's evidence counts identifiers, not tiers. Nor does any rule say that a value's confidence may not exceed the tier of the evidence it cites.
 - **Conflicts between levels are found by verification, not by the chain.** Conflicts within the contract level are checked at every commit to the corpus. No tool detects a conflict between levels as such. It surfaces when a verification step reads one level against another — a test written from the contract fails against the code — and is then logged. A conflict that no verification exercises stays invisible.
 - **The dependency graph is not the authority order.** Declared dependencies record what a document builds on; they are not checked against the levels. In the reference installation the constitution declares eighteen documents as dependencies. Nothing is wrong with that as a statement of what it draws on, but it means the order of authority cannot be read off the dependency graph.
-- **The chain records what, not when, and links run one way.** The release's known issues list three gaps: a level has no declared scope, so two top documents of different scope split the chain; a statement records what it rests on but not when its links were read; and evidence entries have no relations to each other, so two entries that seem to corroborate each other while resting on one study cannot be told apart by the chain. The structure that would carry those relations is to be called a *governed evidence graph*.
+- **The chain records what, not when, and links run one way.** The release's known issues list three gaps: a level has no declared scope, so two top documents of different scope split the chain; a statement records what it rests on but not when its links were read; and evidence entries have no relations to each other, so the chain cannot tell two entries that support each other from two entries that both rest on a single study. The structure that would carry those relations is to be called a *governed evidence graph*.
 
 ---
 

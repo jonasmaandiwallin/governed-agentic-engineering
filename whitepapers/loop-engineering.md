@@ -2,7 +2,7 @@
 title: "Loop Engineering: Designed Loops That Converge"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: triage described as run at every architect session start since 2026-10-20; the regression rule brought in line with the standard and the installation's practice; the round limits marked as the installation's; § 3.5 rewritten as explanation with pointers; § 5 dated to the checked Osmani post; Limitations brought up to date with the release's known issues."
+    scope: "v0.2: triage described as run at every architect session start since 2026-10-20; the regression rule brought in line with the standard and the installation's practice; the round limits marked as the installation's; § 3.5 rewritten as explanation with pointers; § 5 dated to the checked Osmani post; Limitations brought up to date with the release's known issues. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -128,7 +128,7 @@ This is the loop version of a principle that runs through all of GAE: an unread 
 
 ### 3.3 Done is the goal's content, not the loop's passage
 
-A build loop that ends when the tests are green measures its own passage. GAE's contract loop ends when the completeness gate finds the contract complete on the main branch — every normative statement and every governed value consumed and tested — after the merge. Green tests are a condition for merging; they are not the definition of done.
+A build loop that ends when the tests are green measures its own passage. GAE's contract loop ends only after the merge, when the completeness gate counts the contract on the main branch as fully covered — every normative statement and every governed value consumed and tested. Green tests are a condition for merging; they are not the definition of done.
 
 The distinction matters because a loop optimises for whatever ends it. A loop that ends on green tests produces green tests. A loop that ends on a complete contract produces a complete contract, or a finding that says why it cannot.
 

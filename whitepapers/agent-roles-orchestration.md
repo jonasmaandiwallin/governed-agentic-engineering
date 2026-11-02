@@ -2,7 +2,7 @@
 title: "Agent Roles and Orchestration: The Specification Agent's Mandate"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 3.4–3.7 rewritten as explanation with pointers, where v0.1 restated the Boundary, Contract, GIP, Handoff and GAL Standards closely; § 3.5 corrected for the reviewer's return to the same session; § 5 brought in line with the checked Design by Contract reference and widened from nine to nineteen prior-art candidates; Limitations and What Comes Next brought up to date."
+    scope: "v0.2: § 3.4–3.7 rewritten as explanation with pointers, where v0.1 restated the Boundary, Contract, GIP, Handoff and GAL Standards closely; § 3.5 corrected for the reviewer's return to the same session; § 5 brought in line with the checked Design by Contract reference and widened from nine to nineteen prior-art candidates; Limitations and What Comes Next brought up to date. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -105,7 +105,7 @@ The working thesis of this paper is that **the specification agent is not merely
 Governed agentic engineering (GAE) gives that process four parts.
 
 - **Two kinds of agent.** Specification agents work on the specifications and on the governance system itself. Implementation agents build the product from a specification that has passed a gate. Only an implementation agent writes product code.
-- **Roles.** The specification side has an owner (a person), an architect who shapes the agent system and dispatches implementation work, a domain researcher who gathers the knowledge contracts rest on, a contract author, a contract auditor, an adversarial reviewer of agents and shared infrastructure, and a harmonizer who writes the approval lists when an agent is measured against the lifecycle standard. The implementation side has a session agent and its step agents: planner, tester, verifier, implementer and fixer.
+- **Roles.** The specification side has an owner (a person), an architect who shapes the agent system and dispatches implementation work, a domain researcher who gathers the knowledge contracts rest on, a contract author, a contract auditor, an adversarial reviewer of agents and shared infrastructure, and a harmonizer who, when an agent is checked against the lifecycle standard, prepares the lists of approved changes. The implementation side has a session agent and its step agents: planner, tester, verifier, implementer and fixer.
 - **A boundary contract.** One document states, for every agent, what it may and may not read, write, run and decide, and which of those rules a tool holds.
 - **The operator.** A person starts the agents' sessions and decides on the work that passes between them, in a handoff of a fixed form along a route listed in one table.
 
@@ -137,7 +137,7 @@ What it means for the specification to have authority can be stated as five ques
 | How are gaps handled? | An implementation that needs a decision the contract does not make reports a finding against the contract and invents nothing. A missing value is added to the registry only after the contract specifies it | GIP Standard, Registry Standard |
 | How are conflicting requirements resolved? | The higher level of the truth chain holds; the conflict is logged with both statements; the lower one is corrected. Between two contracts, declared priority decides | Truth Chain Standard, Contract Standard |
 | Who approves a change to a contract? | An independent auditor, in a full audit with an approving verdict on the document's current version. The author never approves its own document | Contract Standard |
-| How is it verified that the implementation follows the contract? | A completeness gate counts whether the code consumes and tests every normative statement and every registry key the contract cites. Work is done when that gate finds the contract complete on the main branch, not when the tests are green | GIP Standard, Contract Standard |
+| How is it verified that the implementation follows the contract? | A completeness gate counts whether the code consumes and tests every normative statement and every registry key the contract cites. Work is done when, on the main branch, that gate counts the contract as fully covered; passing tests alone do not end it | GIP Standard, Contract Standard |
 
 Read together, the five answers describe a specification that is not a suggestion to the builders. It is the thing their work is measured against, and it can only be changed by a route that does not pass through them.
 
@@ -166,9 +166,9 @@ With one operator, routing everything through one person is the architecture's s
 
 ### 3.6 No agent reviews itself — including the reviewer
 
-The rule that an author never approves its own work applies at every level. A contract author's draft goes to the auditor. A change to an agent's instructions or to shared infrastructure goes to the adversarial reviewer. A reviewer never changes the work it reviews, because a reviewer that fixes what it found has reviewed its own work in the next round (Boundary Standard §5).
+The rule that an author never approves its own work applies at every level. A contract author's draft goes to the auditor. A change to an agent's instructions or to shared infrastructure goes to the adversarial reviewer. A reviewer never changes the work it reviews, because once a reviewer repairs its own finding, the next round has it reviewing what it wrote (Boundary Standard §5).
 
-That leaves the reviewer's own instructions. Someone has to review them, and it cannot be the reviewer. In the reference installation the architect does, under a registered exception with conditions: a different session from the one that wrote the change, findings written to a file, the owner confirming the intent, and nothing outside the reviewer's own surface.
+That leaves the reviewer's own instructions. Someone has to review them, and it cannot be the reviewer. In the reference installation the architect does, under a registered exception with conditions: the review runs in another session than the one where the change was written, findings written to a file, the owner confirming the intent, and nothing outside the reviewer's own surface.
 
 ### 3.7 Roles are stated once and retired explicitly
 
@@ -219,7 +219,7 @@ The question this paper turns on is narrower: what happens when the agents that 
 - **The completeness gate does not run at merge.** It runs when an agent calls it. A unit of contract work cannot yet be declared done by the gate on the main branch, and no contract-driven unit has run under the current pipeline (§ 4).
 - **The session agent's own boundary is held by instruction.** On the platform used, a session started with the session agent's bootstrap line runs with the full tool list; that it writes no product code and no checks rests on its instructions.
 - **Five documents in force lack a full audit.** As shown in § 4, the rule that entry requires a full audit postdates their records.
-- **The split into roles is not measured against an alternative.** Whether separate agents beat one agent with modules, and how many tools an agent can hold before its choice of tool degrades, has not been measured.
+- **The split into roles is not measured against an alternative.** No measurement compares separate agents with a single agent that loads modules, and none shows at what number of tools an agent starts choosing the wrong one.
 - **The operator is one person.** The architecture assumes that every transition passes through the operator's decision. With several operators, nothing yet says who decides when two of them decide about the same contracts; the overview's section on scale describes the track.
 
 ---

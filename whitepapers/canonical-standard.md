@@ -2,7 +2,7 @@
 title: "The Canonical Standard: One Document Format for Agents and People"
 type: white-paper
 status: draft
-version: "v0.2"
+version: "v0.2.1"
 date: "2026-11-02"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 3 rewritten as explanation with pointers to the standard's sections, where v0.1 restated rules nearly word for word; rules that hold only in the reference installation (the floor for agent instructions, the reading order of its domains, a check at every commit) marked as the installation's; the registry order added to the orders that may omit a section; § 4 recounted; § 5 brought in line with the checked Markdoc reference; Limitations brought in line with the instance appendix and the release's known issues; the map pointed at the release."
+    scope: "v0.2: § 3 rewritten as explanation with pointers to the standard's sections, where v0.1 restated rules nearly word for word; rules that hold only in the reference installation (the floor for agent instructions, the reading order of its domains, a check at every commit) marked as the installation's; the registry order added to the orders that may omit a section; § 4 recounted; § 5 brought in line with the checked Markdoc reference; Limitations brought in line with the instance appendix and the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
     evidence: "The diff against v0.1."
     reason: null
   - role: fact-check
@@ -47,7 +47,7 @@ ai_disclosure:
   - role: review
     status: complete
     scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings; two advisory findings stay open for the next revision: sentences sharing a run of ten or more words with the standards' wording, and a release-tool form that none of the twelve papers contains."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -189,7 +189,7 @@ Put simply, the formats agree on the floor and differ on how much governance the
 - **The conversion tool writes before the audit.** Converting source material produces documents marked canonical before any auditor has approved them. Until that is fixed, a conversion run is a manual checkpoint.
 - **Most audit records lack the version field.** For 85 of 142 records, whether the audit covers the current text is a decision for the owner, not something the record can show. Five documents in force carry only a standard-audit record.
 - **Some rules can only be read.** No mechanical search separates a metaphor from plain language, and no tool checks that a document's declared type matches what its content does. These rest on the auditor's reading, which is checked by its own process rather than by a tool.
-- **The standard assumes one way of writing in places.** The release's known issues list where a second installation did not fit: no type for the top documents, a reference that must use the full title where a unique key would do, no place for wording that must keep its own language, an auditor that may not be able to write its own record, a prohibition that must stand apart from the rule it qualifies, and an empty implementation scope that the standard allows.
+- **The standard assumes one way of writing in places.** The release's known issues list where a second installation did not fit: no type for the top documents, a reference that must use the full title where a unique key would do, nowhere to put text that has to stay in its original language, an auditor that may not be able to write its own record, a prohibition that must stand apart from the rule it qualifies, and an empty implementation scope that the standard allows.
 
 ---
 
