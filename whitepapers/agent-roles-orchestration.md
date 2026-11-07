@@ -2,8 +2,8 @@
 title: "Agent Roles and Orchestration: The Specification Agent's Mandate"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 3.4–3.7 rewritten as explanation with pointers, where v0.1 restated the Boundary, Contract, GIP, Handoff and GAL Standards closely; § 3.5 corrected for the reviewer's return to the same session; § 5 brought in line with the checked Design by Contract reference and widened from nine to nineteen prior-art candidates; Limitations and What Comes Next brought up to date. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: § 3.4–3.7 rewritten as explanation with pointers, where v0.1 restated the Boundary, Contract, GIP, Handoff and GAL Standards closely; § 3.5 corrected for the reviewer's return to the same session; § 5 brought in line with the checked Design by Contract reference and widened from nine to nineteen prior-art candidates; Limitations and What Comes Next brought up to date. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. The separation of carrying a handoff from deciding on it is now the Boundary Standard's (§ 3.5), and § 3.4 names the rule that no agent changes its own gate or grants itself a permission. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -57,19 +57,19 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/gal-standard.md
-    version: "v1.76"
+    version: "v1.78"
   - path: standards/boundary-standard.md
-    version: "v0.3"
-  - path: standards/handoff-standard.md
-    version: "v0.3"
-  - path: standards/gip-standard.md
-    version: "v0.5"
-  - path: standards/truth-chain-standard.md
-    version: "v0.5"
-  - path: standards/contract-standard.md
-    version: "v0.6"
-  - path: standards/registry-standard.md
     version: "v0.4"
+  - path: standards/handoff-standard.md
+    version: "v0.4"
+  - path: standards/gip-standard.md
+    version: "v0.6"
+  - path: standards/truth-chain-standard.md
+    version: "v0.6"
+  - path: standards/contract-standard.md
+    version: "v0.7"
+  - path: standards/registry-standard.md
+    version: "v0.5"
 ---
 
 # Agent Roles and Orchestration: The Specification Agent's Mandate
@@ -153,6 +153,8 @@ The Boundary Standard has an agent decline a request that crosses its entry, nam
 
 The rule holds for the operator too. That is deliberate. A boundary the operator can widen with a sentence in the chat leaves no trace, and the next session inherits a boundary nobody wrote. So the operator widens a boundary in one of two recorded ways — by a governed change to the boundary contract, or by an exception for one action that stands in the decision log — and one rule of a reviewer's boundary admits no exception at all, the rule that it leaves the work under review untouched (Boundary Standard §3, §5).
 
+The same reasoning applies to an agent's own controls. No agent changes, on its own, a gate that holds its own work, or gives itself a permission its entry does not grant, such as the right to merge; that change is the operator's, recorded, and reviewed by another agent (Boundary Standard §3).
+
 ### 3.5 Work passes through the operator's decision
 
 No agent starts another agent's session without the operator. The Boundary and Handoff Standards put the operator between every two agents and list every permitted route once (Boundary Standard §4). The session agent's dispatch of its step agents, and its report back to the architect, are the two named exceptions.
@@ -160,7 +162,7 @@ No agent starts another agent's session without the operator. The Boundary and H
 The reason is not that a person must type every message. It is that one actor sees every transition and can stop any of them. Two practices test that reading:
 
 - **The reviewer's answer comes back to the session that sent the round.** When the architect sends a change to the adversarial reviewer, the session pauses, and the findings return to it rather than to a fresh session that would not know the work. The operator still carries the answer.
-- **On a coding-agent platform the architect can dispatch a specification round itself.** The starter kit allows it, with the dispatch naming files and carrying no content, the reviewer on another model than the author, and every step writing its output to a file. The standards do not yet describe such a round, so the kit registers it as a departure. The release's known issues propose separating the carrying of a handoff from the decision on it, with the decision kept by the operator.
+- **On a coding-agent platform the architect can dispatch a specification round itself.** The starter kit allows it, with the dispatch naming files and carrying no content, the reviewer on another model than the author, and every step writing its output to a file. The standards do not yet describe such a round, so the kit registers it as a departure. What the standards now do say is that carrying a handoff and deciding on it are two acts: a platform may carry the handoff into the next session, and starting that session remains the operator's decision (Boundary Standard §4).
 
 With one operator, routing everything through one person is the architecture's strength. With several it is a bottleneck, and the release lists that as an open track.
 

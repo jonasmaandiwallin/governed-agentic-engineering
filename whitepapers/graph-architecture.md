@@ -2,8 +2,8 @@
 title: "Graph Architecture: Explicit Structure Over Implicit Convention"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Wave Standard closely; the dependency rules attributed to the Contract Standard, which owns them; which edge checks block a commit in the reference installation stated; § 4 recounted, with the contract edges of the implementation graph split by whether the task came before or after the dispatch gate; an unattributed contrast removed from § 5; Limitations and What Comes Next brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Wave Standard closely; the dependency rules attributed to the Contract Standard, which owns them; which edge checks block a commit in the reference installation stated; § 4 recounted, with the contract edges of the implementation graph split by whether the task came before or after the dispatch gate; an unattributed contrast removed from § 5; Limitations and What Comes Next brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. Corroboration across distinct sources is now a rule of the Truth Chain Standard, so the evidence graph's gap in § 6 and the direction in § 7 keep only the relations between entries; § 3.3 points to the Contract Standard's rule that a reference never targets a deprecated document. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: not-applicable
@@ -57,11 +57,11 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/contract-standard.md
-    version: "v0.6"
+    version: "v0.7"
   - path: standards/truth-chain-standard.md
-    version: "v0.5"
+    version: "v0.6"
   - path: standards/registry-standard.md
-    version: "v0.4"
+    version: "v0.5"
   - path: standards/wave-standard.md
     version: "v0.3"
 ---
@@ -128,7 +128,7 @@ A node that holds an edge to something that does not exist is defective. So is a
 
 A dangling edge looks exactly like a valid one until something tries to follow it, so the rule sits with the tool, not with the author. Where the tool sits decides what the rule is worth. In the reference installation:
 
-- a contract that declares a dependency on a deprecated contract cannot be committed, and has not been since 2026-10-19;
+- a contract that declares a dependency on a deprecated contract cannot be committed, and has not been since 2026-10-19 (the Contract Standard's rule, §4.10, is that a reference names the document that replaced a deprecated one);
 - a contract whose evidence field names an entry that does not exist cannot be committed;
 - an edge in the order graph to a node that does not exist fails the sweep;
 - a contract dependency on a document outside the contract corpus, or a dependency the tool detected and no author confirmed, is reported by the architecture review and blocks nothing.
@@ -203,7 +203,7 @@ What we want to point to is not graphs as such, but the discipline applied to al
 - **Some dangling edges only get reported.** An edge to a deprecated contract blocks the commit; an edge to a document outside the contract corpus, and a detected edge no author has confirmed, are reported by the architecture review and block nothing. The review runs at the architect's session start when the latest report is older than ten days.
 - **The evidence graph is read from a mirror.** The counts above are taken from the database, whose reverse lists are derived when the evidence is synced, not when a contract changes. Between syncs the mirror can lag the files.
 - **Unused evidence is not a defect by itself.** The 195 entries that nothing cites may be waiting for a contract, may support research that has not been written up, or may be candidates for retirement. The graph shows that they are unconnected; it does not say which.
-- **Evidence entries have no relations to each other.** Links run from code to contract, from contract to values and evidence, and from evidence to source. The standards give no way to record that one entry supports another, contradicts it or is derived from it; the graph therefore cannot separate two entries that confirm each other from two that both rest on a single study. The release's known issues give the direction.
+- **Evidence entries have no relations to each other.** Links run from code to contract, from contract to values and evidence, and from evidence to source. The Truth Chain Standard now counts two links to entries for one source as a single link, so one study cannot corroborate itself through two entries (§3.2, §4.2). What the standards still give no way to record is that one entry supports another, contradicts it or is derived from it. The release's known issues give the direction.
 - **The graphs are not joined.** No single traversal runs from a line of code through its contract to the evidence behind it: the index meant to join code to contracts is empty, code headers are not checked, and the tasks since the dispatch gate carry no contract. Each graph is sound enough on its own; the joins between them are where the gaps are.
 - **The order graph covers one line of work.** All its edges lie in the part-nodes of one item. Most of the backlog has no edges, so the sweep's statement that nothing is waiting says little outside that line.
 
@@ -214,7 +214,7 @@ What we want to point to is not graphs as such, but the discipline applied to al
 - A review of the large contract component: which edges are real dependencies and which are references that belong among the explicit exclusions.
 - Dependencies on documents outside the contract corpus, unconfirmed detected edges and code headers that name no contract in force, checked at commit like dependencies on deprecated contracts.
 - The index from code to contract filled, so that a traversal from code to evidence is a query.
-- In the standards, as directions in the release's known issues: a closed set of relations between evidence entries, with corroboration counted only across distinct sources — the structure the release calls a *governed evidence graph* once that change enters — and, for several operators, the contracts a change touches, worked out from the dependency graph before the work is assigned.
+- In the standards, as directions in the release's known issues: a closed set of relations between evidence entries — the structure the release calls a *governed evidence graph* once that change enters — and, for several operators, the contracts a change touches, worked out from the dependency graph before the work is assigned.
 - Order edges written for the next lines of work as they start.
 
 ---

@@ -2,8 +2,8 @@
 title: "Governed Agentic Engineering: Building Systems With Agents You Can Check"
 type: overview
 status: draft
-version: "v0.3"
-date: "2026-11-02"
+version: "v0.3.1"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: sentences close to a standard's wording replaced by the framework's own words and a pointer (§ 1, § 2); § 3.7 brought in line with the first post of the implementation pipeline; § 5 widened from nine to nineteen prior-art candidates and the harness study scoped to its longitudinal sample; Limitations and What Comes Next brought up to date with the release of the standards and the starter kit; the map pointed at the release."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: sentences close to a standard's wording replaced by the framework's own words and a pointer (§ 1, § 2); § 3.7 brought in line with the first post of the implementation pipeline; § 5 widened from nine to nineteen prior-art candidates and the harness study scoped to its longitudinal sample; Limitations and What Comes Next brought up to date with the release of the standards and the starter kit; the map pointed at the release. v0.3.1: brought up to gae-standards-v0.5. The standards now carry the knowledge-corpus shape, so § 2 and § 6.1 name only what still assumes a product, and § 4 says that much of the second installation's report went into the standards. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.1, and for v0.3.1 the diff against v0.3."
     reason: null
   - role: fact-check
     status: complete
@@ -57,23 +57,23 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/gal-standard.md
-    version: "v1.76"
+    version: "v1.78"
   - path: standards/boundary-standard.md
-    version: "v0.3"
-  - path: standards/handoff-standard.md
-    version: "v0.3"
-  - path: standards/gip-standard.md
-    version: "v0.5"
-  - path: standards/truth-chain-standard.md
-    version: "v0.5"
-  - path: standards/contract-standard.md
-    version: "v0.6"
-  - path: standards/registry-standard.md
     version: "v0.4"
+  - path: standards/handoff-standard.md
+    version: "v0.4"
+  - path: standards/gip-standard.md
+    version: "v0.6"
+  - path: standards/truth-chain-standard.md
+    version: "v0.6"
+  - path: standards/contract-standard.md
+    version: "v0.7"
+  - path: standards/registry-standard.md
+    version: "v0.5"
   - path: standards/gem-standard.md
     version: "v0.10"
   - path: standards/backlog-standard.md
-    version: "v0.8"
+    version: "v0.9"
   - path: standards/wave-standard.md
     version: "v0.3"
 ---
@@ -108,7 +108,7 @@ GAE is an answer to that question, developed while building one real system with
 
 Governed agentic engineering (GAE) is a set of standards for building with AI agents. In it the specification is the source of truth, and every agent — the ones that write the specification as much as the ones that write code — works inside rules that a tool can check.
 
-**Two shapes.** What the agents build takes one of two shapes. A *product* is software that runs without them; the reference installation, a running-coach platform, is one. A *knowledge corpus* is a governed body of knowledge — analyses, plans, decisions and their sources — in which the agents' work is itself the deliverable. The standards were written on a product. The starter kit sets up both shapes, and where the standards still assume code, the release's list of known issues says so: the Truth Chain and Registry Standards define the implementation as code.
+**Two shapes.** What the agents build takes one of two shapes. A *product* is software that runs without them; the reference installation, a running-coach platform, is one. A *knowledge corpus* is a governed body of knowledge — analyses, plans, decisions and their sources — in which the agents' work is itself the deliverable. The standards were written on a product, and they now carry both shapes: in a knowledge corpus the implementation level holds the agents' deliverables, and a deliverable made before its contract stands only with a visible mark (Truth Chain and Registry Standards). The starter kit sets up both. Where the standards still assume a product, the release's list of known issues says so: the record is taken to be a file, and the top documents have no type of their own.
 
 **In a product: build-time agents, runtime determinism.** Agents build the system. Every decision the product takes for its users is made by deterministic code that reads governed contracts and governed values, so the same inputs give the same decision. In the reference installation those are training decisions: classifying the runner's state, setting load, granting escalation. A model may run at runtime only outside that decision layer. The reference installation uses one in three places, read in its code at the commits named in § 4:
 
@@ -202,7 +202,7 @@ Every figure below was read from the reference installation, Runapp, at one meas
 - The most frequent pattern — taking a count on trust instead of measuring it — has 152 entries, from 2026-09-24 to 2026-11-02. A regression item opened on 2026-10-13 counted 44 entries after its fix of 2026-10-03. The pattern has since been accepted, with a date for review, and 18 more entries have followed.
 - A register of measurements that a session could not make holds 92 open entries; results have been recorded for 145.
 
-**A second installation.** A second installation was set up from the starter kit in another domain: a strategy and planning system for a marketing role, in which the agents' knowledge work is the delivered product and the record is a database rather than files. The standards were copied unchanged. What did not fit was reported upstream, and those findings stand in the release's known issues. The installation shows that the standards could carry an installation with no code in its product and with its record in a database, in a domain other than training. It does not show that the method transfers to anyone but the originator, or to a team, since the same person set it up. No figures from it are given here.
+**A second installation.** A second installation was set up from the starter kit in another domain: a strategy and planning system for a marketing role, in which the agents' knowledge work is the delivered product and the record is a database rather than files. The standards were copied unchanged. What did not fit was reported upstream. Much of it now stands in the standards, among it the knowledge-corpus shape, the round limits and the start gates' questions; the rest stands in the release's known issues, each item with a direction. The installation shows that the standards could carry an installation with no code in its product and with its record in a database, in a domain other than training. It does not show that the method transfers to anyone but the originator, or to a team, since the same person set it up. No figures from it are given here.
 
 What these figures show is that the framework runs on a real system, that its checks find real errors, and that its records say plainly where it has not worked — its most frequent pattern among them.
 
@@ -235,7 +235,7 @@ The searches behind these statements covered the sources named and no others. Th
 - **The logs are self-reported.** The retro log and much of the decision log are written by the agents about their own sessions. A rule removed for having caught nothing may have prevented errors no one wrote down.
 - **Several rules are held by instruction.** The companion papers list them: per-agent write surfaces in the specification repository, the read boundary of the agent that writes checks, the model split between builder and verifier. Each says so where it is described.
 - **Some loops do not converge yet.** The most frequent recurring pattern regressed after its fix and has been accepted rather than fixed again (§ 4).
-- **The standards assume a product in places.** The knowledge-corpus shape is set up by the starter kit, not yet by the standards (§ 2).
+- **The standards assume a product in places.** They carry the knowledge-corpus shape, but they still take the record to be a file, which an installation whose agents can write only a database cannot follow without a departure, and they have no document type for the top documents (§ 2).
 - **No external evaluation.** The figures are the installation's own. No independent party has reproduced them.
 
 ### 6.2 Scale

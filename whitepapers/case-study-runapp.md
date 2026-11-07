@@ -2,8 +2,8 @@
 title: "Case Study: Runapp — Governed Agentic Engineering Applied"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: the operator's confirmations, the guards in the product repositories and the declared files of the commit tool brought up to date (§ 2, § 3.2); the parser rule in § 3.5 replaced by an explanation and a pointer to the memory standard; v0.1's eight-round series, which could not be reproduced, removed from § 3.4; § 5 widened from nine to nineteen prior-art candidates; Limitations shortened to what this case adds, with scale pointed at the overview and the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: the operator's confirmations, the guards in the product repositories and the declared files of the commit tool brought up to date (§ 2, § 3.2); the parser rule in § 3.5 replaced by an explanation and a pointer to the memory standard; v0.1's eight-round series, which could not be reproduced, removed from § 3.4; § 5 widened from nine to nineteen prior-art candidates; Limitations shortened to what this case adds, with scale pointed at the overview and the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. The cases are history and keep their dates; where a rule they describe has since entered the standards (the reviewer's finding form, stop rule and round limit in § 3.4; staging only declared files in § 3.2; the session-start sensors and the register in § 3.5), a pointer says so. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -57,23 +57,23 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/gal-standard.md
-    version: "v1.76"
+    version: "v1.78"
   - path: standards/boundary-standard.md
-    version: "v0.3"
-  - path: standards/handoff-standard.md
-    version: "v0.3"
-  - path: standards/gip-standard.md
-    version: "v0.5"
-  - path: standards/contract-standard.md
-    version: "v0.6"
-  - path: standards/truth-chain-standard.md
-    version: "v0.5"
-  - path: standards/registry-standard.md
     version: "v0.4"
+  - path: standards/handoff-standard.md
+    version: "v0.4"
+  - path: standards/gip-standard.md
+    version: "v0.6"
+  - path: standards/contract-standard.md
+    version: "v0.7"
+  - path: standards/truth-chain-standard.md
+    version: "v0.6"
+  - path: standards/registry-standard.md
+    version: "v0.5"
   - path: standards/gem-standard.md
     version: "v0.10"
   - path: standards/backlog-standard.md
-    version: "v0.8"
+    version: "v0.9"
   - path: standards/wave-standard.md
     version: "v0.3"
 ---
@@ -147,7 +147,7 @@ A deliberate test found a second gap. On 2026-10-09, in an adversarial review, a
 
 **What it cost.** Friction recorded in at least 12 retro entries over seven weeks. The records do not give a time cost.
 
-**What changed.** The commit tool now requires the list of files the caller wrote, and stages only those; since 2026-10-22 a call without the list is refused with nothing staged. Other uncommitted files stay in place and are named in the answer. The write gate itself was not changed after the 2026-10-09 test. What changed was the documentation's account of it: the claim is described as a local mark that stops mistakes, not deliberate bypasses, and what holds the rule that writing waits for a real claim is the queue and the detection at the architect's next session start (*Harness Engineering*, § 4 and § 6).
+**What changed.** The commit tool now requires the list of files the caller wrote, and stages only those; since 2026-10-22 a call without the list is refused with nothing staged. The Boundary Standard has since made staging only one's own files a rule for every agent (§2.1). Other uncommitted files stay in place and are named in the answer. The write gate itself was not changed after the 2026-10-09 test. What changed was the documentation's account of it: the claim is described as a local mark that stops mistakes, not deliberate bypasses, and what holds the rule that writing waits for a real claim is the queue and the detection at the architect's next session start (*Harness Engineering*, § 4 and § 6).
 
 ### 3.3 The compliance loop (spring 2026)
 
@@ -188,6 +188,8 @@ Shortly after the loop, a post-mortem found that three registry keys had been im
 - On 2026-09-18, series that end in advisory findings only got their own exit. Each advisory finding states whether it establishes a new rule or applies an existing one, and a finding that only applies an existing rule no longer opens another round.
 - On 2026-10-05 the reference installation set a limit: after two rounds without approval, the next step is the owner's: close, with the open findings carried by other work items, or ask for a third round (*Verification Architecture*, § 3.5).
 
+Three of the four are now in GAL: the finding's form and the stop rule (§9.5), and the two-round limit (§9.7). The exit for series that end in advisory findings is still the installation's own.
+
 **How long a series could run.** Before those rules, nothing bounded a series. The longest series of review rounds under one name ran to 35, on a work item closed on 2026-09-14. Across all series, 206 handoffs have gone from the reviewer back to the architect, and 118 of them carry a closure verdict: 50 *yes*, 28 *partial* and 40 *no* (§ 4 gives both rules).
 
 ### 3.5 Memory: where coherence held and where it broke
@@ -196,8 +198,8 @@ Every session in Runapp starts cold. What it knows comes from the handoff, the t
 
 **Where it held.**
 - Retro entries are written in a fixed form, with a scope, the friction and a named pattern. At the measuring point, 517 of the 1,589 retro entries in the database had been returned to a reader at least once.
-- Patterns that recur are triaged. Since 2026-10-20 the triage runs as a sensor at the architect's session start: a read that never stops work and whose finding becomes an action. Its first reading found nine patterns at the threshold with no work item. At the measuring point, 12 patterns stood at the threshold, every one carried by an open item. Triage runs only at that session start, not between sessions.
-- A measurement that a session could not make is carried in a register until someone makes it. At the measuring point the register held 92 open entries, and results had been recorded for 145. Before the register, 49 of 73 such entries stood only in handoffs, reports and review files, and 9 had fallen out of their chains without a result (counted 2026-10-21).
+- Patterns that recur are triaged. Since 2026-10-20 the triage runs as a sensor at the architect's session start: a read that never stops work and whose finding becomes an action. Its first reading found nine patterns at the threshold with no work item. At the measuring point, 12 patterns stood at the threshold, every one carried by an open item. Triage runs only at that session start, not between sessions. GAL now names such sensors as part of the architect's start (§4.2).
+- A measurement that a session could not make is carried in a register until someone makes it, as the standards now require (GAL §4.7.4, Handoff Standard §7). At the measuring point the register held 92 open entries, and results had been recorded for 145. Before the register, 49 of 73 such entries stood only in handoffs, reports and review files, and 9 had fallen out of their chains without a result (counted 2026-10-21).
 - The shared-working-copy defect in § 3.2 could be traced to its closed item only because the item, its criterion and the retro entries were on record.
 
 **Where it broke: a gap in the decision log.** On 2026-06-22, the architect found that about three months of decisions on contracts, governance and agent instructions had not been written to the decision log. The compliance loop in § 3.3 was among them. They were reconstructed from commit messages, at lower detail. The root cause recorded in the backfill entry is plain: throughput was high, and the logging step was skipped (decision log, retrospective block, 2026-06-22).

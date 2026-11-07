@@ -2,8 +2,8 @@
 title: "Verification Architecture: Four Levels, Independent by Design"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: sentences close to a standard's wording replaced by explanation and pointers (§ 3.1, § 3.3, § 3.4, § 3.8); the round limits marked as the installation's and the starter kit's; the register of measurements not yet made; the empirical level's version stamp dated; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: sentences close to a standard's wording replaced by explanation and pointers (§ 3.1, § 3.3, § 3.4, § 3.8); the round limits marked as the installation's and the starter kit's; the register of measurements not yet made; the empirical level's version stamp dated; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. The measurement line, the round limits, the approval that holds over fixes and the rule for building a fix are now the standards', and the paper says so (§ 2, § 3.5, § 3.8, § 6, § 7, § 8); one limitation and one direction that v0.5 closed are removed. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -57,11 +57,11 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/gip-standard.md
-    version: "v0.5"
+    version: "v0.6"
   - path: standards/gal-standard.md
-    version: "v1.76"
+    version: "v1.78"
   - path: standards/handoff-standard.md
-    version: "v0.3"
+    version: "v0.4"
 ---
 
 # Verification Architecture: Four Levels, Independent by Design
@@ -99,7 +99,7 @@ Alongside the four levels, the implementation pipeline has its own verifiers: a 
 
 Running through all of it is a discipline for claims. A response that states something new about the system ends with a line saying what was measured, with which tool, and what was not. What could not be measured is written down with who measures it and when, and stays on record until a result is recorded.
 
-Where the rules stand: the GIP Standard holds the implementation verifiers; the GAL Standard holds the conformance classes, their acceptance rules and the adversarial semantic review; the Handoff Standard holds how a handoff carries what was not measured, through a rule each installation binds. The reference installation binds that rule in a document of its own, the measurement line. The standards are the reference and are not restated here.
+Where the rules stand: the GIP Standard holds the implementation verifiers; the GAL Standard holds the conformance classes, their acceptance rules, the adversarial semantic review and its rounds, and the measurement line itself, which every agent that owns a session carries as a mandatory section (§4.7.4); the Handoff Standard holds how what was not measured is kept between sessions: in a register, of which a handoff carries only the part that concerns its receiver (§7, §8). The reference installation keeps its wording of the line in a document of its own. The standards are the reference and are not restated here.
 
 ---
 
@@ -131,11 +131,11 @@ So a change to an agent's instructions passes both: the structural classes, and 
 
 ### 3.5 Fix the invariant, not the instance
 
-A reviewer's finding carries an invariant — the property that does not hold — and one test case that shows it. In the reference installation, the fix is built against the invariant: the fixer enumerates the class the invariant covers, and adds a second test of its own that the finding did not name, from another member of that class. A fix that only handles the finding's example will be met by the same finding, in a new form, in the next round.
+A reviewer's finding carries an invariant — the property that does not hold — and one test case that shows it. The fix is built against the invariant, and GAL makes that the producer's duty (§9.8): the fixer enumerates the class the invariant covers, and adds a second test of its own that the finding did not name, from another member of that class. A fix that only handles the finding's example will be met by the same finding, in a new form, in the next round.
 
 On the code side the starter kit draws a further line: the tests of a post hold it to its acceptance criteria and invariants, and not to everything a review happened to notice. A mutation the verifier finds surviving where the specification is silent goes back to the architect as a question about the specification, not into a new test.
 
-Review rounds are bounded, and the bounds are each installation's. GAL itself sets none. In the reference installation, the adversarial review stops after two rounds without approval, and the owner then decides whether to close with the open findings carried forward or to ask for a third; a build review stops after three. GIP lets an installation allow the owner to accept a build with the open findings carried; the reference installation does not. The starter kit binds two rounds by default, for the contract audit as well.
+Review rounds are bounded. For a change under adversarial review, GAL sets the bound at two rounds (§9.7): if the second ends without approval, the owner either closes, with each open finding carried by a work item, or asks for a third. A contract is the exception, since it takes effect only after an approving full audit of the version that stands. The build loop's review keeps a limit of its own, which each installation sets: three rounds in the reference installation. GIP lets an installation allow the owner to accept a build with the open findings carried; the reference installation does not.
 
 ### 3.6 Pre-register, then falsify
 
@@ -149,9 +149,9 @@ A result from a domain model holds for the version of the model that produced it
 
 ### 3.8 Every claim carries its measurement
 
-A response that states something new about the system ends with a line naming what was measured, with which tool, and what was not. In the reference installation, something may stand as not measured for one of two reasons only: the tool that would measure it does not exist, or a thing the measurement needs is missing in this session. Cost is not one of them; a claim too expensive to measure in full is narrowed to what was measured.
+A response that states something new about the system ends with a line naming what was measured, with which tool, and what was not. GAL makes this a section every agent that owns a session carries (§4.7.4), and it allows two reasons for leaving something unmeasured: no tool exists that would measure it, or something the measurement needs is missing in the session. Cost is not one of them; a claim too expensive to measure in full is narrowed to what was measured.
 
-What stays unmeasured gets an identifier, the name of whoever measures it and the condition under which they do, and is entered in a register. The register keeps it until the session in which the condition holds records a result. A handoff carries the entries that concern its receiver, and the handoff validator fails a handoff when an entry has left the register without a result.
+What stays unmeasured gets an identifier, the name of whoever measures it and the condition under which they do, and is entered in a register. The register keeps it until the session in which the condition holds records a result. A handoff carries the entries that concern its receiver, and a handoff that drops an entry from the register without a result fails (Handoff Standard §7, §8). In the reference installation the handoff validator makes that check.
 
 ---
 
@@ -196,10 +196,9 @@ We have not checked whether the combination described here — four levels with 
 - **The completeness gate does not run at merge.** The contract loop's final sensor runs when an agent calls it.
 - **The empirical level validates against a model, not the field.** The simulation results say how the system behaves under the domain model; no prospective field data has tested the model itself. The last stored run is from 2026-09-03, and runs before 2026-08-02 carry no version.
 - **The derivation chain's second link depends on a preview model.** When it is unavailable, the chain's rules postpone a form choice rather than lower the requirement.
-- **The contract audit has no round limit in the reference installation.** Only the adversarial review and the build loop's reviews are bounded. The starter kit binds a limit for new installations.
+- **The contract audit has no round limit in the reference installation yet.** GAL now bounds review rounds and keeps the contract's full audit as the exception (§ 3.5), and the starter kit binds the same limit for new installations. The reference installation bounds only the adversarial review and the build loop's reviews until it moves to the current standards.
 - **The measurement line itself is not gated.** The handoff validator checks the inherited entries — their form, that they are carried with the same condition, and that none leaves the register without a result. Whether a response that needed a measurement line has one is reviewed, not measured.
 - **No conformance class covers the bootstrap prompt.** What a chat platform loads is a few lines of project instructions pointing to the agent's core, and the standard measures those lines nowhere (the release's known issues, GAL).
-- **Any later change ends an approval.** Under GAL §9.2 rule 3, fixing only what an approving round named still takes a new round. The starter kit lets the approval hold over such fixes; the standard does not.
 
 ---
 
@@ -210,7 +209,7 @@ We have not checked whether the combination described here — four levels with 
 - A read wall for the tester on the platform's existing hooks, once a tester is measured reading the code it checks.
 - The completeness gate at merge, with the first contract-driven unit under the current pipeline.
 - Prospective validation of the domain model against field data.
-- In the standards, as directions in the release's known issues: the bootstrap prompt as a measured component of the agent, and the later changes an approval holds over.
+- In the standards, as a direction in the release's known issues: the bootstrap prompt as a measured component of the agent.
 
 ---
 
@@ -219,8 +218,8 @@ We have not checked whether the combination described here — four levels with 
 - **The GAE overview** places verification among the other parts of the framework.
 - **The release:** the standards, the starter kit and the list of known issues, in the GAE repository:
   - GIP Standard: the tester, the verifier, the step receipts and the queue as proof
-  - GAL Standard: the conformance classes, the acceptance rules and the adversarial semantic review
-  - Handoff Standard: the lines a handoff to and from the reviewer carries, and the slot for the measurement rule
+  - GAL Standard: the conformance classes, the acceptance rules, the adversarial semantic review and its rounds, the producer's duties before review, and the measurement line
+  - Handoff Standard: the lines a handoff to and from the reviewer carries, and the register of what was not measured
   - Contract Standard: audit tracking and the completeness gate as a tool class
 - **Related white papers:**
   - *Loop Engineering*, on the loops these verifiers sit in

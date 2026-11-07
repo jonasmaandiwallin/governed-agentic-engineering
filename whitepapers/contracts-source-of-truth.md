@@ -2,8 +2,8 @@
 title: "Contracts as the Source of Truth: The Truth Chain"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Truth Chain Standard closely; the rules on declared and generated dependencies attributed to the Contract Standard, which owns them; the knowledge-corpus shape and the release's known issues added; § 4 recounted; § 5 brought in line with the checked Design by Contract reference; Limitations and the map brought up to date. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Truth Chain Standard closely; the rules on declared and generated dependencies attributed to the Contract Standard, which owns them; the knowledge-corpus shape and the release's known issues added; § 4 recounted; § 5 brought in line with the checked Design by Contract reference; Limitations and the map brought up to date. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. The knowledge-corpus shape and the *before contract* mark are now the Truth Chain Standard's (§ 2); counting one source twice is now a rule, so one of the three gaps becomes the relations between entries (§ 6, § 7); § 6 notes that the standard now asks for an entry to be read for the claim it bears. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -57,9 +57,9 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/truth-chain-standard.md
-    version: "v0.5"
-  - path: standards/contract-standard.md
     version: "v0.6"
+  - path: standards/contract-standard.md
+    version: "v0.7"
 ---
 
 # Contracts as the Source of Truth: The Truth Chain
@@ -90,7 +90,7 @@ The chain has three levels — the constitution, which says what the system is f
 
 The Truth Chain Standard is the reference for the levels (§2), the links (§3), the evidence registry (§4) and the tools that check them (§6). The Contract Standard owns the contract and the dependencies between contracts. This paper explains why the chain is built the way it is.
 
-**In a knowledge corpus.** Where the agents' work is itself the product, the implementation level holds their deliverables rather than code. The standards still define the implementation as code. The starter kit binds the level to the deliverables, and lets a deliverable produced before its contract stand if it is marked *before contract*, which the standard would forbid; the release's known issues list both.
+**In a knowledge corpus.** Where the agents' work is itself the product, the implementation level holds their deliverables rather than code, and the Truth Chain Standard now says so (§1.1). A deliverable made before any contract for its area has been merged may stand, marked *before contract* and citing no contract version, so that the departure from the order stays visible; until a contract is merged for it, it rests on none (§2.3).
 
 ---
 
@@ -182,11 +182,11 @@ What we want to point to is not contracts as such, but the combination: a fixed 
 - **Declared and cited evidence disagree, and nothing stops it.** The standard says a contract's declared evidence and the evidence its text cites are the same set. In the reference installation about three in ten declared identifiers are not cited, and the check that finds them reports without blocking a commit. A declaration that the text never uses says the contract rests on evidence that it may not, in fact, use.
 - **Code headers are not checked.** No tool verifies at commit that the contract a code file names exists and is in force. Four headers name something else today.
 - **Link checks read the mirror, not the record.** The tools that check whether a cited evidence entry exists, and whether it is in force, read the database. A row without a file passes them, and existence is checked at every commit while being in force is checked only by hand.
-- **The bottom of the chain is held by people.** Whether an evidence entry's key finding is actually in its source is not checked by any tool, and no tool reads the research record behind an entry. Both rest on the discipline of the agent that writes the entry and on manual verification.
+- **The bottom of the chain is held by people.** The standard now has an entry bear a statement only once it has been read for that statement, in its record and its source, and has every figure in a key finding traceable to the source (§3.2, §4.1). No tool holds that reading: whether a key finding is actually in its source is not checked by any tool, and no tool reads the research record behind an entry. Both rest on the discipline of the agent that writes the entry and on manual verification.
 - **Evidence strength does not travel up.** A contract may rest on low-tier evidence without saying so, and the coverage count that summarises a contract's evidence counts identifiers, not tiers. Nor does any rule say that a value's confidence may not exceed the tier of the evidence it cites.
 - **Conflicts between levels are found by verification, not by the chain.** Conflicts within the contract level are checked at every commit to the corpus. No tool detects a conflict between levels as such. It surfaces when a verification step reads one level against another — a test written from the contract fails against the code — and is then logged. A conflict that no verification exercises stays invisible.
 - **The dependency graph is not the authority order.** Declared dependencies record what a document builds on; they are not checked against the levels. In the reference installation the constitution declares eighteen documents as dependencies. Nothing is wrong with that as a statement of what it draws on, but it means the order of authority cannot be read off the dependency graph.
-- **The chain records what, not when, and links run one way.** The release's known issues list three gaps: a level has no declared scope, so two top documents of different scope split the chain; a statement records what it rests on but not when its links were read; and evidence entries have no relations to each other, so the chain cannot tell two entries that support each other from two entries that both rest on a single study. The structure that would carry those relations is to be called a *governed evidence graph*.
+- **The chain records what, not when, and links run one way.** The release's known issues list three gaps: a level has no declared scope, so two top documents of different scope split the chain; a statement records what it rests on but not when its links were read; and evidence entries have no relations to each other. Counting one study twice is no longer among them: two links to entries for the same source now count as one, and only entries for distinct sources corroborate a statement (§3.2). What has no form yet is that one entry supports, contradicts or derives from another. The structure that would carry those relations is to be called a *governed evidence graph*.
 
 ---
 
@@ -196,7 +196,7 @@ What we want to point to is not contracts as such, but the combination: a fixed 
 - A citation check that blocks a commit on a declared-but-uncited or cited-but-undeclared identifier, once the existing population is cleared contract by contract.
 - Link checks that read the evidence files, so that a row without a file fails instead of passing.
 - A rule that a contract resting only on low-tier evidence says so, and a coverage measure that reads tiers.
-- The directions the release's known issues give for the Truth Chain Standard — scope per level, time on links, relations between evidence entries, and the knowledge-corpus shape — each entering it only through a new release.
+- The directions the release's known issues give for the Truth Chain Standard — scope per level, time on links, and relations between evidence entries — each entering it only through a new release.
 
 ---
 

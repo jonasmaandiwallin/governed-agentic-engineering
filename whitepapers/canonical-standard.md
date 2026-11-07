@@ -2,8 +2,8 @@
 title: "The Canonical Standard: One Document Format for Agents and People"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 3 rewritten as explanation with pointers to the standard's sections, where v0.1 restated rules nearly word for word; rules that hold only in the reference installation (the floor for agent instructions, the reading order of its domains, a check at every commit) marked as the installation's; the registry order added to the orders that may omit a section; § 4 recounted; § 5 brought in line with the checked Markdoc reference; Limitations brought in line with the instance appendix and the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: § 3 rewritten as explanation with pointers to the standard's sections, where v0.1 restated rules nearly word for word; rules that hold only in the reference installation (the floor for agent instructions, the reading order of its domains, a check at every commit) marked as the installation's; the registry order added to the orders that may omit a section; § 4 recounted; § 5 brought in line with the checked Markdoc reference; Limitations brought in line with the instance appendix and the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. Five of the six places where a second installation did not fit are now carried by the Contract Standard, and § 6 names what remains for the top documents; § 2 adds the audit duties and the gates that follow a contract. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -57,7 +57,7 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/contract-standard.md
-    version: "v0.6"
+    version: "v0.7"
 ---
 
 # The Canonical Standard: One Document Format for Agents and People
@@ -89,6 +89,7 @@ Governed agentic engineering (GAE) writes every specification in the form of one
 - **A closed taxonomy** of domains and layers, with a reading order.
 - **Normative statements as lists**, one rule each, apart from explanation.
 - **Content boundaries**: behaviour rather than schemas, governed values by key, one language, history in one log.
+- **Audit and what it owes**: the record of the last audit, an approving full audit before a document takes effect, an auditor that blocks every defect it finds whenever it came in, an advisory finding that ends either fixed or dropped with the architect's validation, and the gates that review what a contract governs, derived from the contract so that they move with it.
 - **Tool classes**: a post-processor, an index generator, a conversion tool and a completeness gate, each defined by what it must and must never pass.
 
 The standard is generic and names no system. Each installation binds it in an **instance appendix**: its title prefix, its domain taxonomy, its paths and its tools. The starter kit carries a template for that appendix. Where this paper describes the reference installation's appendix, it says so.
@@ -189,7 +190,7 @@ Put simply, the formats agree on the floor and differ on how much governance the
 - **The conversion tool writes before the audit.** Converting source material produces documents marked canonical before any auditor has approved them. Until that is fixed, a conversion run is a manual checkpoint.
 - **Most audit records lack the version field.** For 85 of 142 records, whether the audit covers the current text is a decision for the owner, not something the record can show. Five documents in force carry only a standard-audit record.
 - **Some rules can only be read.** No mechanical search separates a metaphor from plain language, and no tool checks that a document's declared type matches what its content does. These rest on the auditor's reading, which is checked by its own process rather than by a tool.
-- **The standard assumes one way of writing in places.** The release's known issues list where a second installation did not fit: no type for the top documents, a reference that must use the full title where a unique key would do, nowhere to put text that has to stay in its original language, an auditor that may not be able to write its own record, a prohibition that must stand apart from the rule it qualifies, and an empty implementation scope that the standard allows.
+- **The top documents have no type of their own.** A second installation found six places where the standard assumed one way of writing. Five are now in the standard: a reference by a unique indexed key (§4.10), text kept in its original language as a marked quotation (§7.3), the committing agent writing the audit record when the auditor cannot reach the store (§8.4), a prohibition standing beside the rule it qualifies (§4.1), and a document that governs something built naming its units (§3.2). What remains, in the release's known issues, is the top of the chain: no document type for the constitution or the architecture contract, and an audit of them that reads the Contract Standard only.
 
 ---
 

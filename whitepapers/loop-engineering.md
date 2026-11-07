@@ -2,8 +2,8 @@
 title: "Loop Engineering: Designed Loops That Converge"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: triage described as run at every architect session start since 2026-10-20; the regression rule brought in line with the standard and the installation's practice; the round limits marked as the installation's; § 3.5 rewritten as explanation with pointers; § 5 dated to the checked Osmani post; Limitations brought up to date with the release's known issues. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: triage described as run at every architect session start since 2026-10-20; the regression rule brought in line with the standard and the installation's practice; the round limits marked as the installation's; § 3.5 rewritten as explanation with pointers; § 5 dated to the checked Osmani post; Limitations brought up to date with the release's known issues. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. The two-round limit and its exception for contracts are now GAL's, and every advisory finding of a contract audit now ends as a fix or a drop the architect validates (§ 2, § 3.4, § 6). Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -57,9 +57,13 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/gip-standard.md
-    version: "v0.5"
+    version: "v0.6"
   - path: standards/gem-standard.md
     version: "v0.10"
+  - path: standards/gal-standard.md
+    version: "v1.78"
+  - path: standards/contract-standard.md
+    version: "v0.7"
 ---
 
 # Loop Engineering: Designed Loops That Converge
@@ -104,8 +108,8 @@ The reference installation runs several such loops. Two are described here in fu
 |---|---|---|---|---|---|---|
 | **Build (contract-driven)** | Completeness gate on the contract; checks written from the contract | Verifier's verdicts; gate's count of statements and values covered | Back into the loop, a finding to the specification side, or done | Implementer (code), tester (checks) | Checks unchanged by the implementer; the contract unchanged by the build | Review-round and retry limits; hard stop to the owner |
 | **Memory** | Retro entries with named patterns | A threshold of undisposed occurrences; regression after a countermeasure | A work item, a countermeasure, or an accepted pattern with a re-review date | Architect (rules and tools) | Logs are append-only; only the architect disposes a pattern | Re-review date; a regression reopens the countermeasure |
-| Contract review | Audit against the contract standard | Auditor's verdict | Approve, or return with findings | Contract author | The author never approves its own document | No round limit in the reference installation; advisory findings go to the owner |
-| Adversarial review | Reviewer's findings by class | A closure criterion stated in the handoff | Fix round, or close | Architect | The reviewer never fixes what it found | Two rounds in the reference installation, then the owner decides |
+| Contract review | Audit against the contract standard | Auditor's verdict | Approve, or return with findings | Contract author | The author never approves its own document | A contract takes effect only on an approving full audit of its current version, so GAL's round limit does not close it; every advisory finding ends as a fix or a drop, and the architect validates each drop. The reference installation has not yet bound a round limit here |
+| Adversarial review | Reviewer's findings by class | A closure criterion stated in the handoff | Fix round, or close | Architect | The reviewer never fixes what it found | Two rounds (GAL), then the owner decides |
 | Research intake | New sources | Classification against the evidence registry | No action, an evidence entry, or a proposal to change a contract | Domain researcher, contract author | Evidence never changes a contract directly | One pass per intake |
 
 ---
@@ -136,7 +140,7 @@ The distinction matters because a loop optimises for whatever ends it. A loop th
 
 When a bound is reached, the loop does not try harder. It stops, and the decision goes to a person: continue, split the work, or send it back (GIP §5.1). GIP also lets an installation allow the owner, at the review limit, to accept the work with the open findings carried as work items, the verifier's verdict kept unchanged beside the acceptance; the reference installation does not allow it.
 
-The bounds are calibration, not doctrine. Their values stand in the installation's appendix, and changing one is a decision someone makes, not a drift. The two-round limit on adversarial review is the reference installation's own rule.
+The build loop's bounds are calibration, not doctrine. Their values stand in the installation's appendix, and changing one is a decision someone makes, not a drift. The bound on adversarial review is different: GAL itself sets it at two rounds (§9.7), after which the owner decides, so no installation calibrates it away.
 
 ### 3.5 Learning is a loop with a counter
 
@@ -203,7 +207,7 @@ We have not checked whether the combination described here — the five named pa
 - **The verifier's mutation probe is analytic.** It reads the checks and decides whether a mutation would be caught, rather than running the checks against a mutated copy.
 - **Triage runs at the architect's session start, not between sessions.** A pattern can reach the threshold, or regress, and stand without a work item until the next such session.
 - **A regression opens a new item.** The standard has the countermeasure's own item reopened; the tool opens a new one, and the architect reopens the countermeasure's item by hand in the same session.
-- **The contract review loop has no bound in the reference installation.** An audit can be repeated until it approves. The starter kit binds a limit for new installations.
+- **The contract review loop has no bound in the reference installation yet.** An audit can be repeated until it approves. GAL now limits review rounds, and a contract that closes at the limit stays out of the canonical corpus until a full audit approves it; the starter kit binds the same for new installations.
 - **Most retro entries name no pattern.** About a third of entries carry a name the loop can count. The rest are read only as text.
 - **Outcomes are read without their conditions.** A change in a count is not separated from a change in the work that produced it.
 - **Whether reading a learning changes behaviour is measured by nobody.** A metric exists that relates reads to later occurrences; no agent or tool reads it.

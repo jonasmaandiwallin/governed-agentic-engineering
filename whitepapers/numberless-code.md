@@ -2,8 +2,8 @@
 title: "Numberless Code: Keeping Every Governed Value in One Registry"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Registry Standard closely; the class for values in use without demonstrated support added to § 3.3, which v0.1 did not name; § 4 recounted with a fresh code sweep; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the Registry Standard closely; the class for values in use without demonstrated support added to § 3.3, which v0.1 did not name; § 4 recounted with a fresh code sweep; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5; no sentence had become wrong. § 6 points to the Truth Chain Standard's rule that an entry bears a claim only once read for it. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: not-applicable
@@ -57,8 +57,10 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/registry-standard.md
-    version: "v0.4"
+    version: "v0.5"
   - path: standards/contract-standard.md
+    version: "v0.7"
+  - path: standards/truth-chain-standard.md
     version: "v0.6"
 ---
 
@@ -195,7 +197,7 @@ What we want to point to is not externalising values — that is common — but 
 - **Deprecation is not enforced at the reader.** The implementation's registry loader returns a deprecated key as live. The marker exists in the registry and the mirror; the code does not act on it.
 - **Sweeps report; few block.** The code sweep never fails its run, matches by value rather than meaning (so it reports coincidences), recognises fewer read forms than the completeness gate, and reads one implementation repository. The contract sweep stops a task from being dispatched, but skips a bare number with no unit or operator and does not check that a cited key exists.
 - **A renamed key is not followed into the code.** The three keys of § 4 were renamed in the registry, and the engine still reads the old names. Whether those reads fail at run time has not been measured.
-- **Provenance is only as good as the evidence registry.** An entry can cite evidence that does not say what the entry claims. Checking that is the job of evidence verification, not of the registry; the registry only records the link. § 4 shows how far apart the two can be.
+- **Provenance is only as good as the evidence registry.** An entry can cite evidence that does not say what the entry claims. Checking that is the job of evidence verification, not of the registry; the registry only records the link. The Truth Chain Standard holds that side: an entry bears a claim only once it has been read for that claim (§3.2). § 4 shows how far apart the two can be.
 - **Definitions are not governed values.** Lookup tables that define things (types, categories) sit beside the governed registry in the same mirror but carry no provenance fields, and the standard does not bind them.
 - **The standards leave three gaps around the registry**, all in the release's known issues:
   - Confidence and evidence tier have no rule between them, so nothing stops a value's confidence from exceeding the strongest evidence it cites.

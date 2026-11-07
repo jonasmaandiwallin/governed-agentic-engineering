@@ -2,8 +2,8 @@
 title: "Context, Coherence and Memory: How an Agent System Remembers What Its Agents Forget"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -40,8 +40,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the GEM, Backlog and Wave Standards closely; the database's two records that cannot be rebuilt from the logs corrected; where the reference installation departs from the standard on naming and regressions stated; the session start's sensors and the register of inherited measurements added; § 4 recounted; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: § 2 and § 3 rewritten as explanation with pointers, where v0.1 restated the GEM, Backlog and Wave Standards closely; the database's two records that cannot be rebuilt from the logs corrected; where the reference installation departs from the standard on naming and regressions stated; the session start's sensors and the register of inherited measurements added; § 4 recounted; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. A cited learning's step is now GAL's (§ 3.5); the backlog's answer gains its fifth part, a reason and a trigger for every new item (§ 3.6); the sensors and the register point to the GAL and Handoff Standards that now carry them (§ 3.8, § 8). Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -63,11 +63,13 @@ describes:
   - path: standards/gem-standard.md
     version: "v0.10"
   - path: standards/backlog-standard.md
-    version: "v0.8"
+    version: "v0.9"
   - path: standards/wave-standard.md
     version: "v0.3"
   - path: standards/gal-standard.md
-    version: "v1.76"
+    version: "v1.78"
+  - path: standards/handoff-standard.md
+    version: "v0.4"
 ---
 
 # Context, Coherence and Memory: How an Agent System Remembers What Its Agents Forget
@@ -137,20 +139,21 @@ What the design forbids is the countermeasure that exists only as an intention. 
 
 ### 3.5 Reading is measured
 
-A learning that no agent reads has no effect, so the system records each time an entry is returned to a reader (GEM Standard §7.1). The session's start receipt says how many learnings it was given per item, and a handoff names the learnings it consulted and their relevance, or says that none was relevant (GAL Standard §4.5). The reference installation adds that each cited learning gives a step for the receiver — a file to read, a run, a measurement — rather than only what went wrong.
+A learning that no agent reads has no effect, so the system records each time an entry is returned to a reader (GEM Standard §7.1). The session's start receipt says how many learnings it was given per item, and a handoff names the learnings it consulted and, for each, what the receiver is to do about it — a file to read, a run, a measurement — rather than only what went wrong, or says that none was relevant (GAL Standard §4.5).
 
 This makes two failures visible that are otherwise invisible: a learnings function that returns nothing for a certain agent, and a learning that is read again and again while its pattern keeps recurring.
 
 ### 3.6 The backlog as long-term memory
 
-A backlog is a memory of intent, and it fails in two ways: it forgets something that is still open, or it remembers something as open that is already done. The Backlog Standard's answer has four parts:
+A backlog is a memory of intent, and it fails in two ways: it forgets something that is still open, or it remembers something as open that is already done. The Backlog Standard's answer has five parts:
 
 - **one source** — the record is the item's file, and everything else is derived from it or written in the same operation;
 - **one partition** — every status is either open or closed, and every tool that asks whether an item is open answers from that partition (§3);
 - **nothing filed twice** — a finding is searched for by its own names across open and closed items before a new item is opened, so that an item that already carries it takes it and a closed item that dropped it is reopened (§4.1);
-- **nothing dropped** — a finding sent on to "a follow-up" counts as handled only once the item it was sent to actually carries it (§4.2).
+- **nothing dropped** — a finding sent on to "a follow-up" counts as handled only once the item it was sent to actually carries it (§4.2);
+- **nothing parked without a way back** — a new item says why the work was not done where it was found, and names the event that will bring it to work; a list of candidates is an item too, with such an event (§4.1).
 
-The standard allows one controlled exception to the last part: a finding a review marks as needing no change before the item closes may wait for the next change of the file it concerns, held meanwhile in an item that collects such findings for that file, and taken by whoever next changes it (§4.2). The reference installation collects them per file in one item, or in the item of the planned pass that next changes that file.
+The standard allows one controlled exception to *nothing dropped*: a finding a review marks as needing no change before the item closes may wait for the next change of the file it concerns, held meanwhile in an item that collects such findings for that file, and taken by whoever next changes it (§4.2). That next change is then its trigger. The reference installation collects them per file in one item, or in the item of the planned pass that next changes that file.
 
 ### 3.7 Order, never status
 
@@ -164,9 +167,9 @@ The failure this design exists for has a precise shape: an item whose done condi
 
 The records help only if they reach the agent when it decides something, and the lifecycle standard puts that moment at session start (GAL Standard §4.2). The start compares the repository's head with the commit the handoff says it left, reads each item the handoff names and the learnings for it, and emits a receipt before any work begins.
 
-In the reference installation the architect's start also reads six sensors: patterns at the triage threshold without an item, regressions, untriaged intake, an architecture review older than ten days, the wave sweep, and inherited measurements that have fallen due. A sensor never stops the start; what it finds becomes an action in the same turn or an item on the session's checklist. Triage runs there, when the sensor finds a pattern without an item, and not between sessions.
+In the reference installation the architect's start also reads six sensors: patterns at the triage threshold without an item, regressions, untriaged intake, an architecture review older than ten days, the wave sweep, and inherited measurements that have fallen due. A sensor never stops the start; what it finds becomes an action in the same turn or an item on the session's checklist. GAL names the same reads as sensors the architect's start may run (§4.2), and leaves the instance to list them. Triage runs there, when the sensor finds a pattern without an item, and not between sessions.
 
-**Inherited measurements.** A claim that cannot be measured in the session that makes it is carried forward with the condition under which someone will measure it. For a while these were carried in handoffs, one session to the next, and a handoff is superseded by the next one. When the installation counted them, most of the open ones stood nowhere but in handoffs, reports and review files, and some had fallen out of the chain altogether. They now stand once in a register; a handoff carries only those for its receiver and its items; a result removes the entry in the same commit; and the handoff check fails a handoff whose base held an entry that has since disappeared without a result. It is the "nothing dropped" property applied to what has not yet been measured.
+**Inherited measurements.** A claim that cannot be measured in the session that makes it is carried forward with the condition under which someone will measure it. For a while these were carried in handoffs, one session to the next, and a handoff is superseded by the next one. When the installation counted them, most of the open ones stood nowhere but in handoffs, reports and review files, and some had fallen out of the chain altogether. They now stand once in a register; a handoff carries only those for its receiver and its items; a result removes the entry in the same commit; and the handoff check fails a handoff whose base held an entry that has since disappeared without a result. The standards now require that form: GAL has every agent that owns a session write an entry once to the register (§4.7.4), and the Handoff Standard says which entries a handoff carries and fails one that is lost (§7, §8). It is the "nothing dropped" property applied to what has not yet been measured.
 
 ---
 
@@ -253,7 +256,8 @@ A prior-art search for this package looked for these parts and found partial ana
   - Governed Engineering Memory Standard: the two logs, the learnings function, triage and consultation
   - Backlog Standard: the item, its statuses and lifecycle, and the advisory class
   - Wave Standard: edges, done conditions, waves and the sweep
-  - Governed Agent Lifecycle Standard: the start gates and receipt, and when an agent writes and reads the records
+  - Governed Agent Lifecycle Standard: the start gates and receipt, the sensors, when an agent writes and reads the records, and the measurement line
+  - Handoff Standard: the register of what was not measured, and which of its entries a handoff carries
 - **Related white papers:**
   - *Agent Roles and Orchestration*, on handoffs between agents
   - *Loop Engineering*, on retro and triage as a designed loop

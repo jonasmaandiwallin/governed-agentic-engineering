@@ -2,8 +2,8 @@
 title: "Spec-Governed Dispatch: The Factory Floor"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 3.2–3.6 rewritten as explanation with pointers to the standard; the options the standard leaves to an installation — a product as paths, the first post, acceptance with open findings carried — named, with which the reference installation uses; the sibling search placed where it runs; a claim about the main branches corrected; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: § 3.2–3.6 rewritten as explanation with pointers to the standard; the options the standard leaves to an installation — a product as paths, the first post, acceptance with open findings carried — named, with which the reference installation uses; the sibling search placed where it runs; a claim about the main branches corrected; Limitations brought up to date with the release's known issues; the map pointed at the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. Two of the three gaps in § 6 and § 7 are closed by the standards (what holds a session's writes outside a product's prefixes, and the first post's entry), and the emergency path gets a pointer to the rule on a merge without its review. Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -57,7 +57,11 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/gip-standard.md
-    version: "v0.5"
+    version: "v0.6"
+  - path: standards/gal-standard.md
+    version: "v1.78"
+  - path: standards/truth-chain-standard.md
+    version: "v0.6"
 ---
 
 # Spec-Governed Dispatch: The Factory Floor
@@ -193,13 +197,10 @@ We have not checked whether this combination is formulated elsewhere, and this p
 - **The completeness gate does not run at merge.** It runs when an agent calls it.
 - **Size lanes, the lane's choice of model and the batch threshold are not built.** As shown in § 4, a large change merged without the manual review the large lane asks for, and the review was done by hand after the merge.
 - **The merge check detects.** The repository host cannot make the queue check required on private repositories at the current plan; the session-start read finds what went around.
-- **The emergency path leaves no trace.** There is no bypass log. A bypass shows only as a commit on main that no post explains.
+- **The emergency path leaves no trace.** There is no bypass log. A bypass shows only as a commit on main that no post explains. The standards now call such a merge a bypass, to be logged and reviewed before the same files are changed again, and count a path as used when it cannot be told whether it was (GAL §9.7, GIP §3); the reference installation has not yet built the log that would hold it.
 - **The write gate's claim is a local mark.** It stops a write beside the queue made by mistake, not one made on purpose; the queue and the detection hold the rest.
 - **Dependencies are rarely declared.** One of the 31 posts names the post it waits for. How order between the others was kept is not recorded in the queue.
-- **The standards leave three gaps around dispatch**, all in the release's known issues:
-  - Where a product is declared as paths, the write gate refuses a session's writes under the prefixes only, and the lifecycle standard does not say what holds its writes elsewhere in the repository.
-  - The architect commits task specifications and adds queue posts. An installation whose owner rules out a write connector for the architect has no executor of those writes in the standards.
-  - The Truth Chain lets code rest on a task specification with a passed gate, and does not name the first post's entry.
+- **The standards leave one gap around dispatch**, in the release's known issues: the architect commits task specifications and adds queue posts, and an installation whose owner rules out a write connector for the architect has no executor of those writes in the standards. Two earlier gaps are closed. Where a product is declared as paths, the write gate holds the prefixes and the agent's boundary entry holds its writes everywhere else (GAL §4.2). And the first post's entry is now named as the one specification code may rest on before any gate has passed (Truth Chain §2.3, §3.1).
 
 ---
 
@@ -210,7 +211,7 @@ We have not checked whether this combination is formulated elsewhere, and this p
 - Size lanes counted by a tool from the change itself.
 - A bypass log, and a claim the queue confirms.
 - Order between posts written as dependencies, or as order edges in the backlog where it spans work outside the queue.
-- In the standards, as directions in the release's known issues: what holds a session's writes outside a product's prefixes, an executor of the architect's writes, and the first post's entry in the Truth Chain.
+- In the standards, as a direction in the release's known issues: an executor of the architect's writes.
 
 ---
 

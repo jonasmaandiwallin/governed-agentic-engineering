@@ -2,8 +2,8 @@
 title: "Harness Engineering: Infrastructure That Holds the Rules"
 type: white-paper
 status: draft
-version: "v0.2.1"
-date: "2026-11-02"
+version: "v0.2.2"
+date: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -36,8 +36,8 @@ ai_disclosure:
     reason: null
   - role: editing
     status: complete
-    scope: "v0.2: § 3.3 and § 3.7 rewritten as explanation with pointers, where v0.1 restated the GIP and Boundary Standards closely; § 3.8 corrected for the reference installation's own exception to the module halt; the declared paths described as in force; § 5 brought in line with the checked harness study; Limitations and the map brought up to date with the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept."
-    evidence: "The diff against v0.1."
+    scope: "v0.2: § 3.3 and § 3.7 rewritten as explanation with pointers, where v0.1 restated the GIP and Boundary Standards closely; § 3.8 corrected for the reference installation's own exception to the module halt; the declared paths described as in force; § 5 brought in line with the checked harness study; Limitations and the map brought up to date with the release. v0.2.1: sentences that shared a run of ten or more words with a standard or the known issues rewritten in the paper's own words, with the pointer kept. v0.2.2: brought up to gae-standards-v0.5. What holds writes outside a product's prefixes, and independent routes for the version check, are now GAL's (§ 3.3, § 6); the confirmation flag and staging only one's own files point to the Boundary Standard, which now carries both (§ 3.4, § 3.6); the emergency path points to the rule on a merge without its review (§ 6). Every sentence about a standard was read against the v0.5 text before the change."
+    evidence: "The diff against v0.2.1."
     reason: null
   - role: fact-check
     status: complete
@@ -57,11 +57,11 @@ release: public
 audience: "External — no IP disclosure. Readable without NDA."
 describes:
   - path: standards/gal-standard.md
-    version: "v1.76"
+    version: "v1.78"
   - path: standards/boundary-standard.md
-    version: "v0.3"
+    version: "v0.4"
   - path: standards/gip-standard.md
-    version: "v0.5"
+    version: "v0.6"
 ---
 
 # Harness Engineering: Infrastructure That Holds the Rules
@@ -125,13 +125,13 @@ GIP puts its gate on the product repository, not on the agents (GIP §3): every 
 
 The reason is in how the gate came about. The changes that made it necessary were not agents breaking their rules. They were sessions started beside the queue — work done in the right repository, by an agent that had no rule against it, outside the path that records what was built and why. A gate that only bound agents would have missed every one of them. A gate on the repository catches them whoever starts the session.
 
-Where a product is declared as paths inside a shared repository rather than as a repository of its own, the gate covers only those paths, and what holds a session's writes elsewhere in the repository is left open; the release's known issues name it. The reference installation keeps each product in its own repository.
+Where a product is declared as paths inside a shared repository rather than as a repository of its own, the gate covers only those paths. Outside them, GAL has the session agent's boundary entry hold its writes (§4.2): an instruction rather than a gate, but a named one. The reference installation keeps each product in its own repository.
 
 ### 3.4 A confirmation the agent gives itself is not a gate
 
 Many tools in the reference installation take a flag that says the human operator confirmed the step. The flag is useful: it makes the agent stop and ask before a commit, a push or a write to the database. But no tool can verify that the operator actually confirmed. Setting the flag is the agent's own statement.
 
-So the flag is treated as what it is — a prompt to the agent, not a check — and is never cited as one. What stops a bad commit is the set of gates the commit tool runs on what is staged. The same distinction applies to the write gate's claim: the mark that a session has claimed its work is a file the session writes itself. It stops a write made by mistake beside the queue. It does not stop a write made on purpose, and the documentation says so.
+So the flag is treated as what it is — a prompt to the agent, not a check — and is never cited as one; the Boundary Standard now says the same of every such flag (§2.1). What stops a bad commit is the set of gates the commit tool runs on what is staged. The same distinction applies to the write gate's claim: the mark that a session has claimed its work is a file the session writes itself. It stops a write made by mistake beside the queue. It does not stop a write made on purpose, and the documentation says so.
 
 ### 3.5 An empty read fails closed
 
@@ -143,7 +143,7 @@ The same rule runs through the rest of the reference installation's harness. The
 
 The tool server in the reference installation is stateless and does not know which agent is calling. Every specification agent writes to the same working copy. For a long time, the commit tool staged by directory — and so took with it whatever another session had left uncommitted in those directories.
 
-Identity at the tool layer would solve this properly, and it is not built. The answer in the meantime is declaration: the caller names the files it wrote, only those are staged, and every other uncommitted file is left in place and listed in the answer. A call that names no files is refused. It is a weaker guarantee than identity — an agent can still declare a file it did not write — but it turns a silent sweep into a visible choice.
+Identity at the tool layer would solve this properly, and it is not built. The answer in the meantime is declaration, which the Boundary Standard now requires of every agent (§2.1): the caller names the files it wrote, only those are staged, and every other uncommitted file is left in place and listed in the answer. A call that names no files is refused. It is a weaker guarantee than identity — an agent can still declare a file it did not write — but it turns a silent sweep into a visible choice.
 
 ### 3.7 The way through is cheaper than the way around
 
@@ -208,9 +208,9 @@ We have not checked whether the combination described here — every rule declar
 - **The write gate's claim is a local mark.** As shown in § 4, a session can write a claim for work that does not exist. The commands the gate allows without a claim are not all read-only, and the gate's scan of a command follows the rules of one shell while the command runs in another.
 - **The tester's read boundary is held by instruction.** The rule that the agent writing checks never reads the code it checks stops nothing today. A spike showed the platform can enforce it; it is not built.
 - **Merge checks detect.** The repository host cannot make the queue check required on private repositories at the current plan, so a merge without a queued unit of work is found at the next session start, not stopped.
-- **The emergency path leaves no trace.** The bypass log is not built. A bypass is detectable only as a commit on main that no unit of work explains.
+- **The emergency path leaves no trace.** The bypass log is not built. A bypass is detectable only as a commit on main that no unit of work explains. The standards now have such a merge logged and reviewed before the same files change again (GAL §9.7); the log that would hold it is what is missing here.
 - **The model split is claimed, not proven.** Nearly every step receipt names the model from configuration, so a reviewer that ran on the implementer's model would not show in the receipt.
-- **The version check can compare two copies of one stale state.** The start gate that compares the loaded instructions with the version registry passes whenever both reach the session through one periodic sync. The release's known issues propose that the two sides come from independent routes.
+- **The version check may compare two copies of one stale state.** GAL now has the start gate take the loaded instructions and the version registry from independent routes, and halt where the copy being checked is the only route to the current version (§4.2). Whether the reference installation's start call meets that is measured when the installation moves to the current standards; until then this paper claims nothing about it.
 - **The receipt is not stored.** Session receipts are emitted to the operator and are not parsed or kept by any tool. Whether every agent starts with the deterministic start call is not measured.
 - **The confirmation flag proves nothing.** It is kept because it makes the agent stop and ask, not because it holds anything.
 
