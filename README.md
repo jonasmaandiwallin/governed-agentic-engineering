@@ -55,7 +55,7 @@ The standards and the white papers are early work, and each one carries its own 
 
 ## Releases
 
-Each release is a tag. `SHA256SUMS` lists every file under `standards/` and `starter/`, and `KNOWN-ISSUES.md`, so a copy can be checked as unchanged; `starter/ADOPTION.md` step 0 says how to check the copies at the paths they are installed under. The white papers are not in it, since an adopter does not install them; each paper carries its own version. Report what did not fit your domain as an issue; do not edit your copy.
+Each release is a tag. `SHA256SUMS` lists every file under `standards/` and `starter/`, and `KNOWN-ISSUES.md`, so a copy can be checked as unchanged; `starter/ADOPTION.md` step 0 says how to check the copies at the paths they are installed under. The white papers are not in it, since an adopter does not install them; each paper carries its own version. The licence and the other files at the root are not in it. Report what did not fit your domain as an issue; do not edit your copy. Before each release, every candidate rule — from the installations, from the issues reported and from `KNOWN-ISSUES.md` — is tested and given one of four outcomes: taken into a standard, merged with another, refused with a reason, or kept in `KNOWN-ISSUES.md` with a direction.
 
 ## License and attribution
 

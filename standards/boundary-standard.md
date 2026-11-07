@@ -1,9 +1,9 @@
 ---
 document_title: "Boundary Standard"
-version: "v0.3"
+version: "v0.4"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-01"
+last_updated: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -73,7 +73,15 @@ Three properties follow:
 - A rule that a tool holds names the tool. A rule that no tool holds says so, or the [instance appendix] says it for the whole list. A reader can tell, for each rule, whether breaking it is stopped, detected, or neither.
 - An implementation agent's entry follows the role it fills (GIP §2) and adds what the repository requires. An entry may name the role once and list the agents that fill it.
 - A retired agent keeps an entry marked as retired, with the date and the agent or process that took over its responsibilities.
-- Every [write surface] stands, in addition to the lists, in one machine-readable declaration in the [boundary contract], for the repositories the [instance appendix] names. The declaration and the lists say the same thing there. Where they differ, the lists hold, and the [instance appendix] names the difference until the declaration is brought into line. An agent whose surface lies outside the declared repositories is named in the [instance appendix].
+- Every [write surface] stands, in addition to the lists, in one machine-readable declaration in the [boundary contract], for the repositories the [instance appendix] names. The declaration and the lists say the same thing there. Where they differ, the lists hold, and the [instance appendix] names the difference until the declaration is brought into line, or names the standing rule of its own that carries the difference, with the reason. An agent whose surface lies outside the declared repositories is named in the [instance appendix].
+- What an agent may write or run without a fresh confirmation from the [operator] — a standing confirmation — is named in its entry, action by action. Every other write the entry gives to the [operator]'s confirmation waits for it in the session.
+- An agent's deliverables are written to its [write surface], never only to a document or page outside the repository, which no gate reads and no later session finds.
+
+### 2.1 Writing
+
+- Before a write, the agent reads the state of the repository. A change it did not make — a file, a path, a commit — stops the write until it knows whose the change is.
+- An agent stages and commits only the files it wrote, by name, never everything in the tree.
+- A flag by which an agent declares that the [operator] confirmed an action is a lock in its instructions, not a gate: no tool can verify it. The agent sets it only after the [operator]'s yes in the session, treats a run it does not know to be read-only as a write, and never cites the flag as a check.
 
 ## 3. Crossing a boundary
 
@@ -85,9 +93,11 @@ When an agent is asked to act outside its entry:
 
 A request does not widen a boundary, also when it comes from the [operator]. The [operator] widens a boundary in one of two ways. The first is to change the entry, which is a change to a governance document (GEM §4.3). The second is a recorded exception for one action: the [operator]'s decision, the action, and the boundary it crosses are written in the [decision log] before or with the action. An entry may exclude exceptions for a rule whose purpose they would defeat, as §5 does for a reviewer.
 
+No agent changes, on its own, a gate or a [write guard] that holds its own work, and no agent gives itself a permission its entry does not give, such as to merge or to write a path. Such a change is the [operator]'s decision, written in the [decision log], and an agent other than the one it concerns reviews it.
+
 ## 4. Work between agents
 
-- An agent hands work to another agent through the [operator], in the form the [handoff standard] gives. No agent starts another agent's session.
+- An agent hands work to another agent through the [operator], in the form the [handoff standard] gives. No agent starts another agent's session. Transport and decision are separate: a platform may carry the handoff into the target session, and the decision to start that session stays with the [operator].
 - The permitted routes, each as giver, [operator] and receiver, stand in one list: in the [boundary contract], or in the [handoff standard] where a tool reads them there. The other document points to the list and does not keep a second one. A route that names the same agent on both sides is a session boundary: the work stays inside that agent's entry, and the [operator] carries it into a new session.
 - Two exceptions are permitted, and the [boundary contract] names each:
   - **Dispatch inside a session.** A session agent dispatches its step agents inside the one session the [operator] started, with fields only, never content (GIP §2).
@@ -114,4 +124,4 @@ In a product repository, the GIP standard's [write gate] is a [write guard] for 
 
 - Every change to this standard raises `version`.
 - The [instance appendix] states the version of this standard it binds. An appendix bound to an older version is read against that version until it is revised.
-- A new agent, a retired agent or a changed role changes the [boundary contract] in the same pass as the agent's prompt (§2).
+- A new agent, a retired agent or a changed role changes the [boundary contract] in the same pass as the agent's prompt (§2). So does any change of what an agent reads, writes or runs, in the change that makes it.

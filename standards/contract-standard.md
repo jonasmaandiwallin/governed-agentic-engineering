@@ -1,9 +1,9 @@
 ---
 document_title: "Contract Standard"
-version: "v0.6"
+version: "v0.7"
 status: "draft"
 created: "2026-10-12"
-last_updated: "2026-11-01"
+last_updated: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -66,6 +66,7 @@ This standard defines the form of the documents that carry a system's specificat
 | [author] | The role that writes canonical documents |
 | [auditor] | The role that validates a document against this standard before it becomes canonical |
 | [owner] | The person who decides what the reviewers leave open |
+| [architect] | The agent that owns the agent system and validates what an audit drops (GAL §3) |
 | [post-processor], [index generator], [conversion tool], [completeness gate] | Tools of the classes in §9 |
 
 ## 2. Document types
@@ -120,9 +121,10 @@ Fields beyond this list are defined in the [instance appendix], never ad hoc in 
 - `depends_on` lists upstream dependencies by slug. An entry the [post-processor] detected automatically carries the appendix's auto marker and is unverified until a person or the [author] confirms it; an unverified entry is not canonical.
 - `referenced_by` is informational and carries no authority. The [post-processor] maintains it.
 - `evidence_ids`, when present, names entries that exist in the [evidence registry].
-- `implementation_scope`, when present, names [implementation unit]s, never file paths. A document that drives no implementation leaves it empty.
+- `implementation_scope`, when present, names [implementation unit]s, never file paths. A document whose rules govern something built names its units, or states in its body why it names none; only a document that drives no implementation leaves it empty.
 - `audience` is mandatory on orientation documents and unused on other types.
 - Version is stored in the frontmatter only — never in a file name, a slug or a title.
+- A change raises the part of `version` that matches what it changes: the patch part for a correction that changes no rule (wording, a reference, metadata); the minor part for a rule added or made stricter, every existing rule kept; the major part for a rule removed, relaxed or changed in meaning. A change whose class is unclear raises the higher part.
 
 ## 4. Structure
 
@@ -130,7 +132,7 @@ Fields beyond this list are defined in the [instance appendix], never ad hoc in 
 
 - **One H1.** Each document has exactly one H1, `# [title prefix][Document Title]`, matching `document_title`. All other sections are H2 or lower. A change to [title prefix] is applied to the whole corpus by one scripted pass, never by hand.
 - **Title Case headers.** `## Core Assertions`, never `## CORE ASSERTIONS` or `## core assertions`.
-- **Fixed order.** Where a type has a section order, sections are not reordered, and no section is left empty. Only the contract order (§4.3), and the registry order that follows it (§4.4), lets a section that does not apply be omitted; every other order applies in full.
+- **Fixed order.** Where a type has a section order, sections are not reordered, and no section is left empty. Only the contract order (§4.3), and the registry order that follows it (§4.4), lets a section that does not apply be omitted; every other order applies in full. A prohibition may stand with the rule it bounds, one rule per item (§4.9); `## Prohibited Behavior` and `## Failure Modes` then count as not applying.
 
 ### 4.2 Orientation
 
@@ -222,7 +224,7 @@ A normative statement written as prose cannot be counted by the [completeness ga
 
 ### 4.10 Cross-references
 
-A reference to another document uses its full title: `See: [title prefix][Document Title]`. Abbreviated or informal references are not permitted.
+A reference to another document uses its full title: `See: [title prefix][Document Title]`. Abbreviated or informal references are not permitted. Where every document's slug is unique in the corpus and is the [index]'s key, a reference by slug is explicit too. A reference names a canonical document; a deprecated one is never a target, and the reference names its `superseded_by` instead.
 
 ### 4.11 File names
 
@@ -263,11 +265,11 @@ A contract states behavioural rules and invariants. Data schemas, field definiti
 
 ### 7.2 Governed values
 
-A numeric value in a body that represents a tunable boundary — a limit, threshold, score, window or cutoff — references its key in the [registry]. A hardcoded tunable value is a violation whether or not the [registry] holds a matching key: without a key the value is both hardcoded and unmanaged, and the fix is a [registry] entry. Definitional constants of the domain are exempt.
+A numeric value in a body that represents a tunable boundary — a limit, threshold, score, window or cutoff — references its key in the [registry]. A hardcoded tunable value is a violation whether or not the [registry] holds a matching key: without a key the value is both hardcoded and unmanaged, and the fix is a [registry] entry. Definitional constants of the domain are exempt. An assertion that implies a quantity the document does not state — "too high", "shortly after", "enough" — is a finding: the quantity is stated and, where it is tunable, keyed.
 
 ### 7.3 Language
 
-The corpus is written in the [corpus language]. Mixed-language text in a body is not permitted. Exempt: metadata values and quoted system-defined identifiers (domain names, slugs, enum values), and comments in code blocks that serve as implementation references.
+The corpus is written in the [corpus language]. Mixed-language text in a body is not permitted. Exempt: metadata values and quoted system-defined identifiers (domain names, slugs, enum values), comments in code blocks that serve as implementation references, and wording that must keep its own language — a client's or a source's own words — written as a marked quotation, `"…" [xx]` with its ISO 639-1 code, read as data and never as a rule.
 
 ### 7.4 Change history
 
@@ -310,8 +312,24 @@ last_audit:
 
 ### 8.4 Updating and promotion
 
-- The [auditor] writes `last_audit` immediately after delivering a verdict, with the `version` it actually read, and stores the full report at [audit report path]. Reports are append-only: a new audit is a new file, and no report is deleted.
+- The [auditor] writes `last_audit` immediately after delivering a verdict, with the `version` it actually read, and stores the full report at [audit report path]. Reports are append-only: a new audit is a new file, and no report is deleted. Where the [auditor] cannot write the document's store, the agent that commits the audited document writes `last_audit` from the [auditor]'s report, with the `version` the [auditor] read.
 - No document enters the canonical corpus without a `full` audit with an approving verdict. The audit is on the document's current `version`; for a record without `version`, the [owner] decides whether it covers the current text (§8.2). The [owner]'s decision never replaces the `full` type or the approving verdict: a record of a `standard` or `deep` audit, or with `needs-work` or `needs-review`, is not a basis for promotion. The [author] never approves its own document.
+- A document written after what it describes was built is audited against what is built, not only against the corpus.
+
+### 8.5 What the auditor and the author owe
+
+- **The [auditor] blocks what it finds** in a document about to become canonical, whenever the defect came in. "Pre-existing" is not a verdict.
+- **Every advisory finding ends as FIX or DROP**, and the [architect] validates each DROP before the document is promoted.
+- **Change scope.** A change covers every statement it makes false, in the document and in the documents that depend on it, and a correction that changes behaviour is flagged as one. A rewrite that only normalises form keeps every rule: the normative statements are counted before and after, and the counts match.
+- **The [author]'s self-check** runs the [auditor]'s checklist over the whole document before handover (GAL §9.8 p. 4).
+
+### 8.6 Gates follow the contracts
+
+A gate that reviews what a contract governs — a deliverable, a build — is derived from the contract, never written beside it, so that it cannot drift from the next version.
+
+- A review goes through every normative statement of the contract, by its id or position, with an outcome for each, listed the way the [completeness gate] counts them.
+- When a contract is merged or gets a new version, the change lists the gates that read it — checklists, validators, templates, store rules — and opens a backlog item for each one that is not derived automatically.
+- A deliverable records the version of the contract it followed, its review and its approval.
 
 ## 9. Tool classes
 

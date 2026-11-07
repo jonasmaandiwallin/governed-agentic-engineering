@@ -1,9 +1,9 @@
 ---
 document_title: "GAL Standard (Governed Agent Lifecycle)"
-version: "v1.76"
+version: "v1.78"
 status: "draft"
 created: "2026-09-11"
-last_updated: "2026-11-01"
+last_updated: "2026-11-07"
 author: "Tooling & Architecture"
 supersedes: "dpal-standard v1.0 (archived), dpal-standard v2.0 (name change)"
 framework:
@@ -98,6 +98,7 @@ This standard governs:
 - **Core skeleton** — mandatory sections, their order, and which are invariant vs agent-owned (§4.1).
 - **Session start** — gate sequence and invariant template (§4.2, §4.3).
 - **Session close** — close sequence and session-close module skeleton (§4.4).
+- **Mandatory behavior sections** — four rules every agent that owns a session carries, in one text (§4.7).
 - **Step agent skeleton** — the four parts a step agent's file carries (§4.6).
 - **Header contract** — YAML frontmatter for cores and modules (§5).
 - **Session receipt** — structured proof of successful assembly (§6).
@@ -105,7 +106,7 @@ This standard governs:
 - **Registration checklist** — touchpoints a new agent must be registered in (§7).
 - **Deterministic Prompt Assembly & Linking (DPAL) runtime** — module loading, version gate, fail-fast — consequences of the skeleton (§8).
 
-The standard does NOT govern behavioral content. It governs the container.
+Beyond the four rules of §4.7 and the review rules of §9.5, §9.7 and §9.8, the standard does NOT govern behavioral content. It governs the container.
 
 ## 3. Definitions
 
@@ -179,8 +180,8 @@ The core skeleton below is carried by every specification agent's core and by an
 | 2 | **Session Start Protocol** | Invariant | Gate sequence per §4.2, text per §4.3. The [tool appendix] holds one template per kind of agent. Placeholders: `[version registry row]` (specification agents on a [chat platform] only — a session agent, and a specification agent on the [coding-agent platform], has no registry check, §4.2 G2), `[AGENT_IDENTITY]`, `[CORE_FILENAME]`. |
 | 3 | **What This Agent Handles** | Agent-owned | Scope description. (A specification agent's heading carries `What This Agent Handles` or `What This Project Handles`.) |
 | 4 | **Key Paths** | Agent-owned | Repo paths relevant to the agent. |
-| 5 | **Routing and permissions** | Invariant frame | Frame: the [primary MCP connector] or the platform's tools, the wrong-connector warning where the agent reaches the repository through a connector, and the stale-clone rule where the agent works in a clone that a server keeps for it and does not bring to the remote on its own. Agent-owned: what the agent may read, write and run — its entry in the [boundary contract]. For an implementation agent the platform enforces the entry (tool list, hooks); the section states it and points to the entry. For a specification agent the agent-owned part also names which commit tool routes each path it writes. (A specification agent's heading carries `MCP Routing` on a [chat platform], and the section name in this table on the [coding-agent platform].) |
-| 6 | **Behavior Rules** | Agent-owned | Mandatory protocols, investigation rules, circuit breaker, etc. MUST contain the invariant H3 **§ Auto-Retro — Mandatory** (text per §4.4 step 3). Position of the H3 within the block is agent-owned. |
+| 5 | **Routing and permissions** | Invariant frame | Frame: the [primary MCP connector] or the platform's tools, the wrong-connector warning where the agent reaches the repository through a connector, the stale-clone rule where the agent works in a clone that a server keeps for it and does not bring to the remote on its own, and the fresh-clone rule: the working copy is brought to the remote before the session's first write, and again after any pause in which another session may have written. Agent-owned: what the agent may read, write and run — its entry in the [boundary contract]. For an implementation agent the platform enforces the entry (tool list, hooks); the section states it and points to the entry. For a specification agent the agent-owned part also names which commit tool routes each path it writes. (A specification agent's heading carries `MCP Routing` on a [chat platform], and the section name in this table on the [coding-agent platform].) |
+| 6 | **Behavior Rules** | Agent-owned | Mandatory protocols and the agent's own rules. MUST contain the invariant H3 **§ Auto-Retro — Mandatory** (text per §4.4 step 3) and the four mandatory H3s of §4.7. Position of the H3s within the block is agent-owned. |
 | 7 | **Boundaries** | Agent-owned | What the agent does NOT do. MUST exist as an H3 and MUST point to [boundary contract]. Title is agent-owned and carries `Boundary` or `Boundaries` (`Agent Boundary Rule`, …). |
 | 8 | **Commands** | Invariant frame | Frame: `/handoff` with invariant text per §4.4 § Close trigger. Agent-owned: further commands (`/sprint`, `/report`, …). |
 | 9 | **Module or Skill Catalog** | Invariant frame | Frame: header row `\| Module \| File \| Content \|` — for a session agent `\| Skill \| File \| Content \|` —, the intro sentence "The core is always loaded. Modules are loaded via [module read call]." — for a session agent "The core is always loaded. Skills are loaded via [skill read call]." —, the single-source rule, the always-loaded rule (§8.1). Rows are agent-owned; the always-loaded set MUST contain `[prefix]-handoff` and `[prefix]-session-close` — for a session agent, its handoff skill and close skill. A session agent's catalog also lists its loop skills and support skills (§8.1). (A specification agent's heading is an H2 that carries `Module Catalog`.) |
@@ -203,29 +204,33 @@ The gate sequence is invariant. Every core carries these gates in this order: a 
 | Gate | Name | Action | Receipt line |
 |---|---|---|---|
 | G1 | **Handoff validation** | Extract target from `HANDOFF:` line. Compare against `AGENT_IDENTITY`. Mismatch → HALT. | `Handoff:` |
-| G2 | **Core verification** | Read [version registry]. Compare `[version registry row]` against `prompt_version` in this file's YAML frontmatter. Mismatch → read full prompt from repo, follow it for the rest of the session, warn. | `Core:` |
-| G3 | **Persistence gate** | [repo status] + [last commit]. Warn if [agent directory] dirty or HEAD ≠ Last commit. | `HEAD:` |
+| G2 | **Core verification** | Read [version registry]. Compare `[version registry row]` against `prompt_version` in this file's YAML frontmatter. Mismatch → read full prompt from repo, follow it for the rest of the session, warn. The two sides come from independent routes; where the only route to the current core is the copy being checked, G2 halts (§8.3). | `Core:` |
+| G3 | **Persistence gate** | [repo status] + [last commit], on the branch the handoff names, or main when it names none. Warn if [agent directory] dirty or HEAD ≠ Last commit. Where the giver's last durable write is not a commit, the handoff names it in a form the receiver reads back (Handoff §2). | `HEAD:` |
 | G3b | **Tool preload** | [tool preload call]. [Chat platform] lazy-loads tools; narrow initial queries miss newer tools. | — |
 | G4 | **Deterministic Prompt Assembly & Linking (DPAL) module loading** | Classify task → load modules via [file read]. Version gate each (§8.2). | `Modules:` |
 | G5 | **Task context** | Read [backlog item] if indicated. Run [learnings function]. | `Learnings:` |
-| G6 | **Agent-specific gates** | Agent-owned. Results summarized in receipt. | `Gates:` |
+| G6 | **Agent-specific gates** | Agent-owned, the [architect]'s sensors included (below). Results summarized in receipt. | `Gates:` |
 | — | **Receipt emit** | Emit `GAL ready` (or `GAL halt`). | *(receipt itself)* |
 
 **Session agent.** A session agent runs the same gate sequence. Where the platform makes a gate's check different or empty, the gate takes this form:
 
 | Gate | Form for a session agent |
 |---|---|
-| G1 | Same. The target stands on the bootstrap line of the code-session handoff. No handoff → the null form; the session can then only read, because the [write gate] (GIP §3) refuses a write without a claimed queue post. |
+| G1 | Same. The target stands on the bootstrap line of the code-session handoff. No handoff → the null form; the session can then only read, because the [write gate] (GIP §3) refuses a write without a claimed queue post. Where a product is declared as paths (GIP §1), the [write gate] holds the prefixes only; the agent's entry in the [boundary contract] holds its writes outside them. |
 | G2 | Does not apply. G2 compares a copy of the core with the repository; the [coding-agent platform] loads the core from the working tree, so there is no copy to compare. The version is read from the file and printed on the `Core:` line. |
-| G3 | Same, with a pull first: the working tree is brought to the remote main before status and HEAD are read. |
+| G3 | Same, with a pull first: the working tree is brought to the branch the handoff names, or to the remote main when it names none, before status and HEAD are read. |
 | G3b | Same, where the [coding-agent platform] defers tool loading; otherwise it does not apply. The [tool appendix] states which holds. |
 | G4 | The loop skill named by the queue post, and the always-loaded skills; each version-gated (§8.2). |
 | G5 | Claim the queue post and read its task specification; run the [learnings function] for its backlog item (§4.5). |
 | G6 | Agent-owned — for example the baseline: the full suite green before work begins. |
 
-**Specification agent on the [coding-agent platform].** A specification agent that runs in the repository on the [coding-agent platform] (§3, Agent kinds) takes the session agent's form for the three gates whose form the platform decides: G2, G3 and G3b above. The core is read from the working tree, so G2 has no copy to compare and the `Core:` line carries the version read from the file (§6.2 p. 6). Because G2 no longer catches a stale core, G3 brings the working tree to the remote main before status and HEAD are read. The platform loaded the core before the pull, so when the pull changes the agent's core file, the agent reads it, follows it for the rest of the session and warns the [operator], as on a G2 mismatch; the `Core:` line carries the version after the pull. The modules are loaded at G4, after the pull. Every other gate keeps the specification agent's form in the first table; G4 and G5 differ for a session agent because of its kind, not its platform. The [tool appendix] states which platform each agent runs on.
+**Specification agent on the [coding-agent platform].** A specification agent that runs in the repository on the [coding-agent platform] (§3, Agent kinds) takes the session agent's form for the three gates whose form the platform decides: G2, G3 and G3b above. The core is read from the working tree, so G2 has no copy to compare and the `Core:` line carries the version read from the file (§6.2 p. 6). Because G2 no longer catches a stale core, G3 brings the working tree to the branch the handoff names, or to the remote main when it names none, before status and HEAD are read. The platform loaded the core before the pull, so when the pull changes the agent's core file, the agent reads it, follows it for the rest of the session and warns the [operator], as on a G2 mismatch; the `Core:` line carries the version after the pull. The modules are loaded at G4, after the pull. Every other gate keeps the specification agent's form in the first table; G4 and G5 differ for a session agent because of its kind, not its platform. The [tool appendix] states which platform each agent runs on.
 
 **One call for several gates.** A system may run gates G2–G5 in one deterministic call, a [session-start function], instead of one model step per gate. The gates, their order, their halt and warn conditions and the receipt lines do not change: the call runs the gates in the order above and answers each gate's values, marking each value on which a gate halts or warns (a G2 mismatch, a module older than its core or missing); the model halts or warns where the mark stands and carries out what the call cannot — the warning to the [operator] and following the full core on a G2 mismatch, the version-gate halt question — and emits the receipt from the answer. A halt the model makes on a mark is the gate's halt: the text the call answered for a module older than its core is not followed until the [operator] confirms (§8.2). G1 stays the model's, decided from the handoff before any read. G3b stays the model's where the [chat platform] defers tool loading; when the call returns the modules' text, G4 no longer needs the full tool set, and G3b may follow the call. G6 stays agent-owned. A gate the call runs is executed by a script, not by the model, which closes for that gate the gap §1.2 requirement 1 names. The [tool appendix] states which gates the instance's call runs.
+
+**Sensors.** The [architect]'s G6 may read sensors: reads that never stop the start and whose finding becomes an item in the start reply's checklist — recurring patterns and regressions (GEM §6), unread intake, the age of the latest architecture review, the work graph (Wave Standard §7) and the register of inherited measurements (§4.7.4). A sensor whose read fails is named under what is unclear. The [tool appendix] names the sensors and their reads.
+
+**A handoff received mid-session.** A handoff that reaches a session already running names a state the session has not seen. Before any work on it, the agent runs G1, G3 and G4 again — and G2 where a route to the [version registry] exists — and emits those receipt lines; a line that cannot have changed since the start is left out.
 
 Gate ordering is load-bearing. G1 before file reads (wrong project). G2 before module loading (stale core). G3 before writes (dirty tree). G3b before G4 (module loading and the version-gate halt both need the full tool set). G4 before task work (stale module). G5 before work begins (learnings may change approach). G6 before receipt (the `Gates:` line cannot be filled after emit).
 
@@ -257,7 +262,7 @@ The lifecycle closes through the session-close module. The core carries only the
 
 #### Close trigger
 
-The core's § Commands carries the close trigger as invariant text. `/handoff` is a mandatory sequence, not a question: the agent reads the session-close module from the repo, never from memory; it executes every step in the module's order; and it produces the handoff block only after all preceding steps are complete. A session that reaches its end without `/handoff` runs the same sequence as its final action, from step 1. The instance's text is in the [tool appendix] § Close trigger.
+The core's § Commands carries the close trigger as invariant text. `/handoff` is a mandatory sequence, not a question: the agent reads the session-close module from the repo, never from memory; it executes every step in the module's order; and it produces the handoff block only after all preceding steps are complete. A session that reaches its end without `/handoff` runs the same sequence as its final action, from step 1. A session that wrote a file or a row runs it before it ends, whatever else it did. The instance's text is in the [tool appendix] § Close trigger.
 
 #### Session-close module skeleton
 
@@ -266,8 +271,8 @@ Every [prefix]-session-close module follows this skeleton. Four H4 steps in fixe
 | # | Section | Owner | Content |
 |---|---|---|---|
 | — | **Header** | skeleton | `### Session Close Protocol — Mandatory`, then `**Trigger:**` ([operator] writes `/handoff`, session reaches context cap (~70%), or all tasks are complete) and `**Purpose:**` (agent-owned sentence). |
-| 1 | **Pre-commit verification** | agent | What must be true before commit: deliverables present, backlog state, brief, governance-log. Agent-owned content. |
-| 2 | **Commit + push** | skeleton | [commit non-canonical] → [commit canonical] (only if canonical changes) → [push]. Post-push verification: [last commit] — confirm the commit is HEAD. |
+| 1 | **Pre-commit verification** | agent | What must be true before commit: deliverables present, backlog state verified against the item files, brief, governance-log, and every other repository the session wrote in committed or named as left uncommitted. Agent-owned content beyond these. |
+| 2 | **Commit + push** | skeleton | [commit non-canonical] → [commit canonical] (only if canonical changes) → [push]. Post-push verification: [last commit] — confirm the commit is HEAD; a push that reports nothing to send is a warning, not a confirmation. The report and the handoff cover only the files this session wrote. |
 | 3 | **Retro-log** | skeleton | Append to [retro log] via [append with commit] (message `retro: [RETRO_KEY] [date]`), then [push]. Format below. Trivial session → skip append and push. |
 | 4 | **Produce handoff** | skeleton | Delegate to `[prefix]-handoff` (§ Handoff checklist). Work remains → handoff. All tasks complete → no handoff, checkpoint line. Session cap → resume handoff. The handoff is the last thing produced. |
 | — | **Trivial session (exception)** | skeleton | Single question, no repo changes → none of the steps. Criterion: no file written, no commit. (The block under [tool appendix] § Skeleton text is the reference; this row restates it.) |
@@ -281,7 +286,7 @@ Every [prefix]-session-close module follows this skeleton. Four H4 steps in fixe
 
 `[AGENT_OWNED_QUOTE]` is the only placeholder in the anti-pattern block. Agent-added rows follow the three skeleton rows. Step 3's text is the retro format above plus the two sentences in the §4.4 table row.
 
-The same format is the invariant text of the core's § Auto-Retro H3 (§4.1 row 6), prefixed by a sentence that says where and how the entry is appended and suffixed by the rule that a trivial session skips it; the instance's two sentences are in the [tool appendix] § Auto-Retro core text. Core and module state the same format; the module is the executing location, the core is the standing rule.
+The same format is the invariant text of the core's § Auto-Retro H3 (§4.1 row 6), prefixed by a sentence that says where and how the entry is appended and suffixed by the rule that a trivial session skips it; the instance holds one such text per agent kind in the [tool appendix] § Auto-Retro core text, because a session agent carries its entry in its report (step 3 below) while a specification agent appends it. Core and module state the same format; the module is the executing location, the core is the standing rule.
 
 **Machine-readable exceptions.** A session-close module that deviates from the skeleton text is registered in the [tool appendix] § Registered deviations twice: in prose that says why, and in an HTML comment the [skeleton check] can read. Both are required — the comment alone says nothing about why, and the prose alone left the tool reporting `✘` on a deviation the standard had already accepted.
 
@@ -314,15 +319,13 @@ G5 loads the [learnings function] at session start. This subsection governs what
 
 | # | Decision point | What the agent does | Where the citation appears |
 |---|---|---|---|
-| 1 | **Handoff production** | Before producing the handoff block: review the learnings for entries that concern the scope the handoff addresses. | In the handoff block — a `Learnings consulted:` line listing the cited entries and their relevance, or `none relevant`. |
+| 1 | **Handoff production** | Before producing the handoff block: review the learnings for entries that concern the scope the handoff addresses. | In the handoff block — a `Learnings consulted:` line listing the cited entries, each with the step the receiver takes about it (a file or section to read, a run, a measurement), or `none relevant`. |
 | 2 | **Scope definition** | When a new scope declaration is made during the session (not the initial task from the handoff — the *narrowing or expanding* that happens mid-session). | In the response that declares the scope. |
 | 3 | **Closure declaration** | Before [closure tool] or equivalent: review for entries that say a dimension must not be forgotten. | In the pre-close reasoning. |
 
 **Trigger 1 is mandatory and produces a visible artifact** (the line in the handoff). Triggers 2 and 3 are mandatory obligations on the agent's reasoning but produce no separate artifact — the citation appears in the response's prose.
 
 **Adversarial verification.** The [reviewer] checks handoffs for trigger 1 compliance: was `Learnings consulted:` present, and if a learning was relevant to the handoff's scope, was it cited? This is secondary — the [reviewer] should not need to catch what the sender should have done. The [reviewer] does not gate triggers 2 and 3 (no artifact to verify).
-
-**Implementation.** No mechanical emit or gate in v1 — the obligation is protocol text, like the measurement line's prerequisite gate. Experience determines whether a gate is needed.
 
 **Scope.** Every specification agent, and an implementation agent's session agent. For the session agent the decision points are: its report or handoff at the end of a run (trigger 1); a change to a task's scope during the run — a task stopped by a finding, split, or widened (trigger 2); and the report that a task is done (trigger 3). It reads the [learnings function] through the same narrow path it uses for the queue.
 
@@ -342,6 +345,48 @@ A step agent does one step of a build loop for the session agent, reports, and e
 | 4 | **Agent-owned** | Everything else: reading order, method, modes, input checks and failure formats. |
 
 A step agent's file is measured by the conformance classes like any other component (§9): the header by structural conformance (§9.4), the rules by the adversarial semantic review (§9.5).
+
+### 4.7 Mandatory behavior sections
+
+Four rules hold for every agent that owns a session: every specification agent and every session agent. Each core carries them as H3s in Behavior Rules (§4.1 row 6), titled `Investigation — Mandatory`, `No deferral without a reason — Mandatory`, `Process economy — Mandatory` and `Measurement line — Mandatory`. The text of each is the instance's, held once in the [tool appendix] and byte-matched in every core (§9.4). A core may carry a pointer to that text instead; the pointer binds only because the start reads the [tool appendix]'s section at G4, with the modules or skills (§4.2, §8.1), and §9.4 then byte-matches the pointer line. A core never carries a variant of its own. A step agent is held to them through its task specification and its report (§4.6).
+
+#### 4.7.1 Investigation
+
+It protects against a fix, a recommendation or a verdict built on something nobody read.
+
+1. **Fix.** No fix without investigation: read the files, logs and state; form a hypothesis; verify it against the system; then fix. While the investigation runs, nothing outside the part under examination changes. The same failure three times stops the work: the agent classifies it and escalates to the [operator].
+2. **Recommend or decide.** Every rule a recommendation, specification, verdict or finding rests on or cites is read in full at its source — the contract, the standard, the decision entry — in the session, with every dependency it touches. The output says what was read and in which version. A claim that something does not exist names the search that did not find it.
+3. **Assume nothing silently.** Where the work needs a fact nobody has stated, the agent says what it would have assumed and asks.
+
+Not a reason to skip: the rule being familiar, the task being small, or a summary of the rule in a handoff.
+
+#### 4.7.2 No deferral without a reason
+
+It protects against work that is described well enough to feel handled and is never done.
+
+1. What a session finds — a finding, a gap, a rider — is done in the session or in the work in progress, unless one of three reasons holds: it needs a route or an agent the session does not have, and is handed over now, in parallel; it needs an [owner] decision, and the question is asked now; or it depends on something that does not yet exist, and the dependency is named as one.
+2. Every deferral names its reason and its trigger: the event that brings it back. A deferral without a trigger is not permitted.
+3. "Pre-existing", "out of scope", "next version", "later" and "increases scope" are not reasons.
+4. No data is removed to get past a gate, and a workaround is committed only with a blocking item that removes it.
+
+#### 4.7.3 Process economy
+
+It protects against rules and checks that only accumulate, and against control that stalls progress.
+
+1. A decision that is the agent's — form, tooling, order of work — is made and carried out, and the reply says what was decided. A decision that is the [owner]'s gets one recommendation and a yes/no question.
+2. A check that does not say stop warns and continues. Before stopping on a failing measurement, the agent tries another way to the same measurement or narrows its claim to what was measured.
+3. A check, gate or mandatory procedure that has not stopped a real error in 30 days, counted from the [retro log] and the [decision log], is removed. A sensor (§4.2) is measured instead by whether it showed, in 30 days, something no other step showed.
+4. A new rule enters only with a rule removed or merged in the same change. A rule states what it protects and why; a rule that only prescribes a procedure is rewritten or left out.
+5. A review finding is a change: it is fixed where it points, and never by itself becomes a new check or case (§9.8). It stays open, carried by a backlog item, only under the stop rule (§9.5) or at the round limit (§9.7 p. 1).
+
+#### 4.7.4 Measurement line
+
+It protects against a result that looks measured and was not.
+
+1. A reply that reports a new result, or asks for a decision on evidence the agent produced, ends with one line: what was measured, with which tool or source, and what was not. The [tool appendix] gives the line's form.
+2. Two reasons for not measuring are allowed: the tool to measure it does not exist, or the measurement is impossible in this session, with the cause named. Time, cost and scope are not reasons: a claim too costly to measure is narrowed to what was measured.
+3. A value not read or computed in this session — another agent's, a handoff's, a summary's, or the agent's own earlier one — is not measured until it is measured at its source. Derived numbers and copied text are produced with a tool, never by hand.
+4. An entry that stays not measured is written once to the register that the [handoff standard]'s [measurement rule] binds, with who measures it and when.
 
 ## 5. Header Contract
 
@@ -417,7 +462,7 @@ A null form is a passed gate with an empty input, not a warning. Principle 6 bel
 ### 6.2 Principles
 
 1. **Every line carries the value that passed.** `Core: 2026-09-11-b · [version registry name] ✔` is verifiable. `Core: verified` is not.
-2. **The receipt opens the start reply, and the start reply ends the turn.** The start reply is emitted after the last gate, and no tool call follows it in the same turn: text written before a later tool call does not reach the [operator]. It has four parts, in this order. First, the receipt, as its first text. Second, a numbered checklist of the session's work, with one item per task. A task counts whether it comes from the handoff, the [backlog item] or the [operator]'s message, and a task named in more than one of them is one item. Third, what in the handoff, the [backlog item] or the [operator]'s message is unclear, or that nothing is. Fourth, one question: whether to start, or what must be resolved first. The question ends the turn. Task work begins in the next turn. A receipt alone is not a start reply: a turn that ends on the receipt reads to the [operator] as a dropped connection. The block is not split around the gates — an opening line written before the first tool call would never be seen. A session agent that has claimed a queue post starts work in the same turn when its receipt carries no ⚠ and nothing is unclear; otherwise its start reply ends with the question, as for every other agent.
+2. **The receipt opens the start reply, and the start reply ends the turn.** The start reply is emitted after the last gate, and no tool call follows it in the same turn: text written before a later tool call does not reach the [operator]. It has four parts, in this order. First, the receipt, as its first text. Second, a numbered checklist of the session's work, with one item per task. A task counts whether it comes from the handoff, the [backlog item] or the [operator]'s message, and a task named in more than one of them is one item. Third, what in the handoff, the [backlog item] or the [operator]'s message is unclear, or that nothing is. Fourth, one question: whether to start, or what must be resolved first. The question ends the turn. Task work begins in the next turn. A receipt alone is not a start reply: a turn that ends on the receipt reads to the [operator] as a dropped connection. The block is not split around the gates — an opening line written before the first tool call would never be seen. A session agent that has claimed a queue post starts work in the same turn when its receipt carries no ⚠ and nothing is unclear; otherwise its start reply ends with the question, as for every other agent. No gate asks a question of its own or starts the task: each speaks through the start reply. A question to the [operator] ends the turn, and work that depends on the answer, a commit included, waits for the next. The [architect] may instead, as an option its core declares, start the first checklist item in the same turn; then only a halt, a handoff addressed to another agent or an unreachable connector ends the start reply with a question.
 3. **Halt: same block, different terminal.** `GAL halt: [line] — [reason]`. Nothing written after halt.
 4. **Warn: `⚠` on the affected line.** Session continues.
 5. **Fixed labels, free values.** Labels (`GAL start`, `Handoff:`, `Core:`, `HEAD:`, `Modules:`, `Learnings:`, `Gates:`, `GAL ready`, `GAL halt:`; for a session agent also `Skills:`, in place of `Modules:`, and `Task:`) are invariants in the [invariant inventory]. They are present in every core because the template embeds the block (§4.3 step 9). Values are session-specific. Enables parsing by a [receipt parser].
@@ -494,7 +539,7 @@ Assembly is deterministic: same handoff + same classification rules = same modul
 
 **Multiple modules allowed.** On-demand loading permitted mid-session (same mechanism, same version gate).
 
-**Module authority.** A loaded module's rules are binding protocol, not reference material.
+**Module authority.** A loaded module's rules are binding protocol, not reference material. A pointer is not a loading: a rule that a core or module points to binds only when its file is read in the session in which the rule has force.
 
 ### 8.2 Version gate
 
@@ -521,9 +566,12 @@ Independent module bumps permitted per [module versioning rules]. Atomic bumps (
 | Version gate fails | HALT (confirmation fallback §8.2) | The §4.3 step 6 halt question, `GAL halt: Modules — ` + question (§8.2) |
 | Target ≠ AGENT_IDENTITY | HALT | `GAL halt: Handoff — target [X] ≠ [AGENT_IDENTITY]` |
 | [version registry] mismatch | WARN | `Core: [ver] · [version registry name] ⚠ (repo: [Y])` + warning text per §4.3 step 4 |
+| No route to the current core independent of the copy checked (§4.2 G2) | HALT | `GAL halt: Core — no independent route` |
 | Connector unreachable (an agent that reaches the repository through one) | FALLBACK | Read [fallback instructions] |
 | [agent directory] dirty | WARN | `HEAD: [hash] · [agent directory] dirty ⚠` |
 | HEAD ≠ Last commit | WARN | `HEAD: [hash] · ≠ Last commit [expected] ⚠` |
+
+A fallback path runs every gate the primary path runs, or forbids what it cannot measure.
 
 ### 8.4 Context isolation
 
@@ -557,7 +605,7 @@ These rules hold for every class. A class's never-passes list adds to them and n
 
 1. **An empty measurement is a failure, not a result.** A check that counts zero of something the surface plainly contains has most likely measured the wrong thing. It stops and names what it scanned and where; it never reports the zero. *Case: a provenance check reported "0 documents with evidence" because it read a directory that did not exist where it ran. The output was well-formed and wrong.*
 2. **Not observed is not observed absent.** What a check did not measure is reported as its own outcome (⊘), and ⊘ is never green. A registered deviation is ⊘, not a pass. *Case: a file carrying key comments passed a two-direction key check because its inventory scope held no rows — the comments were present and nothing protected them.*
-3. **An attestation holds against its inputs, not only its subject.** It names the state of every input it read and lapses when any of them changes. *Case: a recorded before/after check on a file could not be reproduced a day later; the inventory it had read was changed after the attestation, in the same round.*
+3. **An attestation holds against its inputs, not only its subject.** It names the state of every input it read and lapses when any of them changes, with one exception: a [reviewer]'s `yes` holds over later changes that only fix findings the same round named (§9.7). *Case: a recorded before/after check on a file could not be reproduced a day later; the inventory it had read was changed after the attestation, in the same round.*
 4. **An approval list is read row by row.** Every row that authorises a change is read by someone other than its writer, and the reading records what was read, not only that it was. An unused row is a failure: it authorises a change that may arrive later unnoticed. *Case: a row type the checker accepted without a reader let an inserted section pass with none of its content measured.*
 5. **No role reviews its own work.** The author of a change is a role, not a session or a model: the same role in a new session is still self-review. The one exception is the reviewer's own surface, under the conditions in §9.3 § Approved-change list governance p. 4.
 6. **A gate never stands before its only remedy.** When a tool's output is the only way to satisfy a gate, the gate may not stop the run before that tool has produced it. *Case: a presence check aborted the comparison before the step that writes the approval list — the one list that would have satisfied the check could never be produced.*
@@ -593,7 +641,7 @@ A harmonization that re-levels headings, adds invariant sections or introduces i
    - (c) a verdict. For an addition or an inserted section: the change belongs where the row says, or it is a rule that moved in from elsewhere, which is a relocation and is read against its origin rather than as an addition. For a removal: the text leaving is bookkeeping — history, tool detail relocated to the [tool appendix], or a rule restated elsewhere, with the place named — or it is a rule leaving, which is a loss and blocks the outcome however the row is worded.
 
    The [harmonizer] proposes, the [reviewer] verifies.
-3. **An attestation handed on carries its material.** Whoever leaves an attestation to another party — the [reviewer], or the [owner] for intent — sends in the same message: the diff or rows to be judged (inline, or an exact path plus lines), what each list or row means in one sentence, and one yes/no question. Naming a directory or a file is not the material; an attestation requested without it is not requested.
+3. **An attestation handed on carries its material.** Whoever leaves an attestation to another party — the [reviewer], or the [owner] for intent — sends in the same message: the diff or rows to be judged (inline, or an exact path plus lines), what each list or row means in one sentence, and one yes/no question with what a yes leads to. It also names the decisions the sender took itself and, for each check it ran, what that check did not prove. For standard text or an architecture contract the sender may add a short comprehension test: a question the [owner] answers before attesting. Naming a directory or a file is not the material; an attestation requested without it is not requested.
 4. **The reviewer's own surface.** The [reviewer] does not attest lists or run the §9.5 review for changes to its own core and modules. For that surface the [architect] does, under four conditions, all required: (a) a different session from the one that wrote the change; (b) the §9.5 findings table written to a file, one row per changed rule, with verdict and basis; (c) the [owner] confirms intent with material per p. 3; (d) the reviewer's own surface only — for every other agent the [reviewer] attests as above. Registered in the [architect] core § Agent Boundary Rule.
 
 ### 9.4 Structural conformance
@@ -653,6 +701,16 @@ The [reviewer] produces a findings table:
 
 **Scope.** Agent-owned content within each file, and the rules outside the agent that Q2 reaches. Invariant text (§4.3 template, §4.4 close trigger, session receipt, retro format) is byte-matched by §9.4 and excluded here — the [reviewer] does not re-verify text that is mechanically identical. A component whose only change is its version needs no row (§9.1).
 
+**Findings.** Each finding states where it is (file, section and cited text — never a line number alone), its source, how it was verified, the invariant it breaks, and a test that tells holds from does not hold. The [reviewer] assumes the change is wrong until it has measured otherwise; a sender's pass is not a pass.
+
+**Verdict boundary.** Only the criteria the handoff names decide the round's verdict; everything else is advisory. A `yes` names its basis — the stop rule, or the handoff's closure criterion — and a checkpoint left unread blocks it. The summary lists every checkpoint with its outcome.
+
+**Stop rule.** A round with no blocking finding, after a round with no blocking finding, closes with `yes`; what remains goes to a follow-up item.
+
+**Fence.** The findings name what the fix must not touch. A fix that touches files outside the findings' places names them.
+
+**Repetition.** The same invariant broken in two rounds is one finding about how the invariant is enforced, not two about its instances. The [reviewer] also reviews the fixer's method: whether the fix built the invariant or the example (§9.8).
+
 **Timing.** This review runs in the same [reviewer] round as the final §9.3 check, not a separate round, and the [reviewer] handoff for the agent's exit code names it as in scope.
 
 ### 9.6 Key/string integrity
@@ -674,10 +732,30 @@ The [reviewer] produces a findings table:
 - an approximation, such as a language heuristic over prose, counted as the gate;
 - a string that has left the files but remains in the inventory.
 
+### 9.7 Review rounds
+
+It protects against review that never ends, and against approval that lapses with no change of meaning.
+
+1. A change gets at most two rounds. After the second without a `yes`, the [owner] decides: close with the open findings, each carried by a backlog item that names it, or run a third. A [contract] is the exception: it does not become canonical without an approving full audit of its current version ([contract standard]).
+2. A `yes` holds over later changes that only fix findings the same round named (§9.2 rule 3); any other change resets it.
+3. A change that rewords and adds or removes no rule, gate or check takes one reading round, which still answers Q1 and Q2 of §9.5.
+4. A factual error found after approval — a statement that does not match what is built — is corrected in one bounded extra round over the changed places and what depends on them. It does not reopen the text and is not a third round.
+5. A change merged without its review is a bypass: it is logged, and reviewed before anything else changes the same surface. Where it cannot be determined whether a change was reviewed, it was not.
+
+### 9.8 Before review: the producer's duties
+
+It protects against fixes that repair the example and relax a case nobody looked at.
+
+1. **Fix the invariant.** A fix to a finding quotes the finding's invariant and enumerates the class it covers from the source — every case, path, producer or state its words cover, read from the rule text and, where a tool decides the answer, from the tool's code — and checks the fix against each member. It adds a test case of its own: a member of the class the finding did not name.
+2. **Trace what the change relaxes.** Before a change to a prompt, module or standard goes to review, the producer reads it for what it relaxes: each case it narrows, merges or removes, against every rule that names the same step, tool, event or field; each sequence it changes, walked as if the session ended after each step; and, when a concept changes, every statement, producer and consumer of it, its empty set and its extremes. A change that tightens one path and relaxes another is a weakening (§9.5 Q2).
+3. **Build a check only against a measured failure.** A new check, gate or validator answers a failure that happened, named by its retro entry, finding or backlog item. A change to an existing check counts what the check accepts and rejects from its source before the fix, and adds a case that tries to get past it, drawn from the artifact the check reads, never invented.
+4. **Check the whole.** Before handing over, the producer runs the reviewer's checklist over the whole document, not only over the change.
+
 ## 10. Maintenance and History
 
 1. **The standard changes only when a class changes.** A [reviewer] finding about a tool lands in the [tool appendix] or in the tool — never here. What costs a [reviewer] round is the question *does this finding change a class?*, not the finding itself.
 2. **Every normative change bumps the version and is reviewed** by the [reviewer] before it counts. The same holds for the [tool appendix] where it holds the instance's invariant text and its registered deviations (§4.3, §4.4): a change there changes what the cores and modules are measured against, and it bumps the appendix's version. Adding a registered deviation (§4.4) is a normative change.
 3. **Classes and tools are bound by declaration.** The [tool appendix] names, per class, the tool that implements it, and is versioned on its own. A tool change changes the appendix; the standard is touched only under point 1.
 4. **History lives in version control.** Every prior text of this file is there. A standard restates none of its history; a third copy here is the one nobody corrects when it turns out wrong.
+5. **Tools and their descriptions change together.** A sentence that says what a tool does is read against the tool's source in the change that alters either. Every tool, script and path a prompt names resolves when it is committed, and a name changed in a standard is searched for in the tools in the same change.
 

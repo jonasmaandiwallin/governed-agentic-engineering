@@ -1,9 +1,9 @@
 ---
 document_title: "Backlog Standard"
-version: "v0.8"
+version: "v0.9"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-02"
+last_updated: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -131,7 +131,7 @@ Before an ID is asked for, the backlog is searched for the finding's own names: 
 
 - **An open item carries the problem or its class.** The finding is added to that item as a new dated section. No ID is asked for.
 - **A closed item names the same defect.** It is read before anything is opened. Either it solved the problem, and nothing is opened, or it dropped it, and it is reopened (§4.5) rather than a new ID handed out.
-- **Nothing carries it.** An ID is asked for from the [allocator]. The new item's body names the search that was run (§2.3). A finding of the advisory class may instead go to the next change of its surface (§4.2, third point).
+- **Nothing carries it.** An ID is asked for from the [allocator]. The new item's body names the search that was run (§2.3), its reason — why the work is not done where it was found (GAL §4.7.2) — and its trigger: the event that brings it to work. A list of candidates is an item too, with a trigger. A finding of the advisory class may instead go to the next change of its surface (§4.2, third point).
 
 ### 4.2 Carrying
 

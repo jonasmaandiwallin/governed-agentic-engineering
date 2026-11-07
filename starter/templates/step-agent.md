@@ -16,7 +16,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.1"
+  template_version: "v0.2"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/step-agent.md"
 This license covers the template as published. The file you write from it is your own
@@ -70,4 +70,5 @@ Closed set: <for example, contract author: draft-ready | questions; contract aud
 
 - **Read your sources yourself.** The dispatch names files. If it carries their content instead (contract text, registry values, another agent's reasoning), refuse it, and record the refusal in the receipt (GIP §2).
 - **Questions go back, not out.** You cannot ask the owner. Put open questions in your report under `Questions:`, end with the verdict that says so, and stop. The dispatching agent resumes you with the answers.
+- **The four mandatory rules hold for you** through the dispatch and your report (GAL §4.7): read every rule you apply at its source, defer nothing without a reason and a trigger, and end the report, before the verdict, with the measurement line in the appendix's form.
 - <Agent-owned: reading order, the standard it applies, the output format and where the output is written.>

@@ -1,9 +1,9 @@
 ---
 document_title: "Truth Chain Standard"
-version: "v0.5"
+version: "v0.6"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-01"
+last_updated: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -63,7 +63,7 @@ Four properties follow:
 | [evidence registry] | The store of evidence entries, one per source |
 | [research record] | The record of a research round: what was searched, read and concluded, before an evidence entry is written |
 | [advisory] | Guidance the [system] may show or use for tone and wording, which never changes behaviour |
-| [implementation] | The code that executes the contracts (GIP) |
+| [implementation] | The code that executes the contracts (GIP). In a knowledge corpus, where the agents' work is the product, the deliverables the agents produce; work people do outside the [system] on the strength of a deliverable is outside the chain, and what comes back from it is new evidence |
 | [evidence tier set] | The ordered closed set of evidence strength levels |
 | [decision log] | As in the GEM standard |
 | [database] | The store that mirrors the [evidence registry] for queries |
@@ -96,7 +96,11 @@ A conflict between two statements at the same level is resolved by the rules tha
 
 - A finding from a [research record] or an [evidence registry] entry that would change a [contract] or a [registry] value becomes a proposal to the owner of that statement. It is never applied directly.
 - A [contract] that conflicts with the [constitution] is invalid until the [constitution] is changed by its own process.
-- An [implementation] never contains logic that no [contract] or task specification with a passed gate specifies (GIP §3, §4).
+- An [implementation] never contains logic that no [contract] or task specification with a passed gate specifies (GIP §3, §4). The first post's entry, with its record of what replaced the gate (GIP §3), is the one task specification an [implementation] may rest on without a passed gate.
+- In a knowledge corpus, a deliverable produced before the [contract] for its surface is merged is marked *before contract* and cites no contract version. The mark keeps the departure from the order visible; the deliverable rests on no [contract] until one is merged for it.
+- A statement at level 1 or 2 never rests on the [implementation]. Reading the code can show where a [contract] leaves a gap that the code fills. That is a finding against the [contract], and the text that closes the gap rests on a decision or on evidence, not on what the code does.
+- An answer from a model outside the chain, such as a language model put a question, is a hypothesis to test against the [system]. It is never the ground of a statement and never cited as evidence. The model that answers is the one that was asked: a silent switch to another model fails the run.
+- A criterion that decides whether a run or a comparison bears a statement is written down before the run. The run is made once, and its result is read against that criterion.
 
 ## 3. Links
 
@@ -104,7 +108,7 @@ A conflict between two statements at the same level is resolved by the rules tha
 
 | From | Points to | Where the link stands |
 |---|---|---|
-| [implementation] | The [contract] it implements | A marker in the code, or the task specification of its build (GIP §4) |
+| [implementation] | The [contract] it implements | A marker in the code, the task specification of its build (GIP §4) or the first post's entry (§2.3); for a deliverable, the [contract] version it cites, or its mark *before contract* |
 | [contract] | The [registry] keys it cites, and the [evidence registry] entries it rests on | Key citations in the body (Contract Standard §7.2); evidence IDs in its metadata and its body |
 | [registry] entry | The [evidence registry] entries that bear the value, or an explicit statement that none does | Registry Standard §2.2 |
 | [evidence registry] entry | Its source, and the [research record] that admitted it | §4 |
@@ -115,6 +119,11 @@ A conflict between two statements at the same level is resolved by the rules tha
 - The evidence IDs a [contract] declares in its metadata, and the ones its body cites, are the same set.
 - Evidence named in prose does not count as a link unless it stands in the field or citation form the [instance appendix] names.
 - A link carries no more strength than its source. A statement that rests on an entry of a low tier says so, or the [instance appendix] names where its confidence stands (as Registry Standard §2.2 does for values).
+- A link bears a statement only when the entry has been read for that statement: its key finding concerns the same subject, the same quantity and the same conditions. Where one of the three differs, the statement does not rest on the entry. The writer stops and says so, and narrows neither the statement nor the entry to make them meet.
+- An entry that a search, a [registry] field or another entry points to is a candidate until it has been read so. A link that was found is not yet support.
+- The entry is read in its record (§4.3) and in its source, never in a copy that may be older.
+- Two links to entries for the same source are one link. A statement is corroborated only by entries for distinct sources.
+- Where a tool can read what a research statement says about the [system] itself, the tool's reading holds, and the statement is checked against it.
 
 ## 4. The evidence registry
 
@@ -131,6 +140,8 @@ An evidence entry has one ID from a source that never repeats, and these fields:
 | status | In force, superseded by a named entry, or retracted |
 
 The [instance appendix] may add fields. An entry is written from a [research record] that read the source. An entry written from a citation alone, without the source read, is marked as such.
+
+An entry reports one source: a finding drawn from several sources is not an entry. Every figure in the key finding can be found in the source. A figure that cannot be found there is left out and flagged, never derived.
 
 ### 4.2 Lifecycle
 

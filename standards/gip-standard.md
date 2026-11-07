@@ -1,9 +1,9 @@
 ---
 document_title: "GIP — Governed Implementation Pipeline"
-version: "v0.5"
+version: "v0.6"
 status: "draft"
 created: "2026-09-29"
-last_updated: "2026-11-02"
+last_updated: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -104,12 +104,13 @@ The gate stands at three places.
 - **Who:** only the [owner].
 - **Trace:** every use writes a line with its reason to the [bypass log]. The [architect]'s session start reports the bypasses since its last session.
 - **Afterwards:** the work is always brought into GIP — a queue post, and review of what was already done — so that all code on the main branch has in the end passed through a build loop.
+- **An unclear path:** where it cannot be determined whether a change reached the main branch through the gate, it counts as a use of the emergency path, and is traced and brought into GIP as one.
 
 **The first post.** A first post that builds what the gate itself needs — the [queue], a runnable suite, the store the [architect] writes to — cannot pass the gate or a baseline (§5.1). It is not a use of the emergency path, which is for a gate that exists. The [tool appendix] names that one post, says what replaces each requirement it cannot meet — for example, the tester's new checks are the first baseline and are red before implementation — and records who dispatched it and where the dispatch is logged. Every step of §5 that can run, runs. The replacement lapses when the post is merged: the post is then entered in the [queue] with its merge commit, its receipts and the [tool appendix]'s record of what replaced each requirement, who dispatched it and where the dispatch is logged, so that the entry is told apart from a post whose gate passed. It is the one entry the [architect] makes without a passed gate (§6), and from then on the gate holds without exception. A second post never takes this path.
 
 ## 4. Step 1 — dispatch (Code Dispatch Protocol)
 
-The [architect] runs dispatch, the Code Dispatch Protocol (CDP). Its output is a queue post: the only thing a session agent can build from. Only the architect adds posts to the [queue], and only with a passed gate (§6); the first post's entry (§3) is the one exception. The architect never writes instructions to a step agent; the dispatch goes to the session agent, which runs the build loop the post names.
+The [architect] runs dispatch, the Code Dispatch Protocol (CDP). Its output is a queue post: the only thing a session agent can build from. Only the architect adds posts to the [queue], and only with a passed gate (§6); the first post's entry (§3) is the one exception. The architect never writes instructions to a step agent; the dispatch goes to the session agent, which runs the build loop the post names. A dispatch that was interrupted — a task specification committed without its post, or a post without its dispatch — is completed or withdrawn before the architect starts another.
 
 ### 4.1 Two entries, one path
 
@@ -141,7 +142,7 @@ Every task specification carries:
 - **Backlog item:** the item the task serves. The session agent reads the [learnings function] by it (GAL §4.5).
 - **Disposition** (contract work)**:** `new`, `covered` or `partial`, found by reading the code that owns the contract — never inferred from the contract's name. `partial` lists the gaps that remain.
 - **What the system already knows:** what the target files already carry, and what the evidence, the archive, earlier backlog items and the [registry] hold on the question. Never empty; with no hit, it names where the architect searched, and "nothing found" is written only when every one of those places was searched. The specification asks its question openly; it never plants a hypothesis about the cause for the build to confirm.
-- **Data verified:** every table and column the task reads or writes, found in the data store's migrations — or named as a prerequisite, or as a value that stays empty until it exists. A write that can repeat, such as a re-sync, lands on stable keys.
+- **Data verified:** every table and column the task reads or writes, found in the data store's migrations — or named as a prerequisite, or as a value that stays empty until it exists. A write that can repeat, such as a re-sync, lands on stable keys. A change to a data store's schema is made only through a migration that the store records, in the post's paths; a change made by hand leaves no trail. A step that cannot be undone, such as dropping a table or a column, stands in a migration of its own, applied after the one before it has been verified in the store.
 - **Call site:** for a new function, where and when the existing flow calls it, and one check that runs it through that flow. A function nothing calls is not delivered.
 - **Siblings** (a defect)**:** the pattern the defect follows, and every other place in the code where it occurs, found by a search of the whole code. Each is fixed in the post. With no other place found, the specification names the search. Where the architect cannot search the product repository's code, the session agent runs the search when it claims the post, before step A, and records the list with the post, so that the list is fixed before anything is built; the [tool appendix] states which holds. A sibling found later in the build is reported (§7), never fixed in the post.
 - **Checks affected:** the existing checks the change touches, and what must stay as it is.
@@ -165,6 +166,8 @@ A small fix goes this way too, as a short specification with one acceptance crit
 
 A queue post names the task, its specification, its entry — contract or specification — and the build loop: the contract loop for a post with a driving contract, the task loop for a post with a specification. The session agent starts the loop the post names; it never chooses one.
 
+A post is added only when continuous integration on the main branch of its repository is green at the commit the post builds from. A red main is fixed first, through a post of its own, or the [owner] records an exception for that one post, in the place the [tool appendix] names.
+
 Work that several contracts share — a [registry] value read by more than one of them — is dispatched once, in the task of the contract that owns it. The others are measured again after that task is merged.
 
 The dispatch to the session agent follows the [handoff standard] and names the queue post. The question "was the protocol followed?" is not asked: a post without a passed gate does not exist. The first post (§3) is dispatched without a post, and its entry is made at its merge.
@@ -184,6 +187,7 @@ Both loops run the same steps. **A** — the tester writes the checks. **A.5** �
 - **Limits.** A review runs no more rounds than the review-round limit; a gap it finds is closed in the same run — a gap in the checks by the tester, a gap in the code by the implementer. No pass within the limit → hard stop. A build or test failure goes back to the role that owns the failing file — the tester for a check, the fixer (or without one the implementer) for code — up to the retry limit; one failure more is a hard stop. The bounds of the size lanes, the review-round limit, the retry limit, the batch threshold and the context limit are calibration, not rule: their values stand in the [tool appendix].
 - **Verdicts.** Every review ends with a verdict from its closed set, and the verdict in the step receipt is the gate: without it the post is not done. The number of findings per class and severity is recorded beside it, without free text. The counts never stop a run; they show where the checks keep falling short.
 - **A crashed step runs again.** Its partial result is discarded. The session agent never substitutes its own review for a verifier's; a session that cannot run a pending review stops with the review pending.
+- **A transport error is not a result.** A call that ended in a timeout or a dropped connection may have run. Its outcome is read in the store it writes — the receipt, the commit, the row — before the call is repeated, and a write or a batch is never repeated on a transport error alone.
 - **Staging.** Only named files are staged — the changed code and the checks — never everything in the tree.
 - **No escape hatches.** A skipped or pending check, a suppressed type error or a disabled lint rule in the change fails the build. The [tool appendix] lists the patterns.
 - **Hard stops** end the post before any merge and go to the [owner]: RED-BASELINE, NEEDS-MANUAL-REVIEW, the review-round limit reached without a pass, a build or test failure beyond the retry limit, a missing prerequisite — one the task names, or the switch a reserved part is to be built behind (§5.2) — and the session's context limit. The owner decides whether the post continues, is split, or goes back to dispatch. At the review-round limit, and where the [tool appendix] allows it, the owner may instead accept the post with the open findings of that review carried — the verifier's findings in the step whose receipt carries the acceptance. Each is held by a backlog item, by its text or a pointer, and the item names the post, the step that found the finding and its class. The acceptance stands in that step's receipt beside the verifier's own verdict, which is never changed: the receipt keeps the verdict the verifier gave and adds the owner's acceptance, the reference of the decision that made it and who entered it. A [finding token] (§7) is never carried, and a post with an open [finding token] is not merged on an acceptance. A failing check is never carried — the full suite and continuous integration must still be green — and every other condition of the merge below holds unchanged. A finding stops its contract and goes to the [architect] (§7).
@@ -215,7 +219,7 @@ The task loop is the contract loop with the task specification's acceptance crit
 - **A.5.** The verifier reviews every check — tests and commands — against its criterion.
 - **B, C, D** as in the contract loop.
 - **C.5.** The verifier reviews the change against the criteria, and for a defect searches its pattern in every sibling the post lists (§4.3). The drift review applies as in the contract loop: a task that touches code a contract's checks run is reviewed against that contract.
-- **E.** After the merge, the session agent runs every command criterion on the main branch and reports its outcome; the automated tests are covered by continuous integration on the merge.
+- **E.** After the merge, the session agent runs every command criterion on the main branch and reports its outcome; the automated tests are covered by continuous integration on the merge. A criterion about something the merge deploys — a server, a function, a tool — is checked by a real call to the deployed version; a green build of it is not a call.
 - **Done** when every criterion has a green check on the main branch. There is no completeness measurement, because there is no contract.
 
 ## 6. The queue as proof
@@ -229,7 +233,9 @@ The [queue] is proof, not a note. A post in it always means that the gate was pa
 - **Nothing is set directly.** No one sets a post done, and a post is never done on local evidence. The first post's entry (§3) is made with its merge commit and its receipts, as a reported merge is. A claimed post whose session ended without a report — a post not built — goes back to the queue.
 - **A stopped post.** A post stopped by a finding is blocked until its contract re-enters (§7). A post stopped by a hard stop waits for the [owner] (§5.1).
 
-**At every session start the [architect] reports, as detection:** the reports not yet read; each change merged since its last session, read against its task specification — a deviation becomes a backlog item or a revert; the commits on the main branch without a queue post (§3); and the uses of the emergency path (§3).
+**At every session start the [architect] reports, as detection:** the reports not yet read; each change merged since its last session, read in its diff against its task specification, never from its commit message or report alone — a deviation becomes a backlog item or a revert; the commits on the main branch without a queue post (§3); and the uses of the emergency path (§3).
+
+**What is built, against what is declared.** At every merge, a job derives from the main branch an inventory of what is built — endpoints and functions, tables and their rights, connections and dependencies — and compares it with the inventory the contracts declare. The comparison is deterministic: no model takes part in it. An item built and not declared, or declared and not built, is reported as detection, like a commit without a queue post. A model may write a short orientation per module, or propose the contract an undeclared item belongs to, which the [architect] decides; its output is never the input of a comparison or a gate. The [tool appendix] binds the job, or names it `not built` with its trigger.
 
 ## 7. Back to the specification side
 
@@ -248,5 +254,6 @@ A hard stop is the only thing in the pipeline that waits for the [owner]. Everyt
 - **Hard stops** (§5.1): whether the post continues, is split, or goes back to dispatch; at the review-round limit, where the [tool appendix] allows it, whether the post is accepted with the open findings of that review carried, never a [finding token].
 - **The first post** (§3): which post builds what the gate needs, and what replaces each requirement it cannot meet, as the [tool appendix] records it.
 - **The emergency path** (§3): only the owner uses it.
+- **A red main** (§4.5): whether one post is added while continuous integration on the main branch is red.
 - **Runs in a row** (§5.1): the owner lets a session agent take posts in a row, and sets the batch threshold.
 - **Not the owner's:** the merge, which the session agent makes on its conditions (§5.1); the choice of build loop, which the queue post makes (§4.5); the routing of a finding, which §7 makes.

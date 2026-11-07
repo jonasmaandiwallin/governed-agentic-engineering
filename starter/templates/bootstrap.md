@@ -17,7 +17,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.1"
+  template_version: "v0.2"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/bootstrap.md"
 This license covers the template as published. The file you write from it is your own
@@ -38,7 +38,7 @@ Paste the block below as the **project instructions** of the chat project "<inst
 - **Connectors:** the ones the agent's boundary-contract entry allows, and no other. <For an agent that only reads: the read connection `<installation> System Overview`.>
 - **Model:** as the routing table names for routes to <Agent>.
 
-The block changes only by a governance change on the owner's decision, and only when the system store moves. The block's first line carries its version, the same as `version` above. The core compares the block it was started with against this file in the mirror and writes `Bootstrap: current` or `Bootstrap: differs (<version>)` in its start receipt.
+The block changes only by a governance change on the owner's decision, and only when the system store moves. The block's first line carries its version, the same as `version` above. The core compares the block it was started with against this file in the mirror and reports `bootstrap current` or `bootstrap differs (<version>)` on its start receipt's `Gates:` line.
 
 ```
 Bootstrap: <Agent> <YYYY-MM-DD>-a

@@ -1,9 +1,9 @@
 ---
 document_title: "Registry Standard"
-version: "v0.4"
+version: "v0.5"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-01"
+last_updated: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -60,7 +60,7 @@ Four properties follow:
 | [architect] | The agent that maintains the registry's tools (GAL §3) |
 | [registry] | The file, or files, that hold the governed values, one entry per key |
 | [contract] | A document in the [system]'s contract corpus (Contract Standard) |
-| [implementation] | The code that executes the contracts (GIP) |
+| [implementation] | The code that executes the contracts (GIP); in a knowledge corpus, the deliverables the agents produce (Truth Chain Standard §1.1) |
 | [evidence registry] | The store of evidence entries, referenced by ID |
 | [confidence set] | The ordered closed set of confidence levels |
 | [derivation class set] | The closed set of classes that say how a value relates to its source |
@@ -105,6 +105,7 @@ The [derivation class set] is closed, and its classes are defined in one place, 
 - A [contract] cites a governed value by its key, in the [reference form]. The value itself never stands in the contract (Contract Standard §7.2).
 - An [implementation] reads a governed value by key from the [registry] or the [database]. A literal in code that equals a registry value is a hardcode, whether or not the key exists.
 - A key that a [contract] cites exists in the [registry]. A citation of a key that does not exist is a defect in the contract.
+- Keys that share one formula, one source or one concept, such as the coefficients of one curve or the tiers of one threshold, form a family. A [contract] names every key of a family in the [reference form], even where it explains the family or cites its evidence once. A description of the family is not a citation of its keys.
 
 ## 4. Lifecycle
 
@@ -134,6 +135,7 @@ Every change to the [registry] raises its version.
 - The [database] holds, per key, every field of §2.2 as the file states it, and whether the key is deprecated.
 - A key removed from the file is removed from the [database]. A row without a key in the file and a key without a row are both differences, and the [registry sync] reports both.
 - The [registry reader] reads by key. An unknown key is an error, never an empty answer. A deprecated key is returned marked as deprecated.
+- A value reaches the [database] only through the [registry sync], from the file. A value in the [database] that the file does not hold is a difference to report, never a source: no [contract] takes it, and no key is added from it.
 
 ## 6. Tool classes
 

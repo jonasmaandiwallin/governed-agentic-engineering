@@ -1,9 +1,9 @@
 ---
 document_title: "Handoff Standard"
-version: "v0.3"
+version: "v0.4"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-01"
+last_updated: "2026-11-07"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -56,14 +56,15 @@ Four properties follow:
 | Placeholder | Meaning |
 |---|---|
 | [system] | The system whose agents hand work to each other |
-| [operator] | The person who carries every handoff from one session to the next |
+| [operator] | The person who decides each handoff and, where the platform does not transport it, carries it from one session to the next. Transport and decision are separate: a platform may open the target session with the handoff as its first message, and the decision stays with the [operator] |
+| [owner] | The person who decides intent (GAL §3) |
 | [architect] | The agent that maintains the agents' instructions and tools (GAL §3) |
 | [reviewer] | The agent that reviews another agent's work (GAL §1.2, row 4) |
 | [agent identity] | The exact name each agent declares in its instructions, against which a handoff's target is checked |
 | [routing table] | The one list of permitted routes, with the model and settings each route runs with |
 | [handoff store] | The place every handoff is written before it is shown |
 | [handoff module] | The part of an agent's instructions that produces its handoffs |
-| [measurement rule] | The rule for entries a session states as not measured, and how the next session carries them |
+| [measurement rule] | The rule for entries a session states as not measured (GAL §4.7.4): the one register they stand in, with who measures each and when, and how a handoff selects from it (§7) |
 | [backlog item] | As in the Backlog Standard |
 | [handoff validator] | The tool of the class in §8 |
 | [instance appendix] | The document that binds this standard's placeholders to one installation |
@@ -75,7 +76,8 @@ Four properties follow:
   - the route: giver and target, the target written as its [agent identity];
   - the route's descriptor, where the [routing table] has several rows for the same giver and target;
   - the [backlog item] or items, and the date;
-  - the last commit the giver made, as a hash with a short description;
+  - the giver's last durable write: a commit as a hash with a short description, or, where the giver writes rows rather than commits, the row and its time in a form the receiver reads back;
+  - where the receiver works in a repository, the branch and the HEAD it should find, so that the [operator] can compare them with the receiver's receipt;
   - the model and settings the target session runs with, as the [routing table] gives them for the route;
   - where the [operator] opens the target session;
   - the module or skill the target loads for the task, where it has more than one;
@@ -117,6 +119,10 @@ The producing agent checks, in the session that writes the handoff:
 4. **What is measured is kept apart from what is assumed.** An open question is marked as one.
 5. **The work the handoff relies on is committed.** A change the receiver needs is in the last commit the handoff names, or the handoff says it is not.
 6. **The handoff is written to the [handoff store] and validated by the [handoff validator].** It is shown only when the validator passes. When the validator cannot run, the producer says so in the handoff and checks the validator's rules by hand.
+7. **A brief or order written in an earlier session is checked when it is given**, with no time limit: against the repository's HEAD, against the decisions logged since it was written, and against every rule it rests on, read at its source (GAL §4.7.1). The handoff names the HEAD and the latest decision it was checked against. Two orders on the same files become one. An order that changes is replaced whole by a new version, never amended by an addition.
+8. **Deviations are resolved before the block.** A question the producer can settle is settled and written into the handoff; one that is the [owner]'s is asked before the handoff is produced. No caveat stands above or beside the block: the receiver never sees it.
+9. **The handoff speaks the target's language and the live source's numbers.** It uses the terms of the contract it concerns, and takes a count from the source that holds it now, never from a snapshot field. A historical comparison carries the diff or the read path that shows it, and a recipe for the [operator] carries every step in its code block.
+10. **The producer has checked the whole document**, not only the change (GAL §9.8 p. 4).
 
 The [instance appendix] may add checks for particular routes.
 
@@ -127,6 +133,7 @@ When a handoff reaches an agent:
 1. **The target is checked.** The agent compares the target in the metadata with its own [agent identity]. On a mismatch it does no work and answers in the form the [instance appendix] names.
 2. **The premises are checked, visibly.** Before work begins, the agent reads every field whose current state the handoff asserts, and states the result in its reply: each field, what the handoff says, what the field carries. On a mismatch it stops and reports to the sender. A check that does not appear in the reply was not made.
 3. **A state-changing order is checked against its target.** Before a promotion, a value change, a closure or a deletion, the agent confirms the target is in the state the order assumes. If it is not, it does not act, and reports.
+4. **A handoff received mid-session** gets the gates GAL §4.2 names before any work on it.
 
 ## 7. Handoffs to and from the reviewer
 
@@ -140,8 +147,11 @@ A handoff that sends work to the [reviewer], or returns its verdict, carries the
 - **From the [reviewer]:**
   - the verdict on the closure criterion, in one of the forms the [instance appendix] names (yes, no, partial);
   - the path of the findings file, and the counts of findings by class;
-  - the path of the handoff it answers.
-- **Both directions:** the entries the [measurement rule] covers, each carried verbatim from the previous handoff, or closed by a result recorded where the [measurement rule] says.
+  - the path of the handoff it answers;
+  - what the fix must not touch (GAL §9.5, Fence).
+- **Both directions:** the entries of the [measurement rule]'s register whose measurer is the receiver, or whose [backlog item] stands on the handoff's line, each with its condition word for word, and one line with the count of open entries in the register and how many are the receiver's. An entry is closed in the register by its result, never by being left out of a handoff, and carrying it does not take it out of the register.
+
+**The round returns to the sender.** The [reviewer]'s handoff goes back to the session that sent the round, which pauses rather than closes while the round runs. That session triages the findings against the open backlog before it continues with a fix round or closes. The findings travel verbatim, never as a summary, and the [reviewer] writes each finding to its findings file as it forms.
 
 ## 8. Tool classes
 
@@ -149,7 +159,7 @@ The [instance appendix] binds the class to a tool.
 
 | Class | Measures or produces | Input | Passes | Never passes |
 |---|---|---|---|---|
-| [handoff validator] | Whether a handoff meets this standard's form and its route's required lines | The handoff file, the [routing table], every [agent identity], and the files the handoff names for its route | A target that is an exact [agent identity]; a route with a row in the [routing table], and the model and settings that row gives; a last commit that exists; every line §7 requires for the route present and consistent with the files it names; every inherited entry carried or closed. Every failure named, and the run fails | A handoff passed with a failure that was only printed; a route with no row passed; a setting the row does not give passed; a run over zero identities or zero routes reported as clean; an inherited entry dropped without a recorded result |
+| [handoff validator] | Whether a handoff meets this standard's form and its route's required lines | The handoff file, the [routing table], every [agent identity], and the files the handoff names for its route | A target that is an exact [agent identity]; a route with a row in the [routing table], and the model and settings that row gives; a last commit that exists; every line §7 requires for the route present and consistent with the files it names; every entry that stood in the [measurement rule]'s register at the handoff's base still standing there with the same condition, or carrying a recorded result. Every failure named, and the run fails | A handoff passed with a failure that was only printed; a route with no row passed; a setting the row does not give passed; a run over zero identities or zero routes reported as clean; an entry gone from the register without a recorded result; an entry the handoff carries with a condition other than the register's |
 
 **Zero result.** A missing input, an empty input, or a count of zero where the input plainly holds entries is a hard failure, never a reported value.
 

@@ -9,7 +9,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.9"
+  template_version: "v0.10"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/instance-appendix.md"
 This license covers the template as published. The file you write from it is your own
@@ -209,11 +209,15 @@ Separation check: [contract author] ≠ [contract auditor]; the [reviewer] revie
 
 ### Session Start Protocol template (GAL §4.2–§4.3)
 
-One template per agent kind, written out with this installation's paths, commands and operator. Without a [session-start function], say here that the gates are protocol the model executes (GAL §8.2, Who compares). Profile A's template carries the mirror check, the configuration read and the bootstrap check, each with its receipt line (ADOPTION.md step 7).
+One template per agent kind, written out with this installation's paths, commands and operator. Without a [session-start function], say here that the gates are protocol the model executes (GAL §8.2, Who compares). Profile A's template carries the mirror check, the configuration read and the bootstrap check, each reported on the `Gates:` line (ADOPTION.md step 7).
 
 ### Session close (GAL §4.4)
 
 The close sequence and the retro entry format, written out the same way.
+
+### Mandatory behavior sections (GAL §4.7)
+
+The text of the four sections — Investigation, No deferral without a reason, Process economy, Measurement line — once, in this installation's words, each at least what GAL §4.7.1 to §4.7.4 require, with the measurement line's form. Every core that owns a session carries the text byte for byte under the same H3s, or points here (GAL §9.4). A core that points here reads this section at session start, at G4 with its modules or skills (GAL §4.7, §8.1); the start template names that read.
 
 ### Registration checklist (GAL §7)
 
@@ -310,7 +314,7 @@ One row per agent, with each of the checklist's rows marked as one of: done (wit
 | [routing table] | |
 | [handoff store] | |
 | [handoff module] | |
-| [measurement rule] | |
+| [measurement rule] | <the register's store: one entry per measurement not made, with who measures it and when (Handoff Standard §1.1, §7)> |
 | [backlog item] | as in § Backlog |
 
 | Tool | Binding |

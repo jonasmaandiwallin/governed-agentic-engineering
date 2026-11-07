@@ -18,8 +18,8 @@
 --   gov.mirror_runs      append-only: one row per mirror run, with the commit, the
 --                        directories, the number of files and the time.
 --   gov.mirror_status    view: the latest run. The core compares its commit with the latest
---                        merge in the version registry and writes `Mirror: current` or
---                        `Mirror: behind (<commit>)` in its start receipt.
+--                        merge in the version registry and reports `mirror current` or
+--                        `mirror behind (<commit>)` on its start receipt's `Gates:` line.
 --   gov.mirror_replace   the one write path. It checks every file's sha256 against its bytes,
 --                        and refuses the run, writing nothing, on any mismatch.
 --

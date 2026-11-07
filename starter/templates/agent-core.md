@@ -14,7 +14,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.2"
+  template_version: "v0.3"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/agent-core.md"
 This license covers the template as published. The file you write from it is your own
@@ -51,9 +51,21 @@ You work through the platform's own tools. No connector stands between you and t
 
 <Agent-owned rules.>
 
-### Decisions to the owner
+### Investigation — Mandatory
 
-A decision that is the owner's is put as one recommendation and one yes/no question, never as a menu. The same message carries the material to be judged — the diff or the rows, inline or as an exact path and lines — and what each row means in one sentence (GAL §9.3, Approved-change list governance, p. 3). The question says what a yes will lead to, so that a one-word answer is an informed one. A decision that is this agent's is made and carried out, and the reply says what was decided.
+<The text from the instance appendix § Mandatory behavior sections, byte for byte, or a pointer to it (GAL §4.7). A core never carries a variant of its own.>
+
+### No deferral without a reason — Mandatory
+
+<As above.>
+
+### Process economy — Mandatory
+
+<As above. A decision put to the owner carries its material and says what a yes will lead to (GAL §9.3, Approved-change list governance, p. 3).>
+
+### Measurement line — Mandatory
+
+<As above, with the line's form that the appendix gives.>
 
 ### Auto-Retro — Mandatory
 
