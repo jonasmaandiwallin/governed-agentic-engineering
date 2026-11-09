@@ -2,8 +2,8 @@
 title: "Verification Architecture: Four Levels, Independent by Design"
 type: white-paper
 status: draft
-version: "v0.2.2"
-date: "2026-11-07"
+version: "v0.3"
+date: "2026-11-09"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -26,7 +26,7 @@ author_llm:
 ai_disclosure:
   - role: drafting
     status: complete
-    scope: "Text and structure of v0.1 (2026-10-16), and in v0.2 § 4 rewritten with a rule per figure and the register of measurements not yet made."
+    scope: "Text and structure of v0.1 (2026-10-16), and in v0.2 § 4 rewritten with a rule per figure and the register of measurements not yet made. In v0.3: a regression suite for the governance and governed ablation in § 7."
     evidence: "The document text itself."
     reason: null
   - role: technical-analysis
@@ -41,13 +41,13 @@ ai_disclosure:
     reason: null
   - role: fact-check
     status: complete
-    scope: "External references in § 5 (Meyer's keynote and arXiv:2511.23159) checked against their primary sources by Research Pipeline on 2026-10-19, and the formal-methods framing again on 2026-11-02: it rests on the paper's abstract, not on the keynote's summary."
+    scope: "External references in § 5 (Meyer's keynote and arXiv:2511.23159) checked against their primary sources by Research Pipeline on 2026-10-19, and the formal-methods framing again on 2026-11-02: it rests on the paper's abstract, not on the keynote's summary. v0.3 adds no external source."
     evidence: "Research Pipeline's reference reports of 2026-10-19 and 2026-11-02, one row per claim with the source's own text and who read it."
     reason: null
   - role: review
     status: complete
-    scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
+    scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other. v0.3: one reading round on the additions, together with the overview's v0.4: whether anything proposed stands as measured, whether the sentences shared between the four papers are identical, the references to the standards, and what the release tool ships."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment. v0.3 round (2026-11-09), together with the overview's: no blocking findings. No finding concerned this paper."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -210,6 +210,9 @@ We have not checked whether the combination described here — four levels with 
 - The completeness gate at merge, with the first contract-driven unit under the current pipeline.
 - Prospective validation of the domain model against field data.
 - In the standards, as a direction in the release's known issues: the bootstrap prompt as a measured component of the agent.
+- A regression suite for the governance itself, built from the findings a reviewer is expected to make, each recurring pattern in the retro log as a case to catch, and the checks that must fail. It would verify the governance the way the simulation verifies the engine.
+
+**Governed ablation.** Governance is built in two steps, a method this package calls governed ablation. Step 1 secures quality with rules, gates and mechanical measurement. Step 2 removes them one at a time against a fixed answer key until the result changes, and keeps what the result needs. Each removal is a hypothesis that the owner decides; nothing fades on its own. Step 2 has not been run, and its answer key, a regression suite for the governance itself, does not exist yet. The regression suite above is that answer key, and verification of the governance is what makes step 2 possible at all.
 
 ---
 

@@ -2,8 +2,8 @@
 title: "Agent Roles and Orchestration: The Specification Agent's Mandate"
 type: white-paper
 status: draft
-version: "v0.2.2"
-date: "2026-11-07"
+version: "v0.3"
+date: "2026-11-09"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -26,7 +26,7 @@ author_llm:
 ai_disclosure:
   - role: drafting
     status: complete
-    scope: "Text and structure of v0.1 (2026-10-16), and in v0.2 the new parts: the harmonizer role, the two ways work moves between specification agents, the owner's acceptance at a review limit, and § 4 rewritten with a rule per figure."
+    scope: "Text and structure of v0.1 (2026-10-16), and in v0.2 the new parts: the harmonizer role, the two ways work moves between specification agents, the owner's acceptance at a review limit, and § 4 rewritten with a rule per figure. In v0.3: governed ablation of the operator's checkpoints in § 7, with the regret-free merge rate as a measure from the field."
     evidence: "The document text itself."
     reason: null
   - role: technical-analysis
@@ -41,13 +41,13 @@ ai_disclosure:
     reason: null
   - role: fact-check
     status: complete
-    scope: "External references in § 5 checked against their primary sources by Research Pipeline: the keynote, the delegation paper and the nine sources of the first search on 2026-10-19; Meyer's 1992 article, read in the paginated original, the ten further candidates and the delegation paper's passage on permissions on 2026-11-02, partly through the platform's research mode."
-    evidence: "Research Pipeline's reference reports of 2026-10-19 and 2026-11-02, one row per claim with the source's own text and who read it, the agent or the research mode."
+    scope: "External references in § 5 checked against their primary sources by Research Pipeline: the keynote, the delegation paper and the nine sources of the first search on 2026-10-19; Meyer's 1992 article, read in the paginated original, the ten further candidates and the delegation paper's passage on permissions on 2026-11-02, partly through the platform's research mode. In v0.3 one source added to § 7, Eno Reyes's post on X of 2026-11-06, read by Research Pipeline on 2026-11-09 in a screenshot and text the editor supplied, since x.com refused automated fetching."
+    evidence: "Research Pipeline's reference reports of 2026-10-19 and 2026-11-02, one row per claim with the source's own text and who read it, the agent or the research mode. For the additions of this version, a report of 2026-11-09 with one row per claim, its outcome and the source's own words: 17 of 23 rows confirmed and 6 in part; where a row holds only in part, the text follows the source's wording."
     reason: null
   - role: review
     status: complete
-    scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
+    scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other. v0.3: one reading round on the additions, together with the overview's v0.4: whether anything proposed stands as measured, whether the sentences shared between the four papers are identical, the references to the standards, and what the release tool ships."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment. v0.3 round (2026-11-09), together with the overview's: no blocking findings. An observation on where this paper lists its new source was taken up after the round."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -211,7 +211,7 @@ Spec-driven development has made specifications a first-class artefact in agent-
 
 The question this paper turns on is narrower: what happens when the agents that write specifications are governed as strictly as the agents that write code — with every rule and value in the specification citing evidence, review by someone other than the author before the specification becomes authoritative, and a route back to the contract for every gap the build finds. Two searches for this package read nineteen tools, methods and papers. None combined evidence for the specification's own rules and values with review by someone other than the author before the specification becomes authoritative. The searches covered those nineteen and no others, so they do not show that no one does it.
 
-**Sources.** Meyer, B. (1992). Applying "Design by Contract". *Computer*, 25(10), 40–51. https://doi.org/10.1109/2.161279 · Meyer, B. (2026). *Software Verification in the Age of Artificial Intelligence*, keynote, Swiss Testing Day, Zürich, 26 March 2026; summary: https://swisstestingday.ch/software-verification-in-the-age-of-ai/ · Tomašev, Franklin & Osindero (2026-02-12). *Intelligent AI Delegation*. arXiv:2602.11865 · GitHub Spec Kit, documentation · BMAD-METHOD, repository and documentation · Segner, M. (2026-08-26). Claude blog post on Warp's agents. https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude · Wang, S. (2026). *VibeContract: The Missing Quality Assurance Piece in Vibe Coding*. arXiv:2603.15691 · The other candidates of the two searches are listed in the GAE overview's Sources.
+**Sources.** Meyer, B. (1992). Applying "Design by Contract". *Computer*, 25(10), 40–51. https://doi.org/10.1109/2.161279 · Meyer, B. (2026). *Software Verification in the Age of Artificial Intelligence*, keynote, Swiss Testing Day, Zürich, 26 March 2026; summary: https://swisstestingday.ch/software-verification-in-the-age-of-ai/ · Tomašev, Franklin & Osindero (2026-02-12). *Intelligent AI Delegation*. arXiv:2602.11865 · GitHub Spec Kit, documentation · BMAD-METHOD, repository and documentation · Segner, M. (2026-08-26). Claude blog post on Warp's agents. https://claude.com/blog/how-warp-builds-self-improving-agents-on-claude · Wang, S. (2026). *VibeContract: The Missing Quality Assurance Piece in Vibe Coding*. arXiv:2603.15691 · Reyes, E. (2026-11-06). Post on X. https://x.com/EnoReyes/status/2118767454721851680 · The other candidates of the two searches are listed in the GAE overview's Sources.
 
 ---
 
@@ -232,6 +232,7 @@ The question this paper turns on is narrower: what happens when the agents that 
 - A full audit of the five documents in force that carry only a standard audit.
 - Per-agent enforcement of the specification agents' write surfaces at the tool layer, once a commit is found that writes outside its agent's surface.
 - A form in the standards for a specification round the architect dispatches, which the starter kit now carries as a departure.
+- **Governed ablation of the operator's checkpoints.** Governance is built in two steps, a method this package calls governed ablation. Step 1 secures quality with rules, gates and mechanical measurement. Step 2 removes them one at a time against a fixed answer key until the result changes, and keeps what the result needs. Each removal is a hypothesis that the owner decides; nothing fades on its own. Step 2 has not been run, and its answer key, a regression suite for the governance itself, does not exist yet. Removing a human checkpoint is governed ablation applied to a person, and its measure is how often an attestation changes an outcome. Eno Reyes names a comparable measure from the field, a regret-free merge rate, which validation is meant to raise until most changes can merge automatically (post on X, 2026-11-06; § 5, Sources). The overview's section on scale carries the same direction for the autonomy track.
 
 ---
 

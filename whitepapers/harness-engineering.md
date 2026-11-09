@@ -2,8 +2,8 @@
 title: "Harness Engineering: Infrastructure That Holds the Rules"
 type: white-paper
 status: draft
-version: "v0.2.2"
-date: "2026-11-07"
+version: "v0.3"
+date: "2026-11-09"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -26,7 +26,7 @@ author_llm:
 ai_disclosure:
   - role: drafting
     status: complete
-    scope: "Text and structure of v0.1 (2026-10-16), and in v0.2 the new parts: the two platform profiles, the product declared as paths, the version check that can compare two stale copies, and § 4 rewritten with a rule per figure."
+    scope: "Text and structure of v0.1 (2026-10-16), and in v0.2 the new parts: the two platform profiles, the product declared as paths, the version check that can compare two stale copies, and § 4 rewritten with a rule per figure. In v0.3: § 3.9 on building a control against a measured failure and removing it against an answer key, and governed ablation in § 7."
     evidence: "The document text itself."
     reason: null
   - role: technical-analysis
@@ -41,13 +41,13 @@ ai_disclosure:
     reason: null
   - role: fact-check
     status: complete
-    scope: "External references in § 5 checked against their primary sources by Research Pipeline on 2026-10-19; the harness study's longitudinal scope and Saltzer and Schroeder's bibliography again on 2026-11-02. Nadella's X post refused automated access; the quoted sentence is confirmed from the search-index text of that URL and three independent verbatim press reproductions."
+    scope: "External references in § 5 checked against their primary sources by Research Pipeline on 2026-10-19; the harness study's longitudinal scope and Saltzer and Schroeder's bibliography again on 2026-11-02. Nadella's X post refused automated access; the quoted sentence is confirmed from the search-index text of that URL and three independent verbatim press reproductions. v0.3 adds no external source."
     evidence: "Research Pipeline's reference reports of 2026-10-19 and 2026-11-02, one row per claim with the source's own text and who read it."
     reason: null
   - role: review
     status: complete
-    scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other."
-    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment."
+    scope: "Adversarial review of the twelve papers and the release tool in two rounds against six classes: a refusal of the release tool that lets a member of its class through, a change to what the standards release ships, a figure the stated rule does not reproduce, a claim beyond its source, internal material in released text, and two papers contradicting each other. v0.3: one reading round on the additions, together with the overview's v0.4: whether anything proposed stands as measured, whether the sentences shared between the four papers are identical, the references to the standards, and what the release tool ships."
+    evidence: "Round 1 (2026-11-02): 6 blocking and 9 advisory findings, all corrected in this version. Round 2 (2026-11-02): no blocking findings and two advisory ones, both corrected after the round: sentences that shared a run of ten or more words with the standards' wording were rewritten (v0.2.1), and the release tool now refuses a reference-corpus path that opens an HTML comment. v0.3 round (2026-11-09), together with the overview's: no blocking findings. No finding concerned this paper."
     reason: null
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -157,6 +157,10 @@ Where it can, the reference installation runs these gates as one deterministic c
 
 The standard has a session halt when a module is older than its core (GAL §8.2). The reference installation's architect does not halt there: it loads the module and marks it in the receipt, under an exception the installation registers. The receipt still shows the stale module; what changes is that the session does not wait for an answer.
 
+### 3.9 A control is built against a measured failure, and removed against an answer key
+
+A check is added only in answer to a failure that occurred and was written down (GAL §9.8), and one that has caught no real error for thirty days is taken out (GAL §4.7.3). The two rules keep the harness from only growing. Governance is built in two steps, a method this package calls governed ablation. Step 1 secures quality with rules, gates and mechanical measurement. Step 2 removes them one at a time against a fixed answer key until the result changes, and keeps what the result needs. Each removal is a hypothesis that the owner decides; nothing fades on its own. Step 2 has not been run, and its answer key, a regression suite for the governance itself, does not exist yet. A rule that guards a rare failure, such as schema changes made only through migrations, would look idle in any short window and be cut for doing its job; it is tried against a planted fault instead.
+
 ---
 
 ## 4 — Measured and Shown
@@ -225,6 +229,8 @@ We have not checked whether the combination described here — every rule declar
 - A step receipt that proves which model ran, once the platform reports it.
 
 Each of these has a trigger: a measured failure that would have been caught. None is built ahead of one.
+
+**In the other direction.** Once its answer key exists, step 2 of governed ablation runs over the harness (§ 3.9): each gate and check is removed in turn against the regression suite for the governance, and kept where the suite shows it is needed.
 
 ---
 
