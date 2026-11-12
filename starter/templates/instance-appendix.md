@@ -9,7 +9,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.10"
+  template_version: "v0.12"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/instance-appendix.md"
 This license covers the template as published. The file you write from it is your own
@@ -269,7 +269,7 @@ One row per agent, with each of the checklist's rows marked as one of: done (wit
 |---|---|
 | A product as paths (GIP §1): per product, its repository and, where it is paths, the prefixes; [task specification path] outside them | |
 | The first post (GIP §3): the one post, what replaces each requirement it cannot meet, who dispatched it, where the dispatch is logged | |
-| Accepting a post with the review's open findings carried at the review-round limit (GIP §5.1, §8) | |
+| Accepting a post with the review's open advisory findings carried at the review-round limit (GIP §5.1, §8) | |
 
 **Test growth (ADOPTION.md step 4, Measuring test growth).** The form of the id a test carries for the criterion or invariant it binds: ______. The line in a post's report that records the verifier's counts: ______.
 
@@ -352,7 +352,9 @@ The mismatch answer (Handoff Standard §6 p. 1) and the forms of the closure ver
 
 **What counts as infrastructure that two or more agents consume** (Backlog Standard §4.3, Review). List it here.
 
-**The advisory class** (Backlog Standard §4.2, third point). Taken or not taken. Where taken: the class of findings, and the collecting items per surface that an item reads when it takes up a change of that surface: ______.
+**The advisory class** (Backlog Standard §4.2, third point). Taken or not taken. Where taken: the class of findings, and the collecting items per surface that the order for a change of that surface reads when it is written: ______.
+
+**An order's follow-up item** (Backlog Standard §4.2, fourth point; Handoff Standard §5 p. 7). Where an order names its follow-up item (a field of the handoff, the queue post or the item it serves), and where the [handoff store] or the queue records that the order is given and that it closes: ______.
 
 ---
 

@@ -1,9 +1,9 @@
 ---
 document_title: "Governed Engineering Memory Standard"
-version: "v0.10"
+version: "v0.12"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-01"
+last_updated: "2026-11-12"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -192,7 +192,7 @@ The [instance appendix] names the kinds it uses and which of the two each is.
 
 ### 6.2 Triage
 
-- When a named pattern reaches [triage threshold] undisposed occurrences, [pattern triage] gives it a [backlog item] as Backlog Standard §4.1 says: an open item that carries it takes it, a closed item that names it is reopened (Backlog Standard §4.5), and a new item is opened only when nothing carries it.
+- When a named pattern reaches [triage threshold] undisposed occurrences, [pattern triage] gives it a [backlog item] as Backlog Standard §4.1 says: an open item that carries it takes it, a closed item that names it is reopened (Backlog Standard §4.5), and a new item is opened only when nothing carries it. An order already in progress (Handoff Standard §5 p. 7) never takes a countermeasure: the countermeasure gets an item of its own, or waits in the item that carries it until that order closes. A blocking finding in the work itself is still fixed in its round (GAL §4.7.2). This protects against triage feeding the order whose own reviews produced the pattern.
 - A countermeasure takes effect when its [backlog item] closes. An occurrence of the pattern dated after the later of the disposition and that closure is a regression. [pattern triage] reports every regression, with the entries that make it. An occurrence while the countermeasure's item is still open is not a regression, and a disposition without a countermeasure has none: its re-review date brings the pattern back.
 - [pattern triage] counts names (§3.2) only. A taxonomy reading is never an occurrence.
 - The [instance appendix] states when [pattern triage] runs and who starts it, or that nothing runs it on a schedule. Between runs a pattern at threshold or a regression can stand without an item, and the appendix says how that is seen.

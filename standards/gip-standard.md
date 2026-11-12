@@ -1,9 +1,9 @@
 ---
 document_title: "GIP — Governed Implementation Pipeline"
-version: "v0.6"
+version: "v0.11"
 status: "draft"
 created: "2026-09-29"
-last_updated: "2026-11-07"
+last_updated: "2026-11-12"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -134,7 +134,7 @@ A product repository may add its own checks of the contract before dispatch — 
 
 ### 4.3 The task specification
 
-The architect writes the task specification and commits it before the queue post is added. It stands at [task specification path] in the product repository, unless writing it there would change what the build is measured against; then it stands in the architect's repository, and the [tool appendix] names the case.
+The architect writes the task specification and commits it before the queue post is added. It stands at [task specification path] in the product repository (§1, A product as paths), unless writing it there would change what the build is measured against; then it stands in the architect's repository, and the [tool appendix] names the case.
 
 Every task specification carries:
 
@@ -151,6 +151,8 @@ Every task specification carries:
 - **Dependencies:** the tasks this one waits for. An order between this post and work outside the queue is written in the backlog items under the Wave Standard, where the post can be a node; it is never written in the queue.
 
 A task specification is self-contained. Every gap and finding it acts on is written into it — file, function, current and required behaviour — never as a pointer to another file. A session agent that finds a pointer where a finding should be reports the specification as incomplete and does not start the post.
+
+A task specification's scope is frozen when it is committed, as an order's is ([handoff standard] §5 p. 7): what the post delivers is what the specification says then. Scope is added only by an [owner] decision that is logged, through a replacing specification and a post of its own; what a review or the build finds beyond the scope goes to the follow-up item the post names as an order (Backlog Standard §4.2) or is reported (§7), never into the post. This protects the post against growing while it is built.
 
 ### 4.4 Task work
 
@@ -190,7 +192,7 @@ Both loops run the same steps. **A** — the tester writes the checks. **A.5** �
 - **A transport error is not a result.** A call that ended in a timeout or a dropped connection may have run. Its outcome is read in the store it writes — the receipt, the commit, the row — before the call is repeated, and a write or a batch is never repeated on a transport error alone.
 - **Staging.** Only named files are staged — the changed code and the checks — never everything in the tree.
 - **No escape hatches.** A skipped or pending check, a suppressed type error or a disabled lint rule in the change fails the build. The [tool appendix] lists the patterns.
-- **Hard stops** end the post before any merge and go to the [owner]: RED-BASELINE, NEEDS-MANUAL-REVIEW, the review-round limit reached without a pass, a build or test failure beyond the retry limit, a missing prerequisite — one the task names, or the switch a reserved part is to be built behind (§5.2) — and the session's context limit. The owner decides whether the post continues, is split, or goes back to dispatch. At the review-round limit, and where the [tool appendix] allows it, the owner may instead accept the post with the open findings of that review carried — the verifier's findings in the step whose receipt carries the acceptance. Each is held by a backlog item, by its text or a pointer, and the item names the post, the step that found the finding and its class. The acceptance stands in that step's receipt beside the verifier's own verdict, which is never changed: the receipt keeps the verdict the verifier gave and adds the owner's acceptance, the reference of the decision that made it and who entered it. A [finding token] (§7) is never carried, and a post with an open [finding token] is not merged on an acceptance. A failing check is never carried — the full suite and continuous integration must still be green — and every other condition of the merge below holds unchanged. A finding stops its contract and goes to the [architect] (§7).
+- **Hard stops** end the post before any merge and go to the [owner]: RED-BASELINE, NEEDS-MANUAL-REVIEW, the review-round limit reached without a pass, a build or test failure beyond the retry limit, a missing prerequisite — one the task names, or the switch a reserved part is to be built behind (§5.2) — and the session's context limit. The owner decides whether the post continues, is split, or goes back to dispatch. At the review-round limit, and where the [tool appendix] allows it, the owner may instead accept the post with the open advisory findings of that review carried — the verifier's findings in the step whose receipt carries the acceptance. Each advisory finding carried is held by a backlog item, by its text or a pointer, and the item names the post, the step that found the finding and its class. A blocking finding is never carried (GAL §9.7 p. 1): with one open, the post continues or goes back to dispatch. The acceptance stands in that step's receipt beside the verifier's own verdict, which is never changed: the receipt keeps the verdict the verifier gave and adds the owner's acceptance, the reference of the decision that made it and who entered it. A [finding token] (§7) is never carried, and a post with an open [finding token] is not merged on an acceptance. A failing check is never carried — the full suite and continuous integration must still be green — and every other condition of the merge below holds unchanged. A finding stops its contract and goes to the [architect] (§7).
 - **Merge.** The session agent merges when every condition holds: an approved step receipt for A, A.5, B and C.5 — or, for a review step, one whose verifier's verdict stands beside the owner's acceptance (Hard stops, above) — the full suite green, continuous integration green on the pull request, and no hard stop. No one else is asked (§8).
 - **Runs in a row.** The [owner] can let a session agent take posts in a row without a word between them, once the most recent posts, as many as the batch threshold, ran with both reviews passing and continuous integration green. The owner sets the batch threshold. Any hard stop ends the series.
 
@@ -251,7 +253,7 @@ The build never changes the specification. What it learns about the specificatio
 
 A hard stop is the only thing in the pipeline that waits for the [owner]. Everything else runs on conditions a machine can check. This section collects the owner's decisions; each rule stands in the section it names.
 
-- **Hard stops** (§5.1): whether the post continues, is split, or goes back to dispatch; at the review-round limit, where the [tool appendix] allows it, whether the post is accepted with the open findings of that review carried, never a [finding token].
+- **Hard stops** (§5.1): whether the post continues, is split, or goes back to dispatch; at the review-round limit, where the [tool appendix] allows it, whether the post is accepted with the open advisory findings of that review carried, never a blocking finding or a [finding token].
 - **The first post** (§3): which post builds what the gate needs, and what replaces each requirement it cannot meet, as the [tool appendix] records it.
 - **The emergency path** (§3): only the owner uses it.
 - **A red main** (§4.5): whether one post is added while continuous integration on the main branch is red.

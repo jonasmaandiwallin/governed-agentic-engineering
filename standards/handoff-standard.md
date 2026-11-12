@@ -1,9 +1,9 @@
 ---
 document_title: "Handoff Standard"
-version: "v0.4"
+version: "v0.7"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-07"
+last_updated: "2026-11-12"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -119,7 +119,7 @@ The producing agent checks, in the session that writes the handoff:
 4. **What is measured is kept apart from what is assumed.** An open question is marked as one.
 5. **The work the handoff relies on is committed.** A change the receiver needs is in the last commit the handoff names, or the handoff says it is not.
 6. **The handoff is written to the [handoff store] and validated by the [handoff validator].** It is shown only when the validator passes. When the validator cannot run, the producer says so in the handoff and checks the validator's rules by hand.
-7. **A brief or order written in an earlier session is checked when it is given**, with no time limit: against the repository's HEAD, against the decisions logged since it was written, and against every rule it rests on, read at its source (GAL §4.7.1). The handoff names the HEAD and the latest decision it was checked against. Two orders on the same files become one. An order that changes is replaced whole by a new version, never amended by an addition.
+7. **A brief or order written in an earlier session is checked when it is given**, with no time limit: against the repository's HEAD, against the decisions logged since it was written, and against every rule it rests on, read at its source (GAL §4.7.1). The handoff names the HEAD and the latest decision it was checked against. Two orders on the same files become one while neither is in progress. An order that changes is replaced whole by a new version, never amended by an addition. **An order's scope is frozen when it is written:** what it is to deliver is what it says then, the findings held for its surfaces in their collecting items included (Backlog Standard §4.2), and every part split from it divides that scope and adds nothing to it; a part is not an order of its own. An order is in progress from when it is given — shown to the [operator] to carry, or entered in the queue (GIP §4.5) — until it closes: its last part is merged or reported done, or it is withdrawn. The [handoff store] or the queue records both events. Scope is added only by an [owner] decision logged as a decision entry (GEM §4); joining an order that is in progress with another is adding scope. What is found beyond the scope goes to the order's follow-up item (Backlog Standard §4.2), or, for an order that names none, to an item opened under Backlog §4.1; never into the order. This protects against an order that grows as fast as it is worked, so that its remainder never shrinks.
 8. **Deviations are resolved before the block.** A question the producer can settle is settled and written into the handoff; one that is the [owner]'s is asked before the handoff is produced. No caveat stands above or beside the block: the receiver never sees it.
 9. **The handoff speaks the target's language and the live source's numbers.** It uses the terms of the contract it concerns, and takes a count from the source that holds it now, never from a snapshot field. A historical comparison carries the diff or the read path that shows it, and a recipe for the [operator] carries every step in its code block.
 10. **The producer has checked the whole document**, not only the change (GAL §9.8 p. 4).

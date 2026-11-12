@@ -1,9 +1,9 @@
 ---
 document_title: "GAL Standard (Governed Agent Lifecycle)"
-version: "v1.78"
+version: "v1.82"
 status: "draft"
 created: "2026-09-11"
-last_updated: "2026-11-07"
+last_updated: "2026-11-12"
 author: "Tooling & Architecture"
 supersedes: "dpal-standard v1.0 (archived), dpal-standard v2.0 (name change)"
 framework:
@@ -362,11 +362,11 @@ Not a reason to skip: the rule being familiar, the task being small, or a summar
 
 #### 4.7.2 No deferral without a reason
 
-It protects against work that is described well enough to feel handled and is never done.
+It protects against work that is described well enough to feel handled and is never done, and against work that never closes because everything found in it is added to it.
 
-1. What a session finds — a finding, a gap, a rider — is done in the session or in the work in progress, unless one of three reasons holds: it needs a route or an agent the session does not have, and is handed over now, in parallel; it needs an [owner] decision, and the question is asked now; or it depends on something that does not yet exist, and the dependency is named as one.
+1. What a session finds — a finding, a gap, a rider — is done in the session or in the work in progress, unless one of four reasons holds: it needs a route or an agent the session does not have, and is handed over now, in parallel; it needs an [owner] decision, and the question is asked now; it depends on something that does not yet exist, and the dependency is named as one; or it lies outside the frozen scope of the work in progress ([handoff standard] §5 p. 7), and a named item holds it with a trigger. The work in progress is the order, not a part split from it, and what it delivers is what any of its parts has delivered so far: a finding there lies inside its scope. A blocking finding there is fixed in the round that found it and reviewed again, past the round limit in a round the [owner] decides on (§9.7 p. 1); it is never carried. An advisory one is fixed in that round too, unless the stop rule (§9.5) or the round limit (§9.7 p. 1) closes that round with it open; then the order's follow-up item holds it. Nothing found goes into a later part of the order. Work whose scope is frozen closes when that scope is done: a rule that forbids deferral and allows no closure has no exit.
 2. Every deferral names its reason and its trigger: the event that brings it back. A deferral without a trigger is not permitted.
-3. "Pre-existing", "out of scope", "next version", "later" and "increases scope" are not reasons.
+3. "Pre-existing", "out of scope", "next version", "later" and "increases scope" are not reasons. A frozen scope is one only with its named item and its trigger.
 4. No data is removed to get past a gate, and a workaround is committed only with a blocking item that removes it.
 
 #### 4.7.3 Process economy
@@ -377,7 +377,7 @@ It protects against rules and checks that only accumulate, and against control t
 2. A check that does not say stop warns and continues. Before stopping on a failing measurement, the agent tries another way to the same measurement or narrows its claim to what was measured.
 3. A check, gate or mandatory procedure that has not stopped a real error in 30 days, counted from the [retro log] and the [decision log], is removed. A sensor (§4.2) is measured instead by whether it showed, in 30 days, something no other step showed.
 4. A new rule enters only with a rule removed or merged in the same change. A rule states what it protects and why; a rule that only prescribes a procedure is rewritten or left out.
-5. A review finding is a change: it is fixed where it points, and never by itself becomes a new check or case (§9.8). It stays open, carried by a backlog item, only under the stop rule (§9.5) or at the round limit (§9.7 p. 1).
+5. A review finding is a change: it is fixed where it points, and never by itself becomes a new check or case (§9.8). It stays open, carried by a backlog item, only when it lies outside the frozen scope of the work it reviews (§4.7.2), or when it is advisory and the stop rule (§9.5) or the round limit (§9.7 p. 1) closes the round with it open. A blocking finding in the work is never carried: it holds the work open until it is fixed.
 
 #### 4.7.4 Measurement line
 
@@ -734,9 +734,9 @@ The [reviewer] produces a findings table:
 
 ### 9.7 Review rounds
 
-It protects against review that never ends, and against approval that lapses with no change of meaning.
+It protects against review that never ends, against a change closed with a blocking finding open, and against approval that lapses with no change of meaning.
 
-1. A change gets at most two rounds. After the second without a `yes`, the [owner] decides: close with the open findings, each carried by a backlog item that names it, or run a third. A [contract] is the exception: it does not become canonical without an approving full audit of its current version ([contract standard]).
+1. A change gets at most two rounds. After the second without a `yes`, the [owner] decides: close with the open advisory findings, each carried by a backlog item that names it, or run a third. A blocking finding is never carried: while one is open after the second round, the [owner] decides after each round whether to run another or to withdraw the change. A [contract] is the exception: it does not become canonical without an approving full audit of its current version ([contract standard]).
 2. A `yes` holds over later changes that only fix findings the same round named (§9.2 rule 3); any other change resets it.
 3. A change that rewords and adds or removes no rule, gate or check takes one reading round, which still answers Q1 and Q2 of §9.5.
 4. A factual error found after approval — a statement that does not match what is built — is corrected in one bounded extra round over the changed places and what depends on them. It does not reopen the text and is not a third round.
