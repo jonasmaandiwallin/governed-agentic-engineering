@@ -1,9 +1,9 @@
 ---
 document_title: "Truth Chain Standard"
-version: "v0.6"
+version: "v0.8"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-07"
+last_updated: "2026-11-12"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -112,6 +112,7 @@ A conflict between two statements at the same level is resolved by the rules tha
 | [contract] | The [registry] keys it cites, and the [evidence registry] entries it rests on | Key citations in the body (Contract Standard §7.2); evidence IDs in its metadata and its body |
 | [registry] entry | The [evidence registry] entries that bear the value, or an explicit statement that none does | Registry Standard §2.2 |
 | [evidence registry] entry | Its source, and the [research record] that admitted it | §4 |
+| A finding drawn from several sources, in a [research record] | The [evidence registry] entry for each source it rests on | In the record, in the form the [instance appendix] names. Until an entry exists, the finding names that source by its citation, and the link is made when the entry is written (§4.1) |
 
 ### 3.2 Rules for links
 
@@ -141,7 +142,7 @@ An evidence entry has one ID from a source that never repeats, and these fields:
 
 The [instance appendix] may add fields. An entry is written from a [research record] that read the source. An entry written from a citation alone, without the source read, is marked as such.
 
-An entry reports one source: a finding drawn from several sources is not an entry. Every figure in the key finding can be found in the source. A figure that cannot be found there is left out and flagged, never derived.
+An entry reports one source: a finding drawn from several sources is not an entry. It stands in the [research record] that drew it, or in the statement it bears, and it links to an entry for each source it rests on, each read for it (§3.1, §3.2). A [research record] is written before its entries, so its links are made as the entries are written. A statement rests on such a finding only through entries that exist. The finding corroborates nothing beyond those entries, and it is never cited as a source of its own. Every figure in the key finding can be found in the source. A figure that cannot be found there is left out and flagged, never derived.
 
 ### 4.2 Lifecycle
 

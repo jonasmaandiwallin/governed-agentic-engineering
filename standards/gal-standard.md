@@ -1,6 +1,6 @@
 ---
 document_title: "GAL Standard (Governed Agent Lifecycle)"
-version: "v1.82"
+version: "v1.85"
 status: "draft"
 created: "2026-09-11"
 last_updated: "2026-11-12"
@@ -364,7 +364,7 @@ Not a reason to skip: the rule being familiar, the task being small, or a summar
 
 It protects against work that is described well enough to feel handled and is never done, and against work that never closes because everything found in it is added to it.
 
-1. What a session finds — a finding, a gap, a rider — is done in the session or in the work in progress, unless one of four reasons holds: it needs a route or an agent the session does not have, and is handed over now, in parallel; it needs an [owner] decision, and the question is asked now; it depends on something that does not yet exist, and the dependency is named as one; or it lies outside the frozen scope of the work in progress ([handoff standard] §5 p. 7), and a named item holds it with a trigger. The work in progress is the order, not a part split from it, and what it delivers is what any of its parts has delivered so far: a finding there lies inside its scope. A blocking finding there is fixed in the round that found it and reviewed again, past the round limit in a round the [owner] decides on (§9.7 p. 1); it is never carried. An advisory one is fixed in that round too, unless the stop rule (§9.5) or the round limit (§9.7 p. 1) closes that round with it open; then the order's follow-up item holds it. Nothing found goes into a later part of the order. Work whose scope is frozen closes when that scope is done: a rule that forbids deferral and allows no closure has no exit.
+1. What a session finds — a finding, a gap, a rider — is done in the session or in the work in progress, unless one of four reasons holds: it needs a route or an agent the session does not have, and is handed over now, in parallel; it needs an [owner] decision, and the question is asked now; it depends on something that does not yet exist, and the dependency is named as one; or it lies outside the frozen scope of the work in progress ([handoff standard] §5 p. 7), and a named item holds it with a trigger. The work in progress is the order, not a part split from it, and what it delivers is what any of its parts has delivered so far: a finding there lies inside its scope. A blocking finding there is fixed in the round that found it and reviewed again, past the round limit in a round the [owner] decides on (§9.7 p. 1); it is never carried. An advisory one is fixed in that round too, unless the stop rule (§9.5), the round limit (§9.7 p. 1) or a reading round (§9.7 p. 3) closes that round with it open; then the order's follow-up item holds it. Nothing found goes into a later part of the order. Work whose scope is frozen closes when that scope is done: a rule that forbids deferral and allows no closure has no exit.
 2. Every deferral names its reason and its trigger: the event that brings it back. A deferral without a trigger is not permitted.
 3. "Pre-existing", "out of scope", "next version", "later" and "increases scope" are not reasons. A frozen scope is one only with its named item and its trigger.
 4. No data is removed to get past a gate, and a workaround is committed only with a blocking item that removes it.
@@ -377,7 +377,7 @@ It protects against rules and checks that only accumulate, and against control t
 2. A check that does not say stop warns and continues. Before stopping on a failing measurement, the agent tries another way to the same measurement or narrows its claim to what was measured.
 3. A check, gate or mandatory procedure that has not stopped a real error in 30 days, counted from the [retro log] and the [decision log], is removed. A sensor (§4.2) is measured instead by whether it showed, in 30 days, something no other step showed.
 4. A new rule enters only with a rule removed or merged in the same change. A rule states what it protects and why; a rule that only prescribes a procedure is rewritten or left out.
-5. A review finding is a change: it is fixed where it points, and never by itself becomes a new check or case (§9.8). It stays open, carried by a backlog item, only when it lies outside the frozen scope of the work it reviews (§4.7.2), or when it is advisory and the stop rule (§9.5) or the round limit (§9.7 p. 1) closes the round with it open. A blocking finding in the work is never carried: it holds the work open until it is fixed.
+5. A review finding is a change: it is fixed where it points, and never by itself becomes a new check or case (§9.8). It stays open, carried by a backlog item, only when it lies outside the frozen scope of the work it reviews (§4.7.2), or when it is advisory and the stop rule (§9.5), the round limit (§9.7 p. 1) or a reading round (§9.7 p. 3) closes the round with it open. A blocking finding in the work is never carried: it holds the work open until it is fixed.
 
 #### 4.7.4 Measurement line
 
@@ -638,7 +638,7 @@ A harmonization that re-levels headings, adds invariant sections or introduces i
 2. The lists are written by the [harmonizer]. Before the outcome counts, the [reviewer] reads **every row of every list** — none is self-attested, and a row type the checker accepts without a reader is an unguarded door. Each row is read against what it authorises: an addition against the section it enters, a removal against the pre-state to establish that what leaves is not a rule, a size change against the lines added or removed, an inserted section against its own content, a marker-total row against the markers lost and gained. The reading is recorded in the [reviewer]'s findings and carries, per row, what was read, not only that it was:
    - (a) the scope the row claims against the scope the file carries — a row that authorises 40 lines for a section of 60 authorises the section, not its size;
    - (b) the invariant tokens and normative markers the row introduces, listed, where nothing else in the run measures them;
-   - (c) a verdict. For an addition or an inserted section: the change belongs where the row says, or it is a rule that moved in from elsewhere, which is a relocation and is read against its origin rather than as an addition. For a removal: the text leaving is bookkeeping — history, tool detail relocated to the [tool appendix], or a rule restated elsewhere, with the place named — or it is a rule leaving, which is a loss and blocks the outcome however the row is worded.
+   - (c) a verdict. For an addition or an inserted section: the change belongs where the row says, or it is a rule that moved in from elsewhere, which is a relocation and is read against its origin rather than as an addition. For a removal: the text leaving is bookkeeping — history, tool detail relocated to the [tool appendix], or a rule restated elsewhere, with the place named — or it is a rule leaving, which is a loss and blocks the outcome however the row is worded, unless the [owner] decided the removal in the [decision log] before the run; then it is read as `weakened-intended` (§9.5).
 
    The [harmonizer] proposes, the [reviewer] verifies.
 3. **An attestation handed on carries its material.** Whoever leaves an attestation to another party — the [reviewer], or the [owner] for intent — sends in the same message: the diff or rows to be judged (inline, or an exact path plus lines), what each list or row means in one sentence, and one yes/no question with what a yes leads to. It also names the decisions the sender took itself and, for each check it ran, what that check did not prove. For standard text or an architecture contract the sender may add a short comprehension test: a question the [owner] answers before attesting. Naming a directory or a file is not the material; an attestation requested without it is not requested.
@@ -686,7 +686,7 @@ The [reviewer] produces a findings table:
 
 | Rule (short description) | Archive location | Live location | Cited text | Verdict | Justification |
 |---|---|---|---|---|---|
-| [rule] | [file:section — or `—` for an addition] | [file:section] | [key phrase from the text] | identical / equivalent / strengthened / relocated / added / non-rule / weakened / lost / conflict | [required for equivalent, strengthened, relocated, added, conflict] |
+| [rule] | [file:section — or `—` for an addition] | [file:section] | [key phrase from the text] | identical / equivalent / strengthened / relocated / added / non-rule / weakened-intended / weakened / lost / conflict | [required for equivalent, strengthened, relocated, added, weakened-intended, conflict] |
 
 **Verdicts:**
 - `identical` — verbatim same text (heading level changes permitted), and no text elsewhere that governs the rule has changed its meaning (Q2).
@@ -695,15 +695,16 @@ The [reviewer] produces a findings table:
 - `relocated` — rule moved between files of the agent (Q3), with the same semantics and loaded in every situation in which it has force. Justification column cites the origin text, the destination text, and the line of the core's § Session Start Protocol that loads the destination.
 - `added` — rule in the live version with no counterpart in the archive, relaxing no existing rule (Q5). Justification column names the obligation it adds, the rules in force it touches, and why it relaxes none of them. Does not block.
 - `non-rule` — explanatory text, clarification, or formatting that carries no behavioral obligation. Drop is permitted.
-- `weakened` — rule's meaning is weaker in the live version. **Blocking.**
-- `lost` — rule absent from live version and not relocated. **Blocking.**
+- `weakened-intended` — the rule's meaning is weaker in the live version, or the rule is removed, on purpose: the [owner] decided this weakening, and the decision stands in the [decision log] before the review. The justification column cites the decision and what it permits. The [reviewer] confirms that the weakening goes no further than the decision. Does not block.
+- `weakened` — rule's meaning is weaker in the live version, and no logged [owner] decision covers the whole weakening. **Blocking.**
+- `lost` — rule absent from live version and not relocated, and no logged [owner] decision covers its removal; a removal that one covers is `weakened-intended` (§9.3 § Approved-change list governance p. 2 (c)). **Blocking.**
 - `conflict` — a live file of the agent contradicts another of its files and both sides are unchanged from the archive (Q4). If the change wrote either side, the forbidding rule's row is `weakened`, not this. **Advisory** — it must be fixed, but it does not block this class: the conflict lies in the combination, not in the harmonization itself.
 
 **Scope.** Agent-owned content within each file, and the rules outside the agent that Q2 reaches. Invariant text (§4.3 template, §4.4 close trigger, session receipt, retro format) is byte-matched by §9.4 and excluded here — the [reviewer] does not re-verify text that is mechanically identical. A component whose only change is its version needs no row (§9.1).
 
 **Findings.** Each finding states where it is (file, section and cited text — never a line number alone), its source, how it was verified, the invariant it breaks, and a test that tells holds from does not hold. The [reviewer] assumes the change is wrong until it has measured otherwise; a sender's pass is not a pass.
 
-**Verdict boundary.** Only the criteria the handoff names decide the round's verdict; everything else is advisory. A `yes` names its basis — the stop rule, or the handoff's closure criterion — and a checkpoint left unread blocks it. The summary lists every checkpoint with its outcome.
+**Verdict boundary.** The criteria the handoff names decide the round's verdict, and so does every finding in what the order has delivered (§4.7.2 p. 1), or in the change itself when it was made without an order: it keeps its class whatever the handoff names. Everything else is advisory. A `yes` names its basis — the stop rule, or the handoff's closure criterion — and a checkpoint left unread blocks it. The summary lists every checkpoint with its outcome.
 
 **Stop rule.** A round with no blocking finding, after a round with no blocking finding, closes with `yes`; what remains goes to a follow-up item.
 
@@ -738,7 +739,7 @@ It protects against review that never ends, against a change closed with a block
 
 1. A change gets at most two rounds. After the second without a `yes`, the [owner] decides: close with the open advisory findings, each carried by a backlog item that names it, or run a third. A blocking finding is never carried: while one is open after the second round, the [owner] decides after each round whether to run another or to withdraw the change. A [contract] is the exception: it does not become canonical without an approving full audit of its current version ([contract standard]).
 2. A `yes` holds over later changes that only fix findings the same round named (§9.2 rule 3); any other change resets it.
-3. A change that rewords and adds or removes no rule, gate or check takes one reading round, which still answers Q1 and Q2 of §9.5.
+3. A change that rewords and adds or removes no rule, gate or check takes one reading round, which still answers Q1 and Q2 of §9.5. The reading round closes the change: an advisory finding it leaves open is held by the order's follow-up item (§4.7.2 p. 1) and needs no further round, and a blocking one is fixed and reviewed again under p. 1. A reading round that finds the change adds or removes a rule, gate or check gives a blocking finding: the change was not a rewording, and it takes the rounds of p. 1.
 4. A factual error found after approval — a statement that does not match what is built — is corrected in one bounded extra round over the changed places and what depends on them. It does not reopen the text and is not a third round.
 5. A change merged without its review is a bypass: it is logged, and reviewed before anything else changes the same surface. Where it cannot be determined whether a change was reviewed, it was not.
 

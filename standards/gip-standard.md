@@ -1,6 +1,6 @@
 ---
 document_title: "GIP — Governed Implementation Pipeline"
-version: "v0.11"
+version: "v0.13"
 status: "draft"
 created: "2026-09-29"
 last_updated: "2026-11-12"
@@ -235,7 +235,7 @@ The [queue] is proof, not a note. A post in it always means that the gate was pa
 - **Nothing is set directly.** No one sets a post done, and a post is never done on local evidence. The first post's entry (§3) is made with its merge commit and its receipts, as a reported merge is. A claimed post whose session ended without a report — a post not built — goes back to the queue.
 - **A stopped post.** A post stopped by a finding is blocked until its contract re-enters (§7). A post stopped by a hard stop waits for the [owner] (§5.1).
 
-**At every session start the [architect] reports, as detection:** the reports not yet read; each change merged since its last session, read in its diff against its task specification, never from its commit message or report alone — a deviation becomes a backlog item or a revert; the commits on the main branch without a queue post (§3); and the uses of the emergency path (§3).
+**At every session start the [architect] reports, as detection:** the reports not yet read; each change merged since its last session, read in its diff against its task specification, never from its commit message or report alone — a deviation becomes a backlog item or a revert; where the [architect] cannot read the repository, the [tool appendix] may name who reads the diff for it: a role that did not make the change reads the diff of the merge commit, after the merge, against the task specification, and records that reading on its own. A step receipt from before the merge is not that reading, even when its verifier did not make the change. The architect reads that reading, never the report alone; the commits on the main branch without a queue post (§3); and the uses of the emergency path (§3).
 
 **What is built, against what is declared.** At every merge, a job derives from the main branch an inventory of what is built — endpoints and functions, tables and their rights, connections and dependencies — and compares it with the inventory the contracts declare. The comparison is deterministic: no model takes part in it. An item built and not declared, or declared and not built, is reported as detection, like a commit without a queue post. A model may write a short orientation per module, or propose the contract an undeclared item belongs to, which the [architect] decides; its output is never the input of a comparison or a gate. The [tool appendix] binds the job, or names it `not built` with its trigger.
 

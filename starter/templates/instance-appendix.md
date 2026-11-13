@@ -9,7 +9,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.12"
+  template_version: "v0.14"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/instance-appendix.md"
 This license covers the template as published. The file you write from it is your own
@@ -270,6 +270,7 @@ One row per agent, with each of the checklist's rows marked as one of: done (wit
 | A product as paths (GIP §1): per product, its repository and, where it is paths, the prefixes; [task specification path] outside them | |
 | The first post (GIP §3): the one post, what replaces each requirement it cannot meet, who dispatched it, where the dispatch is logged | |
 | Accepting a post with the review's open advisory findings carried at the review-round limit (GIP §5.1, §8) | |
+| Another role reads a merged change's diff for the [architect] where the architect cannot read the repository (GIP §6): which role, for which changes, and where its reading of the merge commit's diff, made after the merge, stands. A step receipt from before the merge does not count | |
 
 **Test growth (ADOPTION.md step 4, Measuring test growth).** The form of the id a test carries for the criterion or invariant it binds: ______. The line in a post's report that records the verifier's counts: ______.
 
