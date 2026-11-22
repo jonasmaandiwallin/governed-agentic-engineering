@@ -1,9 +1,9 @@
 ---
 document_title: "Truth Chain Standard"
-version: "v0.8"
+version: "v0.10"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-12"
+last_updated: "2026-11-22"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -57,7 +57,8 @@ Four properties follow:
 |---|---|
 | [system] | The system the chain governs |
 | [operator] | The person who decides what the agents leave open |
-| [constitution] | The document that states what the [system] is for and the constraints every contract serves |
+| [constitution] | The document that states what the [system] is for and the constraints every [contract] at level 2 serves |
+| [architecture contract] | The [contract] that states how the [system] is built: it binds the standards and the [instance appendix] for the [system] (Contract Standard §2, type `architecture`). A [system] may have none |
 | [contract] | A document in the contract corpus (Contract Standard) |
 | [registry] | The store of governed values (Registry Standard) |
 | [evidence registry] | The store of evidence entries, one per source |
@@ -76,9 +77,11 @@ Four properties follow:
 
 From highest to lowest:
 
-1. [constitution]
+1. [constitution], and the [architecture contract] where the [instance appendix] places it here
 2. [contract], together with the [registry] values it cites by key
 3. [implementation]
+
+A level applies within the scope its document declares, and says nothing outside it. Every document at level 1 declares its scope. The [architecture contract] is a [contract] and stands at level 2, below the [constitution], unless the [instance appendix] places it at level 1. Where it does, two documents stand at level 1, the [constitution] for what the [system] is for and how the work is done and the [architecture contract] for how the [system] is built; their scopes do not overlap, and neither stands above the other.
 
 [advisory] has no authority over behaviour at any level. [evidence registry] and [research record] are not levels of authority: they are the ground that statements at levels 1–2 rest on, and they change a level only through §2.3.
 
@@ -90,12 +93,12 @@ When two statements at different levels conflict:
 2. The conflict is written to the [decision log], with both statements and where they stand.
 3. The lower statement is updated or deprecated, in the next change the [instance appendix] names for that level.
 
-A conflict between two statements at the same level is resolved by the rules that own that level: Contract Standard §6 for contracts, Registry Standard §2.1 for keys.
+A conflict between two statements at the same level is resolved by the rules that own that level: Contract Standard §6 for contracts, Registry Standard §2.1 for keys. Two documents at level 1 that conflict have scopes that overlap: the conflict is written to the [decision log], and the [operator] narrows one of the scopes, each document by its own process.
 
 ### 2.3 How evidence changes the chain
 
 - A finding from a [research record] or an [evidence registry] entry that would change a [contract] or a [registry] value becomes a proposal to the owner of that statement. It is never applied directly.
-- A [contract] that conflicts with the [constitution] is invalid until the [constitution] is changed by its own process.
+- A [contract] at level 2 that conflicts with a document at level 1 is invalid until that document is changed by its own process.
 - An [implementation] never contains logic that no [contract] or task specification with a passed gate specifies (GIP §3, §4). The first post's entry, with its record of what replaced the gate (GIP §3), is the one task specification an [implementation] may rest on without a passed gate.
 - In a knowledge corpus, a deliverable produced before the [contract] for its surface is merged is marked *before contract* and cites no contract version. The mark keeps the departure from the order visible; the deliverable rests on no [contract] until one is merged for it.
 - A statement at level 1 or 2 never rests on the [implementation]. Reading the code can show where a [contract] leaves a gap that the code fills. That is a finding against the [contract], and the text that closes the gap rests on a decision or on evidence, not on what the code does.
@@ -119,12 +122,24 @@ A conflict between two statements at the same level is resolved by the rules tha
 - A link names an entry that exists and is in force. A link to an entry that is missing, retracted or superseded is a defect at the level that holds the link. A [registry] key is superseded from its deprecation: a [contract] that cites a deprecated key holds a defect from that day, however long the [registry] keeps the key before removing it (Registry Standard §4.3). The defect is corrected when the [contract] cites the key that replaces it, or, where nothing replaces it, when the [contract] no longer cites the key and the text that rested on its value is changed or removed with an entry in the [decision log] (GEM §4.3).
 - The evidence IDs a [contract] declares in its metadata, and the ones its body cites, are the same set.
 - Evidence named in prose does not count as a link unless it stands in the field or citation form the [instance appendix] names.
-- A link carries no more strength than its source. A statement that rests on an entry of a low tier says so, or the [instance appendix] names where its confidence stands (as Registry Standard §2.2 does for values).
+- A link carries no more strength than its source. A statement that rests on an entry of a low tier says so, or the [instance appendix] names where its confidence stands (as Registry Standard §2.2 does for values). The [instance appendix] states how the Registry Standard's [confidence set] orders against the [evidence tier set], and the two may be one set. A value whose confidence stands above what the highest tier of its evidence gives under that order names its reason: corroboration by entries for distinct sources (below), or an [operator] decision in the [decision log]. A value whose evidence states that none bears it has no tier, so any confidence above the lowest level of the [confidence set] stands above its evidence, and only an [operator] decision can be its reason. The reason stands in the entry's source field (Registry Standard §2.2); corroboration is read from its evidence field.
 - A link bears a statement only when the entry has been read for that statement: its key finding concerns the same subject, the same quantity and the same conditions. Where one of the three differs, the statement does not rest on the entry. The writer stops and says so, and narrows neither the statement nor the entry to make them meet.
 - An entry that a search, a [registry] field or another entry points to is a candidate until it has been read so. A link that was found is not yet support.
 - The entry is read in its record (§4.3) and in its source, never in a copy that may be older.
 - Two links to entries for the same source are one link. A statement is corroborated only by entries for distinct sources.
 - Where a tool can read what a research statement says about the [system] itself, the tool's reading holds, and the statement is checked against it.
+
+### 3.3 The governed evidence graph
+
+The links of §3.1 and the relations below form the governed evidence graph. This section states what the graph guarantees, not how it is kept: tables, a graph store, embeddings and full-text search are the installation's choice, bound in the [instance appendix]. A link of §3.1 that stands in a document, such as an evidence ID in a [contract]'s metadata, changes with that document under the rules that own it, and the document's earlier versions keep it; it is not a relation under *Nothing is deleted* below. A relation is a record the graph holds of its own. Where an installation holds no such record, its graph is the links of §3.1, and the points below that govern relations apply from when it declares one. The [instance appendix] marks each point below built or `not built`; a point not built is held by instruction and is not measured (GAL §9.2).
+
+- **A closed set of relations.** A relation joins two entries, or an entry and a statement or a finding, and is one of: supports, contradicts, derived from, supersedes. The [instance appendix] may add relations for work that is not evidence, such as part of, depends on or blocks, each named there. A relation outside the set and the appendix's additions is a defect at the level that holds it. A finding drawn from several sources (§4.1) is joined to the entry for each source by derived from; supersedes is the relation of §4.2.
+- **Provenance.** Every relation names who made it, when, why, and the record or source it was read in. A relation is a link: §3.2 holds for it, and it bears nothing until the entries at both ends have been read for it.
+- **Nothing is deleted.** A relation is never changed or deleted. It is retired, with its reason, wrong or no longer true, and with who retired it and when. A new strength or a new period is a retired relation and a new one. §4.2 holds for entries.
+- **Two times.** The graph keeps when each relation and each change of an entry's tier or status was recorded, and, where a relation holds only for a period, when it holds. It can be read as it was known at a moment and as true on a date. A statement carries the time its links were read, where the [instance appendix] names, so that it can be reproduced as it was read.
+- **The validity of a claim.** A period of validity is set on a claim in a deliverable only from its source, and governs that claim, not the evidence a [contract] rests on.
+- **Changes are proposals.** A relation an agent writes stands on that agent's authority from when it is written. Retiring a relation, retracting an entry or superseding one is a proposal to the owner of the statements that rest on it (§2.3), and the decision is logged.
+- **A search of the graph.** A search names what it searched and what it could not: the count of nodes searched, and the count left out because they cannot yet be searched, such as nodes without an index entry. A search that searched nothing fails. An empty answer is not an absence: it says what was read and that nothing was found, as a claim that something does not exist names the search that did not find it (GAL §4.7.1 p. 2). Nothing that matches is dropped without being counted (GEM §1, nothing lost silently).
 
 ## 4. The evidence registry
 
@@ -154,6 +169,7 @@ An entry reports one source: a finding drawn from several sources is not an entr
 
 - The entry's file is the record. The [database] is derived from it. Where the two differ, the file holds, and the [evidence sync] brings the [database] to the file.
 - A row without a file and a file without a row are both differences, and the [evidence sync] reports both. A route that writes the [database] without writing a file is not permitted.
+- Where the [instance appendix] declares a table as the record of the [evidence registry] (GEM §2.3), this section does not apply to it, and GEM §2.3 does.
 
 ## 5. Which links are checked when
 

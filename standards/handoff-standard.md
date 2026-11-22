@@ -1,9 +1,9 @@
 ---
 document_title: "Handoff Standard"
-version: "v0.7"
+version: "v0.9"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-12"
+last_updated: "2026-11-22"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -151,7 +151,7 @@ A handoff that sends work to the [reviewer], or returns its verdict, carries the
   - what the fix must not touch (GAL §9.5, Fence).
 - **Both directions:** the entries of the [measurement rule]'s register whose measurer is the receiver, or whose [backlog item] stands on the handoff's line, each with its condition word for word, and one line with the count of open entries in the register and how many are the receiver's. An entry is closed in the register by its result, never by being left out of a handoff, and carrying it does not take it out of the register.
 
-**The round returns to the sender.** The [reviewer]'s handoff goes back to the session that sent the round, which pauses rather than closes while the round runs. That session triages the findings against the open backlog before it continues with a fix round or closes. The findings travel verbatim, never as a summary, and the [reviewer] writes each finding to its findings file as it forms.
+**The round returns to the sender.** The [reviewer]'s handoff goes back to the session that sent the round, which pauses rather than closes while the round runs. That session triages the findings against the open backlog before it continues with a fix round or closes. The findings travel verbatim, never as a summary, and the [reviewer] writes each finding to its findings file as it forms. Where the sending session cannot pause through the round — the [reviewer] runs in a session the [operator] starts, and no platform carries the handoff back — the session closes with its handoff, after writing a brief of the state it closes in, and the round returns to a new session of the sending agent. That session reads at its start, whole, the brief, the handoff it answers and the [reviewer]'s findings file, and triages as above.
 
 ## 8. Tool classes
 
@@ -159,7 +159,7 @@ The [instance appendix] binds the class to a tool.
 
 | Class | Measures or produces | Input | Passes | Never passes |
 |---|---|---|---|---|
-| [handoff validator] | Whether a handoff meets this standard's form and its route's required lines | The handoff file, the [routing table], every [agent identity], and the files the handoff names for its route | A target that is an exact [agent identity]; a route with a row in the [routing table], and the model and settings that row gives; a last commit that exists; every line §7 requires for the route present and consistent with the files it names; every entry that stood in the [measurement rule]'s register at the handoff's base still standing there with the same condition, or carrying a recorded result. Every failure named, and the run fails | A handoff passed with a failure that was only printed; a route with no row passed; a setting the row does not give passed; a run over zero identities or zero routes reported as clean; an entry gone from the register without a recorded result; an entry the handoff carries with a condition other than the register's |
+| [handoff validator] | Whether a handoff meets this standard's form and its route's required lines | The handoff file (its row, where the [instance appendix] declares a table as the record of the [handoff store], GEM §2.3), the [routing table], every [agent identity], and the files the handoff names for its route | A target that is an exact [agent identity]; a route with a row in the [routing table], and the model and settings that row gives; a last commit that exists; every line §7 requires for the route present and consistent with the files it names; every entry that stood in the [measurement rule]'s register at the handoff's base still standing there with the same condition, or carrying a recorded result. Every failure named, and the run fails | A handoff passed with a failure that was only printed; a route with no row passed; a setting the row does not give passed; a run over zero identities or zero routes reported as clean; an entry gone from the register without a recorded result; an entry the handoff carries with a condition other than the register's |
 
 **Zero result.** A missing input, an empty input, or a count of zero where the input plainly holds entries is a hard failure, never a reported value.
 

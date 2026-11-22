@@ -12,7 +12,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.1"
+  template_version: "v0.2"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/contract-inventory.md"
 This license covers the template as published. The file you write from it is your own
@@ -32,7 +32,7 @@ One row per contract. A deliverable is not a contract: a contract says how somet
 | Group | Contract | Folder | Store | Depends on | Backlog item | State |
 |---|---|---|---|---|---|---|
 | Governance | System architecture | `contracts/governance/` | system | — (the constitution, from the version after it exists) | | |
-| Governance | Constitution: what the system is for and how its work is done; level 1, above every contract (Truth Chain §2.1) | `contracts/governance/` | system | — | | |
+| Governance | Constitution: what the system is for and how its work is done; level 1, above every contract at level 2, and beside the architecture contract where the appendix places it at level 1 (Truth Chain §2.1) | `contracts/governance/` | system | — | | |
 | Governance | Data layers and data ownership | `contracts/governance/` | system | constitution | | |
 | Governance | Mandate: what the agents may do on the owner's behalf | `contracts/governance/` | system | constitution | | |
 | Method | Evidence levels | `contracts/method/` | system | constitution | | |

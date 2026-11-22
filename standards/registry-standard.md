@@ -1,9 +1,9 @@
 ---
 document_title: "Registry Standard"
-version: "v0.5"
+version: "v0.7"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-07"
+last_updated: "2026-11-22"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -89,7 +89,7 @@ Every entry carries these fields. The [instance appendix] states how each is wri
 | governs | One sentence: what the value controls |
 | source | Where the value came from: the decision, the backlog item or the document that set it |
 | evidence | The list of [evidence registry] IDs that bear the value, or an explicit statement that none does. An empty field is never allowed. Evidence named in other fields is not a link (Truth Chain Standard §3.2). |
-| confidence | A level from the [confidence set] |
+| confidence | A level from the [confidence set]. How the set orders against the evidence tiers, and the reason a value names when its confidence stands above its evidence, follow Truth Chain Standard §3.2. That reason stands in the source field, and a value whose evidence states that none bears it names one for any confidence above the lowest level |
 | derivation | A class from the [derivation class set]. The class's fields in the [derivation definitions] are required with it |
 
 An entry that lacks a required field is incomplete. An incomplete entry stays readable, and the [registry sync] names it as incomplete (§6). A [registry reader] returns it with the fields it has. A field an entry does not need for its class stays absent; it is never filled with a default.
@@ -136,6 +136,7 @@ Every change to the [registry] raises its version.
 - A key removed from the file is removed from the [database]. A row without a key in the file and a key without a row are both differences, and the [registry sync] reports both.
 - The [registry reader] reads by key. An unknown key is an error, never an empty answer. A deprecated key is returned marked as deprecated.
 - A value reaches the [database] only through the [registry sync], from the file. A value in the [database] that the file does not hold is a difference to report, never a source: no [contract] takes it, and no key is added from it.
+- Where the [instance appendix] declares a table as the record of the [registry] (GEM Standard §2.3), the points above on the file do not apply to it, and GEM Standard §2.3 does. The [registry reader]'s rules hold either way.
 
 ## 6. Tool classes
 

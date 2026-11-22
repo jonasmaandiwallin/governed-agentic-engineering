@@ -1,6 +1,6 @@
 ---
 title: "GAE starter — adoption procedure"
-version: "v0.17"
+version: "v0.20"
 status: "draft"
 author: "Tooling & Architecture"
 framework:
@@ -36,7 +36,7 @@ path: "starter/ADOPTION.md"
 
 # Adopting the GAE standards
 
-**Audience.** This document is for the coding agent that sets up GAE in a new repository, acting as the [architect] (GAL §3, Roles). The owner hands it over together with a description of what is to be built.
+**Audience.** This document is for the coding agent that sets up GAE in a new repository, acting as the [architect] (GAL §3, Roles). The owner hands it over, with a description of what is to be built if there is one.
 
 **How to follow it.** Work in checkpoint order (§ The checkpoints). The steps are numbered by subject, not by order of work: the table's last column says which steps describe each checkpoint, and one step can serve two (step 8 writes the agents for CP2 and describes the overview for CP4). Within a checkpoint, take its steps in number order. Each step ends with something written to the repository. A decision marked **owner decides** is put to the owner as one recommendation and a yes/no question, never as a menu. The question carries its material (GAL §9.3, Approved-change list governance, p. 3) and says what a yes will lead to, so that a one-word answer is an informed one.
 
@@ -77,9 +77,8 @@ You need all of the following:
 
   **Before a release exists**, the owner can name a commit in the standards' source repository instead. Copy the two folders at that commit with `git archive`, verify every copied file against the commit's tree (`git ls-tree` gives each blob's hash; `git hash-object` gives the copy's), and record the repository and the full commit hash in place of the tag. § Source of the standards says that no `SHA256SUMS` existed.
 - One named owner.
-- A description of the system to be built.
 
-If any of these is missing, stop and ask the owner for it. The owner's name, and the language you write to them in, are the first two things you ask when they were not given.
+If any of these is missing, stop and ask the owner for it. A description of the system to be built is not among them: it shortens the intake, and without it the intake (step 2) puts every question. The owner's name, and the language you write to them in, are the first two things you ask when they were not given.
 
 **Checking a release.** `SHA256SUMS` lists every file of the release by its path in the release: `standards/…`, `starter/…` and `KNOWN-ISSUES.md`. The licence and the other files at the repository's root are not in it. The copies stand under other paths, so the check runs twice. The commands below are for a POSIX shell; the files they write (`installed.sums`, `listed.txt`, `present.txt`) are scratch, kept outside the repository or deleted after.
 
@@ -119,7 +118,7 @@ Do not read further yet. The aim is to know what each standard governs before yo
 
 ## 2. Intake — CP0
 
-Put to the owner, one question at a time, only what the description leaves open:
+Put to the owner, one question at a time, what the description leaves open, or every question when there is no description:
 
 1. **What kind of installation is it?** Three shapes occur, and the answer decides step 3 and step 4:
    - **Product.** Agents build a system, and the system runs without them. The same input always gives the same output. This is the shape the rest of this document assumes where it says nothing else.
@@ -192,7 +191,7 @@ Bind each role in GAL §3 § Roles to an agent.
 - Every order whose reviews can leave findings open names its follow-up item when it is written, with the order's closure as its trigger (Backlog §4.2, An order and its follow-up item). A finding in what the order has delivered is fixed in the round that found it, and a blocking one is never carried; what lies outside the order's frozen scope, and an advisory finding a round closed with under the stop rule, at the round limit or in a reading round, goes to the follow-up item. Nothing goes into a later part of the order (GAL §4.7.2).
 - A change that only rewords, adding or removing no rule, takes one reading round, which still answers Q1 and Q2 of GAL §9.5 (GAL §9.7 p. 3). The reading round closes the change: an advisory finding it leaves open goes to the follow-up item and needs no further round; a blocking one is fixed and reviewed again. A reading round that finds a rule, gate or check added or removed gives a blocking finding, and the change takes the full rounds.
 - A factual error found after approval (a statement that does not match what is built) is corrected before canonical in one bounded extra round that the owner decides. The round covers only the changed places and what depends on them, the owner attests the new lines before it, and it does not count as a third round, because it does not reopen the text.
-- A post's tests bind its acceptance criteria and invariants, not every observation from a review. A verifier mutation that survives where the specification is silent goes to the [architect] as a specification question, not into a new test.
+- A post's tests bind its acceptance criteria and invariants, not every observation from a review. A surviving mutation probe of GIP's two kinds, a registry read replaced by its value and a rule inverted, is a gap that the tester closes in the same run (GIP §5.1). A probe of a further kind the appendix names that survives where the specification is silent is an observation (GIP §5.1): it goes to the [architect] as a specification question, not into a new test.
 
 **Measuring test growth.** A rule in text does not hold a test suite back on its own: in the second installation the suite kept growing with the rule above in place. So the rule is measured, at every merge of a post:
 
@@ -256,7 +255,7 @@ The appendix also points to the architecture contract (step 6) once it exists.
 - **Start with every tool not built.** Build a tool only when its trigger has happened. A tool that claims a class it does not meet is worse than no tool, and each standard names what its class must never pass.
 - **More can be built from the start when the owner decides it.** A tool the owner decides is part of what the system is for (for example, a graph or a priority view that the owner's work depends on from the first day) is built from the start. Record that decision and its reason in § Installation. The rule still holds for every other tool.
 - **Files are not tools.** The stores the standards name are plain files from day one: version registry, backlog item store, done log, decision log, retro log, handoff store, routing table and boundary contract.
-- **A store lives where its writers can write.** If every agent that writes a store can write to the repository, the store is a file there. If one of them cannot, as a profile A agent cannot, the store is an append-only table in a database that agent can write to, and the table is the record. Stores that only the coding-agent platform changes (agent files, the appendix, the boundary contract, the routing table, the version registry, migrations) stay in the repository. Moving a store into a database is a registered deviation (§ Registered deviations in the appendix) and an issue upstream (step 13).
+- **A store lives where its writers can write.** If every agent that writes a store can write to the repository, the store is a file there. If one of them cannot, as a profile A agent cannot, the store is an append-only table in a database that agent can write to, and the table is the record (GEM §2.3). Stores that only the coding-agent platform changes (agent files, the appendix, the boundary contract, the routing table, the version registry, migrations) stay in the repository. The appendix names each table that is a record, says whether its refusal of updates and deletes is built or held by instruction, and binds the check that the refusal holds.
 - **Contracts live in git**, also where the knowledge lives in a database. A governing document changes seldom, is versioned, reviewed as a diff and attested. The installation's contracts are in its repository; an engagement's contracts are in a repository of their own per data owner, which goes with that owner's store when it is handed over. Each is mirrored to the store at every merge and read whole from there. The file is the record (Truth Chain §4.3), so no deviation is needed. Contracts are written through the coding-agent platform, never through the database path.
 - **A governed value is created after the contract that states it** (Registry §4.1). A value loaded at setup, before its contract, gets the contract as its source in a new entry once the contract is merged.
 - **Agents write text through narrow functions.** A profile A agent writes to the database through functions that take one row or one column and append where they can, never through raw `UPDATE` or `DELETE`. A database connector in a chat app may review a statement before running it, misread it (a `;` inside a text value read as a statement without `WHERE`) and cancel it without a prompt. An encoding that gets past such a review exists only as a registered, time-limited deviation, and never as dynamic SQL.
@@ -271,13 +270,12 @@ The appendix also points to the architecture contract (step 6) once it exists.
 | Rule | Step | Goes beyond |
 |---|---|---|
 | The dispatched specification round in profile B | 4 | Handoff Standard §1.1, where the [operator] carries every handoff; GAL §4.6, where a step agent does a step of a build loop for a session agent |
-| A store kept as an append-only table in a database | 5 | Backlog §1 and §6, Registry §5, Truth Chain §4 and GEM §2.1, where the file is the record |
 
 A bootstrap-line start in profile B (step 8) is registered too, but as a departure from the installation's own binding of profile B, not from a standard: no standard requires the platform to hold the limits of an agent that owns its session.
 
 ## 6. The architecture contract — CP1
 
-The architecture contract is the installation's first contract, written first because everything built rests on it. It is a contract, so it stands at level 2 of Truth Chain's order, below the constitution (Truth Chain §2.1). It says what the system is, and it points up to the standards and the appendix and down to the domain contracts. Without it, a descriptive document fills the role without being a contract, and the system is built against a text nobody reviewed. Write it from `templates/contracts/system-architecture.md` to `contracts/governance/system-architecture.md` (or the path the corpus design below gives it).
+The architecture contract is the installation's first contract, written first because everything built rests on it. It is a contract, so it stands at level 2 of Truth Chain's order, below the constitution, unless the appendix places it at level 1 beside the constitution with a scope that does not overlap it (Truth Chain §2.1). The rest of this step describes level 2; at level 1, a conflict between the two is an overlap of scopes and is settled by narrowing one (Truth Chain §2.2). It says what the system is, and it points up to the standards and the appendix and down to the domain contracts. Without it, a descriptive document fills the role without being a contract, and the system is built against a text nobody reviewed. Write it from `templates/contracts/system-architecture.md` to `contracts/governance/system-architecture.md` (or the path the corpus design below gives it).
 
 It stands on the standards and the intake, and depends on no other contract until the constitution exists. It holds:
 
@@ -290,7 +288,7 @@ It stands on the standards and the intake, and depends on no other contract unti
 - the checkpoints, with the definitions above and their conditions;
 - which rules other contracts own. Domain rules (data layers, evidence levels, a graph, a priority formula, a mandate) are not here but in their own contracts.
 
-It says how the system is built. The constitution, written later (step 11), says what the system is for and how the work is done, and stands above it: a contract that conflicts with the constitution is invalid until the constitution is changed (Truth Chain §2.3). So the constitution is written against the attested architecture contract, a conflict between them is settled in the same round by changing one of the two, and the next version of the architecture contract depends on the constitution.
+It says how the system is built. The constitution, written later (step 11), says what the system is for and how the work is done, and at level 2 stands above it: a contract that conflicts with the constitution is invalid until the constitution is changed (Truth Chain §2.3). So the constitution is written against the attested architecture contract, a conflict between them is settled in the same round by changing one of the two, and the next version of the architecture contract depends on the constitution.
 
 **Design the corpus.** Before the first domain contract, the architecture contract draws the corpus:
 
@@ -443,9 +441,9 @@ Then:
 
 1. The owner decides the upgrade, naming the tag, and the decision log records it.
 2. Fetch the tag, never a branch, and run the release check on it before reading (step 0, Checking a release, point 1). Read its `KNOWN-ISSUES.md`.
-3. For each standard, compare its body with the copy installed. A body that is unchanged moves only the version. A changed body is read against every binding of that standard in the appendix, against the registered deviations, and against the architecture contract.
+3. For each standard, compare its body with the copy installed. A body that is unchanged moves only the version. A changed body is read against every binding of that standard in the appendix, against the registered deviations, and against the architecture contract. Where the [architect] reads a standard whole only from a mirror that holds the new copies after the merge, this reading follows the copies in a change of its own. Until it is merged, the appendix's § Standards still names the old versions as the ones it binds, and the installation runs under them until the reading's change is merged; the old release's tag holds their text. An agent that reads a copy whose version is above the one the appendix binds reads it as not in force. The decision log names the reading as pending, and the reading's change moves § Standards to the new versions.
 4. Replace the two folders, and check the copies (step 0, Checking a release, points 2 and 3).
-5. In the same change as the copies, update every place that binds the release or a version, found by a search of the repository for the old tag and its commit, never from memory: the appendix (`binds_release`, § Source of the standards, § Standards) and any other file the appendix lists as binding one. The architecture contract names no version (step 6), so an upgrade does not change it. It changes only when point 3 finds a changed body that one of its rules rests on, or when a standard is adopted or dropped. That change is a contract change with its own review and attestation, merged after the upgrade, because it rests on the new copies (step 11, Order between the appendix and a contract); the decision log names it as pending until it is merged. An architecture contract that still lists versions moves them to the appendix in its next version.
+5. In the same change as the copies, update every place that binds the release or a version, found by a search of the repository, never from memory: for the old tag and its commit, and for each standard's name followed by its old version, with markup allowed between the two, so that a binding such as `binds: "Boundary Standard v0.3"` or a version label on a published page is found. A hit in a changelog, a review, a log or a finding is history and stays as it is. The places to update are the appendix (`binds_release`, § Source of the standards, § Standards) and any other file the appendix lists as binding one; where point 3's reading follows the copies, § Standards and every binding of a version move in the reading's change, not in this one. The architecture contract names no version (step 6), so an upgrade does not change it. It changes only when point 3 finds a changed body that one of its rules rests on, or when a standard is adopted or dropped. That change is a contract change with its own review and attestation, merged after the upgrade, because it rests on the new copies (step 11, Order between the appendix and a contract); the decision log names it as pending until it is merged. An architecture contract that still lists versions moves them to the appendix in its next version.
 6. Mirror the result, and record the upgrade in the decision log with each changed file's old and new version.
 7. Report what did not fit as an issue upstream (step 13).
 

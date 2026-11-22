@@ -1,9 +1,9 @@
 ---
 document_title: "Backlog Standard"
-version: "v0.13"
+version: "v0.16"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-12"
+last_updated: "2026-11-22"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -46,7 +46,7 @@ The GAL standard owns who maintains the backlog (the [architect], GAL §3) and w
 
 Four properties follow:
 
-- **One source.** The item's own file is the record of the item. The index, the done log and the [database] are derived from the files, or written in the same operation as them, and never stand in for them.
+- **One source.** The item's own file is the record of the item, or the row of the table the [instance appendix] declares as the record (GEM §2.3). The index, the done log and the [database] are derived from the record, or written in the same operation as it, and never stand in for it.
 - **One partition.** Every status belongs to exactly one of two classes, open or closed (§3). Every reader that asks "is this item open?" answers from that partition and from nothing else.
 - **Nothing filed twice.** A finding goes to the open item that already carries its problem before a new item is opened (§4.1). Two items that do not know about each other leave one open after the other has solved it.
 - **Nothing dropped.** A finding routed elsewhere is disposed of only when the receiving item holds it (§4.2).
@@ -106,7 +106,7 @@ The body is free, with three exceptions:
 
 - An item opened from a finding names where the finding stands (a review file, a log entry, a report) and the duplicate search that was run before the item was opened (§4.1).
 - An item that takes over a finding from elsewhere holds it by its text or a pointer to it (§4.2). The [instance appendix] may require more of an item with several parts — a closure criterion per part, and a section saying what happened to each before the item closes (§4.3).
-- A section added later is added below the existing ones and dated, so that the history of the item reads from top to bottom.
+- The body opens with a section for the item's current state, which is rewritten as the state changes. It carries every decision and constraint in force, so that a reader of it alone works under the same rules as a reader of the whole item; a decision recorded in the history is in force only once the current state carries it. Below it is the history, which is only added to: a section added later is added below the existing ones and dated, so that the history reads from top to bottom. The start gate reads the current state, and the history where the task needs it (GAL §4.2 G5). An item written before this form takes it at its next change; until then the start gate reads it whole.
 
 ## 3. Status
 
@@ -177,6 +177,7 @@ A closed item is reopened when its work turns out not to be done, or not carried
 - The file is the record. Where the file and the [database] differ, the file holds, and the [mirror sync] brings the [database] to the file.
 - A row without a file and a file without a row are both differences, and the [mirror sync] reports both.
 - The [database]'s view of open items uses the partition of §3.
+- Where the [instance appendix] declares a table as the record (GEM §2.3), the points above on the file do not apply: the table is the item, the [mirror sync] does not apply, and the index and the done log are views of the rows. The partition of §3 holds either way.
 
 ## 7. Order and blocking
 

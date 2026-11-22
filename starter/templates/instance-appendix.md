@@ -9,7 +9,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.14"
+  template_version: "v0.16"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/instance-appendix.md"
 This license covers the template as published. The file you write from it is your own
@@ -175,6 +175,10 @@ Separation check: [contract author] ≠ [contract auditor]; the [reviewer] revie
 | [append with commit] | |
 | [bootstrap prompts] | |
 | [relevant learnings] | |
+| Agent names that can be mistaken for a role's name, and which each means (GAL §3) | |
+| G2 over one route: the step that writes both copies (GAL §4.2 G2) | |
+| Agents started by a line that names a file that does not bind (GAL §4.2) | |
+| Paths a prompt names that do not exist at the commit: declared before the change that creates them, or under a folder version control ignores, each by its full path (GAL §10 p. 5) | |
 | [learnings function] | |
 | [invariant inventory] | |
 | [prefix] | |
@@ -271,6 +275,7 @@ One row per agent, with each of the checklist's rows marked as one of: done (wit
 | The first post (GIP §3): the one post, what replaces each requirement it cannot meet, who dispatched it, where the dispatch is logged | |
 | Accepting a post with the review's open advisory findings carried at the review-round limit (GIP §5.1, §8) | |
 | Another role reads a merged change's diff for the [architect] where the architect cannot read the repository (GIP §6): which role, for which changes, and where its reading of the merge commit's diff, made after the merge, stands. A step receipt from before the merge does not count | |
+| Mutation probe kinds that give a gap beyond GIP's two, a registry read replaced by its value and a rule inverted (GIP §5.2 C.5, §5.1 Limits); a probe of any other kind is an observation | |
 
 **Test growth (ADOPTION.md step 4, Measuring test growth).** The form of the id a test carries for the criterion or invariant it binds: ______. The line in a post's report that records the verifier's counts: ______.
 
@@ -398,6 +403,11 @@ The mismatch answer (Handoff Standard §6 p. 1) and the forms of the closure ver
 
 **Decision-log events this installation adds** (GEM §4.3 allows additions, never removals). List them here.
 
+**Tables declared as the record** (GEM §2.3). For each store kept as a table: the store, the table, whether its refusal of updates and deletes is built (trigger or permission) or held by instruction, the check that the refusal holds and when it runs, and the export a role without the store reads. Write `none — every store is a file` when that holds.
+
+| Store | Table | Refusal | Check and when | Export |
+|---|---|---|---|---|
+
 ---
 
 ## Registry Standard (if selected)
@@ -427,11 +437,16 @@ The mismatch answer (Handoff Standard §6 p. 1) and the forms of the closure ver
 | Placeholder | Binding |
 |---|---|
 | [constitution] | |
+| [architecture contract] | the path; and whether it stands at level 2 below the [constitution] or at level 1 beside it (Truth Chain §2.1) |
 | [implementation] | as above where the Registry Standard is selected; otherwise bind it here |
 | [evidence registry] | as above |
 | [research record] | |
 | [advisory] | |
 | [evidence tier set] | |
+| The order of the [confidence set] against the [evidence tier set], or that they are one set (Truth Chain §3.2) | |
+| Relations added to the evidence graph for work that is not evidence (Truth Chain §3.3) | |
+| Where the evidence graph keeps its relations, their two times, the time a statement's links were read, and a search's counts of nodes searched and left out; each guarantee of Truth Chain §3.3 marked built or `not built` | |
+| The scope each document at level 1 declares (Truth Chain §2.1) | |
 
 | Tool | Binding |
 |---|---|

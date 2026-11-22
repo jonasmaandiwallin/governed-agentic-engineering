@@ -59,7 +59,7 @@ Each release is a tag. `SHA256SUMS` lists every file under `standards/` and `sta
 
 ## License and attribution
 
-Text, including the standards, the starter kit and the templates: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Code, including the hook scripts: MIT. Both texts are in `LICENSE`. Every file carries its own header with license, editor and attribution, so a copy that travels outside this repository still says where it came from.
+Text, including the standards, the starter kit and the templates: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Code, including the hook scripts: MIT. Both texts are in `LICENSE`. The system overview template (`starter/templates/system-overview/overview.html`) also embeds three fonts, Schibsted Grotesk, Inter and IBM Plex Mono, under the [SIL Open Font License 1.1](https://openfontlicense.org); their notices and the licence text stand in the template's header. Every file carries its own header with license, editor and attribution, so a copy that travels outside this repository still says where it came from.
 
 A file you write from a template is your own; it does not inherit the license. The standards you copy stay under CC BY 4.0, attributed to Jonas Maandi Wallin, and your instance appendix names the release you copied them from.
 

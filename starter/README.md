@@ -1,6 +1,6 @@
 ---
 title: "GAE starter"
-version: "v0.7"
+version: "v0.8"
 status: "draft"
 author: "Tooling & Architecture"
 framework:
@@ -47,7 +47,7 @@ This starter sets GAE up in your own repository, for your own domain. You need n
 - A repository, empty or with code in it.
 - A coding agent with file, git and shell access to it. The templates are written and tested for **Claude Code**. On another coding agent, the setup session binds the same classes in your appendix and records what your platform lacks.
 - One person who is the **owner**. The owner decides intent and confirms what no agent may decide for itself.
-- A description of what you are building: what it does, who uses it, and what it must never do. Half a page is enough.
+- If you have one, a description of what you are building: what it does, who uses it, and what it must never do. Half a page shortens the setup. Without it, the agent asks you every question in the intake.
 
 ## Install
 
@@ -76,7 +76,7 @@ Ask me before every decision the procedure marks "owner decides".
 Owner: <name>
 Write to me in: <language>
 
-What we are building:
+What we are building (leave out if you have no description yet):
 <description>
 ```
 

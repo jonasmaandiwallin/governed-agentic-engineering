@@ -1,9 +1,9 @@
 ---
 document_title: "Contract Standard"
-version: "v0.7"
+version: "v0.9"
 status: "draft"
 created: "2026-10-12"
-last_updated: "2026-11-07"
+last_updated: "2026-11-22"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -54,6 +54,7 @@ This standard defines the form of the documents that carry a system's specificat
 | [system] | The system the corpus specifies |
 | [contract corpus] | The directory or store that holds the canonical documents |
 | [instance appendix] | The document that binds this standard for [system] |
+| [constitution] | The document at level 1 of the Truth Chain's order, above every contract at level 2. The architecture contract stands at level 2 below it, or at level 1 beside it where the [instance appendix] places it there (Truth Chain §1.1, §2.1) |
 | [title prefix] | The prefix every document title carries, possibly empty |
 | [domain taxonomy] | The closed list of valid domain and layer combinations, with their reading order |
 | [registry] | The store of governed values, referenced by key |
@@ -76,6 +77,8 @@ The type set is closed. Each document declares exactly one type in `document_typ
 | Type | Role | Section order |
 |---|---|---|
 | `contract` | States behavioural rules and invariants of [system] | §4.3 |
+| `constitution` | The [constitution]: the principles every contract at level 2 of the Truth Chain stands under | §4.3 |
+| `architecture` | The architecture contract: binds the standards and the [instance appendix] for [system], and is reviewed against what is built. It stands at the level Truth Chain §2.1 gives it | §4.3 |
 | `registry` | A contract that also carries structured data tables | §4.4 |
 | `clause` | A narrow rule within the boundary of a contract | §4.5 |
 | `framework` | Organises a set of contracts | Set by the [instance appendix], or free |
@@ -224,7 +227,7 @@ A normative statement written as prose cannot be counted by the [completeness ga
 
 ### 4.10 Cross-references
 
-A reference to another document uses its full title: `See: [title prefix][Document Title]`. Abbreviated or informal references are not permitted. Where every document's slug is unique in the corpus and is the [index]'s key, a reference by slug is explicit too. A reference names a canonical document; a deprecated one is never a target, and the reference names its `superseded_by` instead.
+A reference to another document uses its full title: `See: [title prefix][Document Title]`. Abbreviated or informal references are not permitted. Where every document's slug is unique in the corpus and is the [index]'s key, a reference by slug is explicit too. A standard is no document of the corpus and has no slug: a reference names it by the name the [instance appendix] binds it under, and that reference is explicit too. A reference names a canonical document; a deprecated one is never a target, and the reference names its `superseded_by` instead.
 
 ### 4.11 File names
 
@@ -315,6 +318,7 @@ last_audit:
 - The [auditor] writes `last_audit` immediately after delivering a verdict, with the `version` it actually read, and stores the full report at [audit report path]. Reports are append-only: a new audit is a new file, and no report is deleted. Where the [auditor] cannot write the document's store, the agent that commits the audited document writes `last_audit` from the [auditor]'s report, with the `version` the [auditor] read.
 - No document enters the canonical corpus without a `full` audit with an approving verdict. The audit is on the document's current `version`; for a record without `version`, the [owner] decides whether it covers the current text (§8.2). The [owner]'s decision never replaces the `full` type or the approving verdict: a record of a `standard` or `deep` audit, or with `needs-work` or `needs-review`, is not a basis for promotion. The [author] never approves its own document.
 - A document written after what it describes was built is audited against what is built, not only against the corpus.
+- A `full` audit of a `constitution` or an `architecture` document also reads the Truth Chain's order and the [instance appendix], since both documents bind what the appendix binds.
 
 ### 8.5 What the auditor and the author owe
 

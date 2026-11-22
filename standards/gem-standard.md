@@ -1,9 +1,9 @@
 ---
 document_title: "Governed Engineering Memory Standard"
-version: "v0.12"
+version: "v0.14"
 status: "draft"
 created: "2026-10-13"
-last_updated: "2026-11-12"
+last_updated: "2026-11-22"
 author: "Tooling & Architecture"
 framework:
   name: "Governed Agentic Engineering (GAE)"
@@ -82,14 +82,25 @@ A [system] keeps two logs and a mirror of them:
 
 - **[retro log]** — one entry per substantive agent session, written at close. It carries the session's friction (§3).
 - **[decision log]** — one entry per governed event: a decision, a change of a governed document, a gate passed, a tool deployed (§4).
-- **[database]** — the parsed form of both logs, which the [learnings function] and the views of §6 read. The logs are the record. The [database] is derived from them and can be rebuilt from them, with two exceptions that exist only in the [database]: read tracking (§7.1) and dispositions (§6.1). Both survive every rebuild of the [database] from the logs; a rebuild that loses either is a failed rebuild. Neither is a log entry, so neither is append-only: a read updates read tracking, and a new disposition replaces the one before it (§6.1).
+- **[database]** — the parsed form of both logs, which the [learnings function] and the views of §6 read. The logs are the record, unless the [instance appendix] declares a table as the record (§2.3). The [database] is derived from them and can be rebuilt from them, with two exceptions that exist only in the [database]: read tracking (§7.1) and dispositions (§6.1). Both survive every rebuild of the [database] from the logs; a rebuild that loses either is a failed rebuild. Neither is a log entry, so neither is append-only: a read updates read tracking, and a new disposition replaces the one before it (§6.1).
 
 ### 2.2 Rules for both logs
 
 - An entry is appended, never inserted between existing entries, edited or removed. A wrong entry is followed by a correcting entry that names it.
-- An entry is written in the same session as the work it records, and committed with the [system]'s ordinary commit path. An entry that exists only in an agent's context is not in the log.
+- An entry is written in the same session as the work it records, and committed with the [system]'s ordinary commit path, or written to the table that is the record (§2.3). An entry that exists only in an agent's context is not in the log.
 - An entry names the [backlog item ID]s it concerns. An entry that names none can be read by date and agent, but not by task.
 - The [instance appendix] names each log's path and the commit operation used to append to it.
+
+### 2.3 A table as the record
+
+Where an agent that writes a store can reach only the [database], as on a chat platform whose access to the repository is a read-only sync, the [instance appendix] may declare a table as the record of that store in place of the file. This holds for every store whose standard makes the file the record: the two logs here, the backlog (Backlog Standard §1, §6), the registry of governed values (Registry Standard §5), the evidence registry (Truth Chain Standard §4.3) and the handoff store (Handoff Standard §8). The [instance appendix] names each such table. A contract is not such a store: its file in version control stays its record (Contract Standard).
+
+- **The table is the record.** It keeps what the file kept. Rows are only added: an entry, a new version of a row, a change of status. The [database] refuses an update or a delete that the store does not allow, by a trigger or a permission, not by an instruction. Until the refusal is built, it is held by instruction, and the [instance appendix] says so.
+- **A wrong row stays.** A row that breaks a rule stays as written, and is read through a later row that corrects it and names it, as §2.2 has for an entry.
+- **History is kept in the store.** What version control gave a file, the store gives each row: every version, with the time it was recorded and the time it was replaced.
+- **The tools change.** The tool classes that bring the [database] to the file, the mirror syncs and the parsers of a log, do not apply to that store. In their place, a check that the store's refusals hold runs at the times the [instance appendix] names. Every other tool class reads the rows where it read the file.
+- **A reader without the store.** A role that cannot read the [database], such as a step agent, reads a verbatim export of the rows it needs. The export's hash is checked against the rows before each dispatch.
+- **A writer without the store.** A role that must write to such a store and cannot reach the [database] does not write the row itself. It hands what it would write, verbatim, to the role that dispatched it, in its report or receipt, and that role writes the row in the same session, naming the role it came from. Where no role in the chain reaches the [database], the [instance appendix] does not declare a table as the record of that store.
 
 ## 3. Retro entry
 

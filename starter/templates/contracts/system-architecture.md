@@ -1,7 +1,7 @@
 <!--
 GAE starter — template for the architecture contract, the installation's first contract
 (ADOPTION.md step 6, CP1). It is a contract, at level 2 of Truth Chain's order, below the
-constitution. It says what the system is, points up to the standards and the instance
+constitution, unless the instance appendix places it at level 1 beside it. It says what the system is, points up to the standards and the instance
 appendix, and down to the domain contracts.
 Section order: Contract Standard §4.3. Replace every <...>. Keep a rule in the contract that
 owns it: domain rules (data layers, evidence levels, a graph, a priority formula, a mandate)
@@ -14,7 +14,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.2"
+  template_version: "v0.4"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/contracts/system-architecture.md"
 This license covers the template as published. The file you write from it is your own
@@ -45,7 +45,7 @@ last_audit: {}
 
 <What the system does for the owner, in the owner's words, from the intake (ADOPTION.md step 2). One paragraph.>
 
-This contract says how the system is built. What the system is for and how the work is done is the constitution's, which stands above this contract (Truth Chain §2.1).
+This contract says how the system is built. What the system is for and how the work is done is the constitution's, which stands above this contract at level 2, or beside it with a scope that does not overlap where the instance appendix places this contract at level 1 (Truth Chain §2.1).
 
 ## Scope
 
@@ -88,4 +88,4 @@ This contract says how the system is built. What the system is for and how the w
 
 ## Architectural Position
 
-<Where this contract stands: a contract at level 2 of Truth Chain's order (§2.1), below the constitution, with the standards and the instance appendix binding it; the first contract of the governance domain, with no `depends_on` until the constitution exists and the constitution in `depends_on` from the version after; above the domain contracts that rest on it. A descriptive document written before this contract is history and points here.>
+<Where this contract stands: a contract at level 2 of Truth Chain's order (§2.1), below the constitution — or at level 1 beside it, with a scope that does not overlap it, where the instance appendix places it there — with the standards and the instance appendix binding it; the first contract of the governance domain, with no `depends_on` until the constitution exists and the constitution in `depends_on` from the version after; above the domain contracts that rest on it. A descriptive document written before this contract is history and points here.>
