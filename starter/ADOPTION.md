@@ -1,6 +1,6 @@
 ---
 title: "GAE starter — adoption procedure"
-version: "v0.20"
+version: "v0.21"
 status: "draft"
 author: "Tooling & Architecture"
 framework:
@@ -20,14 +20,14 @@ ai_disclosure:
     evidence: "The document text itself."
   - role: technical-analysis
     status: complete
-    scope: "The procedure was written from the standards and from a second installation of them, set up from this kit in a domain without code in the product; what did not fit is recorded as findings in the reference installation."
+    scope: "The procedure was written from the standards and from a second installation of them, set up from this kit in a domain without code in the product, and from a third, set up from this kit without knowledge of the reference installation, for a product with code; what did not fit is recorded as findings in the reference installation."
     evidence: "The reference installation's backlog, not published; the second installation's instance appendix, not published."
   - role: fact-check
     status: not-applicable
     reason: "The document cites no external source."
   - role: review
     status: complete
-    scope: "Adversarial review of the starter kit at v0.8 in two rounds before its release; the changes in v0.9 in two more rounds, including the release check's commands run on a clean copy of the previous release; the database templates tested on PostgreSQL 16. The system overview templates of v0.10 tested on PostgreSQL 16 and in a browser engine and reviewed in two rounds; the changes in v0.11 reviewed with the standards they follow, in two rounds; the changes in v0.12 reviewed with the standards of gae-standards-v0.5, in two rounds."
+    scope: "Adversarial review of the starter kit at v0.8 in two rounds before its release; the changes in v0.9 in two more rounds, including the release check's commands run on a clean copy of the previous release; the database templates tested on PostgreSQL 16. The system overview templates of v0.10 tested on PostgreSQL 16 and in a browser engine and reviewed in two rounds; the changes in v0.11 reviewed with the standards they follow, in two rounds; the changes in v0.12 reviewed with the standards of gae-standards-v0.5, in two rounds; the changes in v0.21 reviewed with the standards of gae-standards-v0.6, in three rounds, the third decided by the owner, with the write hook's tests run in two shells."
     evidence: "The reference installation's review records, not published."
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -52,8 +52,8 @@ The setup runs as eight checkpoints. Each has a visible result and an owner atte
 |---|---|---|
 | **CP0 Intake** | Shape, domain, deliverables, data owners and platforms, on one page. The owner attests that this is what he wants. | 0–3 |
 | **CP1 Architecture contract** | The installation's first contract, with the contract tree drawn. Reviewed by the [reviewer] and attested by the owner. Nothing is built before CP1. | 4–6 |
-| **CP2 Infrastructure built** | Only what the standards and the architecture contract require. The governance stores and their write functions, the mirror, the queue and the read connection are built through GIP against the architecture contract. The agent files are written by the [architect] (step 8), outside GIP (GIP §1, Scope). | 7, 8, 10 |
-| **CP3 Agents answer** | Every agent starts and shows a correct start receipt. The [contract auditor] runs a full review of the architecture contract. | 9 |
+| **CP2 Infrastructure built** | Only what the standards and the architecture contract require. The governance stores and their write functions, the mirror, the queue and the read connection are built through GIP against the architecture contract and, for a tool with rules of its own, against that tool's infrastructure contract (step 6, Keep it narrow). The agent files are written by the [architect] (step 8), outside GIP (GIP §1, Scope). | 6, 7, 8, 10 |
+| **CP3 Agents answer** | Every agent starts and shows a correct start receipt. The [contract auditor] runs a full review of the architecture contract and of each infrastructure contract written before CP3. | 9 |
 | **CP4 System overview live** | An overview of the installation reads the system through the read connection, and the checkpoints' status is computed, not written by hand. | 8 (The system overview) |
 | **CP5 Domain contracts** | The constitution, then the governance and method contracts, each reviewed, attested and merged. | 11 |
 | **CP6 Domain built** | The domain's schema and implementation, built through GIP against the merged contracts. The first output contract is written alongside. | 11 |
@@ -62,7 +62,7 @@ The setup runs as eight checkpoints. Each has a visible result and an owner atte
 **Four rules hold across them:**
 
 1. Nothing is built before an attested architecture contract (CP1).
-2. Infrastructure is built only against the standards and the architecture contract.
+2. Infrastructure is built only against the standards, the architecture contract and, for a tool with rules of its own, that tool's infrastructure contract, attested before the tool is built (step 6).
 3. Domain implementation is built only against its merged contract. Its backlog item depends on the contract's item, and its priority never goes ahead of the contract's.
 4. Anything built before its contract is listed, one line per part (the part → the contract that is to carry it), reviewed against that contract when it exists, and where the two differ the contract governs. Nothing is torn down in advance.
 
@@ -102,7 +102,7 @@ If any of these is missing, stop and ask the owner for it. A description of the 
      find governance/standards governance/gae-starter ! -type f ! -type d
      ```
 
-   - *A file's mode.* A checksum reads the bytes, not the mode. `templates/hooks/write-only-under.sh` is executable in the release, and the platform runs it as a command; `test -x governance/gae-starter/templates/hooks/write-only-under.sh` succeeds. `templates/database/mirror.sh` is run with `bash` and needs no mode.
+   - *A file's mode.* A checksum reads the bytes, not the mode. `templates/hooks/write-only-under.sh` is executable in the release, so an agent file that runs it as a command, as earlier templates did, still works; `test -x governance/gae-starter/templates/hooks/write-only-under.sh` succeeds. The command form step 8 gives runs it with `bash`, as `templates/hooks/write-only-under.test.sh` and `templates/database/mirror.sh` are run, and needs no mode.
 
 Moving an installation to a later release is step 12.
 
@@ -253,6 +253,7 @@ The appendix also points to the architecture contract (step 6) once it exists.
 - **Every placeholder is bound.** An unbound placeholder is a defect.
 - **Every tool class is bound** to a tool that meets the class, or written `not built — held by instruction; trigger: <the measured failure that would make it needed>`, or, where the owner has decided it is part of what the system is for, `not built yet — owner decision <date>; built in <backlog item>`.
 - **Start with every tool not built.** Build a tool only when its trigger has happened. A tool that claims a class it does not meet is worse than no tool, and each standard names what its class must never pass.
+- **The installation's own checks follow the same rule.** A gate, script or check that no standard names, such as a checkpoint script or a script that checks a status file, is built only against a failure that happened (GAL §9.8 p. 3). A check a standard names is a tool class, and the rule above already holds it. Built ahead, they take the time the first product needs: a third installation built its own gates on the first night and reached no product code.
 - **More can be built from the start when the owner decides it.** A tool the owner decides is part of what the system is for (for example, a graph or a priority view that the owner's work depends on from the first day) is built from the start. Record that decision and its reason in § Installation. The rule still holds for every other tool.
 - **Files are not tools.** The stores the standards name are plain files from day one: version registry, backlog item store, done log, decision log, retro log, handoff store, routing table and boundary contract.
 - **A store lives where its writers can write.** If every agent that writes a store can write to the repository, the store is a file there. If one of them cannot, as a profile A agent cannot, the store is an append-only table in a database that agent can write to, and the table is the record (GEM §2.3). Stores that only the coding-agent platform changes (agent files, the appendix, the boundary contract, the routing table, the version registry, migrations) stay in the repository. The appendix names each table that is a record, says whether its refusal of updates and deletes is built or held by instruction, and binds the check that the refusal holds.
@@ -270,6 +271,7 @@ The appendix also points to the architecture contract (step 6) once it exists.
 | Rule | Step | Goes beyond |
 |---|---|---|
 | The dispatched specification round in profile B | 4 | Handoff Standard §1.1, where the [operator] carries every handoff; GAL §4.6, where a step agent does a step of a build loop for a session agent |
+| A standing owner decision for a run the owner does not watch | 10 | GAL §9.7 p. 1, where the [owner] decides at the [reviewer]'s round limit after the round, with its material in front of them (GAL §9.3, Approved-change list governance, p. 3). It does not reach a GIP post's round limit (GIP §5.1, §8) or a contract's round (Contract §8.4) |
 
 A bootstrap-line start in profile B (step 8) is registered too, but as a departure from the installation's own binding of profile B, not from a standard: no standard requires the platform to hold the limits of an agent that owns its session.
 
@@ -288,6 +290,8 @@ It stands on the standards and the intake, and depends on no other contract unti
 - the checkpoints, with the definitions above and their conditions;
 - which rules other contracts own. Domain rules (data layers, evidence levels, a graph, a priority formula, a mandate) are not here but in their own contracts.
 
+**Keep it narrow.** The architecture contract names the parts and the boundaries between them. It does not hold a part's own rules. A part with rules of its own has a contract of its own, and that includes each of the installation's own tools that is built: the rules of the queue, the mirror or a gate stand in that tool's **infrastructure contract**, never here. A store that is a plain file is not a tool (step 5) and needs none. An infrastructure contract is a contract in the inventory's infrastructure group, written after CP1 and before its tool is built. One written before CP3 is reviewed by the [reviewer] and attested by the owner before it is merged, like the architecture contract at CP1 (Review and attest, below), and the [contract auditor] reviews it in full at CP3. Most are written after CP3, because a tool is built only when its trigger has happened (step 5). Such a contract takes the contract round of step 11 (CP5, points 1–5): the [contract author] writes it, the [contract auditor] reviews it in full, and the owner attests it, all before the tool is built. Until an infrastructure contract is canonical, the architecture contract does not refer to it, because a reference names a canonical document (Contract §4.10). It names the part and its boundary, and the inventory, the installation's plan, lists the contract to come with its folder and state. The version of the architecture contract after that contract is canonical names it by its full title among the rules owned elsewhere. A tool that is not built has no contract (step 5). A third installation let its architecture contract take in the rules for its own tools. The contract grew from 75 to 228 normative statements in two rounds and stopped at the round limit, and by the end of the first night no product code had been merged. Once the tools had contracts of their own it came down to 98 statements.
+
 It says how the system is built. The constitution, written later (step 11), says what the system is for and how the work is done, and at level 2 stands above it: a contract that conflicts with the constitution is invalid until the constitution is changed (Truth Chain §2.3). So the constitution is written against the attested architecture contract, a conflict between them is settled in the same round by changing one of the two, and the next version of the architecture contract depends on the constitution.
 
 **Design the corpus.** Before the first domain contract, the architecture contract draws the corpus:
@@ -296,11 +300,11 @@ It says how the system is built. The constitution, written later (step 11), says
 - a folder per domain;
 - an index with a reading order;
 - where an engagement's corpus stands (its own repository, step 5);
-- the **contract inventory**, from `templates/contract-inventory.md`: governance (constitution, data layers, mandate), method (evidence levels, research method, evidence graph, priority), output (a common spine, one contract per deliverable surface, and one for the presentation form the visual ones point to) and engagement (strategy, brand, market). Strike and add; the order follows `depends_on`, not the list.
+- the **contract inventory**, from `templates/contract-inventory.md`: governance (constitution, data layers, mandate), infrastructure (one contract per tool the installation builds that has rules of its own), method (evidence levels, research method, evidence graph, priority), output (a common spine, one contract per deliverable surface, and one for the presentation form the visual ones point to) and engagement (strategy, brand, market). Strike and add; the order follows `depends_on`, not the list.
 
 **Contracts and deliverables.** A contract says how something is produced and what it must meet. A deliverable is produced under it, stored as knowledge and reviewed against it. A brief or an analysis is a deliverable, not a contract. Three levels: the installation's contracts (for every engagement), an engagement's premises (strategy, brand, constraints: contracts in the engagement's store), and the work itself (in the engagement's database).
 
-**Review and attest.** At CP1 no [contract auditor] has started yet. The architecture contract is reviewed by the [reviewer] and attested by the owner; the [contract auditor]'s first job at CP3 is a full review of it, which closes the bootstrap. A first overview may be drawn from the contract (step 8, The system overview), so that the owner can answer "is this the system you had in mind?" before anything is built.
+**Review and attest.** At CP1 no [contract auditor] has started yet. The architecture contract is reviewed by the [reviewer] and attested by the owner, and so is each infrastructure contract written before CP3. The [contract auditor]'s first job at CP3 is a full review of them, which closes the bootstrap. A first overview may be drawn from the contract (step 8, The system overview), so that the owner can answer "is this the system you had in mind?" before anything is built.
 
 **An architecture contract written after the build** — in an installation that built first, and at every later version — is reviewed against what is built before it becomes canonical, by an agent that can read the repository and the store. Its statements about the system (which code exists, which connections) are checked there. Where the contract and the build differ, rule 4 of the checkpoints applies.
 
@@ -315,6 +319,8 @@ Without a [session-start function], the gates are protocol that the model execut
 - the mirror check (step 4), reported on the `Gates:` line;
 - reading the installation's configuration (step 5), with the values read in the receipt and an expected tool that is missing flagged;
 - the bootstrap check (step 8), reported on the `Gates:` line.
+
+**The [architect]'s start template**, where the appendix uses the standing owner decision (step 10), also carries its check. The check reads the decision log at the commit the session starts from, for an entry for this run, and reports `standing decision <entry> at <commit>` or `standing decision none` on the `Gates:` line. The receipt's labels are fixed (GAL §6.2 p. 5), so the check takes no label of its own.
 
 **Every core** carries the rule on putting a decision to the owner: the material in the same message, one recommendation, a yes/no question, and what a yes leads to (How to follow it, above).
 
@@ -334,7 +340,7 @@ For each agent from step 4, write:
   - **A bootstrap line in the handoff** ("You are <agent>. Read <its file>."), in a session the owner opens in a desktop app with no agent picker: nothing in the agent file binds. Its limits are held by instruction, the model is the one the owner chose, and the receipt cannot show it. Register it as a deviation.
   - **Dispatched as a subagent** by the session that owns the work: the agent file binds, in a fresh context. This is the default for a [reviewer] round when the owner works in a desktop app. The dispatch names files only, the reviewer writes its findings to a file, and the owner reads that file before attesting, not only the dispatching session's account of it. A dispatch across an agent boundary is an exception (below).
 - `step-agent.md` is for every dispatched agent, on the specification side and the implementation side alike.
-- `hooks/write-only-under.sh` holds a step agent's writes to its path prefixes. It holds every write only for an agent without a shell. Every GIP role needs a shell (the tester, the verifier and the implementer all run the type check, the tests or the build), so for them the hook holds the file tools only. Bind GIP's write gate (§3) in the appendix to what holds their shell writes, for example a sandbox, a filesystem permission or the merge check, or write it not built with its trigger.
+- `hooks/write-only-under.sh` holds a step agent's writes to its path prefixes, with `hooks/write-only-under.test.sh` as the cases it is held to; run the test once on the machine the agents run on before the first dispatch. A prefix is a folder, matched at the folder's boundary. The hook takes the repository from the session's working directory, so in a worktree it holds the agent to that worktree. Call it in the form its header and `step-agent.md` give: run with `bash`, with `|| exit 2` after it and `onFailure: block` on the hook entry, so that a hook that cannot run blocks the write instead of letting it through. A hook called as a bare command, with no guard, lets every write through when it fails to start. It holds every write only for an agent without a shell. Every GIP role needs a shell (the tester, the verifier and the implementer all run the type check, the tests or the build), so for them the hook holds the file tools only. Bind GIP's write gate (§3) in the appendix to what holds their shell writes, for example a sandbox, a filesystem permission or the merge check, or write it not built with its trigger.
 
 **Bootstrap text for profile A.** The chat platform's project instructions are a file in the repository (`agents/bootstrap/<agent>.md`, from `templates/bootstrap.md`), versioned with the agent. It holds only what never changes:
 
@@ -360,11 +366,17 @@ Everything that can change — the overview's address, the engagements' referenc
 
 A project-level agent's frontmatter hooks run only after the owner has trusted the repository folder in the platform. Check that once before the first dispatch.
 
+**Restart after the agent files are written.** The platform reads an agent file's tools, model and hooks when a session starts. A session that was running when the file was written or changed keeps the old limits, or none, until it is started again. Start every session again once the agent files are written and before the build begins. Never change an agent file during a run the owner is not watching: the change does not bind before the next start, and the run goes on without it.
+
+**Other sessions in the same folder.** A second session or side chat opened in the repository's folder has the same tools and rights as the main session, whatever it is asked. A question asked there can turn into work and writes to the repository. In a third installation a side chat that was asked a question began to work and wrote in the repository, and only its reading of the question held the boundary. Ask a question in a session that cannot write: one started with an agent file that has read tools only, or a chat outside the repository. Or put it to the main session. The limit is the platform's, never how the question is worded.
+
+**Git credentials.** A local session uses the machine's git credentials, which are often the owner's own token, with write access to every repository the owner has. Before agents run, give the installation's sessions a fine-grained token limited to this repository and its product repositories, with only the rights the agents need. Bind in the appendix which credential each session uses.
+
 **Registration.** Go through every row of the GAL §7 registration checklist. Each row is done, or not applicable with the reason, or its tool is not built as in step 5.
 
 **Implementation agents.** These live in each product repository, per GIP §2. Bind the write gate of GIP §3 in the appendix, built or not built.
 
-**The form of an exception entry.** An exception to an agent boundary (Boundary Standard §3) is written to the decision log before the act. It is a record of a decision, not a permission, because agents read the log later: dated; one act, named exactly; the boundary it crosses; and when it lapses (at the latest when the act is done). It quotes nobody and addresses no agent. A standing grant in a file agents read cannot be told from a planted one, and a platform's safety check may refuse to write it.
+**The form of an exception entry.** An exception to an agent boundary (Boundary Standard §3) is written to the decision log before the act. It is a record of a decision, not a permission, because agents read the log later: dated; one act, named exactly; the boundary it crosses; and when it lapses (at the latest when the act is done). It quotes nobody and addresses no agent. A standing grant in a file agents read cannot be told from a planted one, and a platform's safety check may refuse to write it. The one standing entry this document allows, the owner's decision for a run the owner does not watch (step 10), is not a grant across a boundary. It is told from a planted one by the owner having seen it in the receipt of the session that starts the run, and it holds in that session only, as step 10 says.
 
 ## 9. Review, set up the chat projects, and start — CP3
 
@@ -378,13 +390,13 @@ Hand the appendix and every core to the [reviewer] in a separate session, for th
 4. Choose the model the role table names.
 5. Start the agent, and check that its receipt shows the core read whole and its `Gates:` line shows `mirror current` and `bootstrap current`.
 
-**CP3** is every agent's start with a correct receipt, and the [contract auditor]'s full review of the architecture contract.
+**CP3** is every agent's start with a correct receipt, and the [contract auditor]'s full review of the architecture contract and of each infrastructure contract written before CP3. One written later takes the contract round of step 11 (step 6, Keep it narrow).
 
 ## 10. The starting backlog and the critical path — CP2
 
 **The starting backlog.** The setup session opens these items unchanged, with `depends_on` between them, and strikes one only with a reason in § Installation. The architecture contract is not among them: it is attested at CP1, before the backlog opens, and each item that rests on it names it by path and version.
 
-1. The governance stores, and the mirror of the agent files, contracts, standards and this starter.
+1. The governance stores, and the mirror of the agent files, contracts, standards and this starter; each tool with rules of its own after its infrastructure contract is attested (step 6).
 2. The chat projects, with a test start that shows the receipt (step 9).
 3. The read connection and the overview's view (step 8).
 4. The constitution, then the domain contracts in the inventory's `depends_on` order (step 11).
@@ -395,6 +407,23 @@ A deliverable produced before the contract for its surface is merged is marked *
 
 **The critical path.** Governance work is limited to the critical path to the next checkpoint and, after CP5, to the first deliverable: the contract infrastructure and the domain contracts that delivery needs. Triage the backlog at each checkpoint: what is done is closed, advisory findings go to their surface or to their order's follow-up item, never into the order they came from (step 4), the rest is parked. Without this, a review that yields four or five advisory findings per change, each becoming an item, grows the backlog faster than it closes.
 
+**Parallel work.** From the first time two units of work run at once (two posts, a post and a contract round, two sessions), each works in a working copy of its own, a git worktree, and never in a shared one. In a shared working copy, a third installation read stale files, lost lines, and kept nine open questions only as uncommitted changes. Before the first parallel run, show that every limit holds in a worktree: run the hook's test (step 8), and get one blocked write from inside a worktree, in a session started there the way the run will start it. A project agent's hooks run only in a folder the platform trusts (step 8), so a hook that never runs is found by the blocked write and not by the test.
+
+- **A file every unit writes becomes a queue.** A configuration file, a list that wires adapters together, the decision log, the open questions and a status file all made posts wait on one another in the third installation, and the shared files lost lines. Where the entries have no order of their own, give each unit a file of its own and read them together: a folder with one file per entry, as the backlog keeps one file per item. Or use a convention in place of a register, so that an adapter is found by its file name rather than by a line in a central list.
+- **The logs stay one file each, appended on the main branch.** The decision log, the retro log and the log of units of work (Measure from the start, below) keep GEM §2.2's order: an entry is written in the session whose work it records and appended, never inserted between existing entries. Under parallel work, each session that writes the logs itself appends its own entries to the log on the main branch. Those are the [architect] and the specification agents. It commits each entry on top of the latest main and pushes it there, and if the push is refused because main has moved, it takes the new main and appends again, so an entry that arrives later stands last. Never carry a log entry on a unit's branch, where a merge can place it between older entries. An implementation session under GIP writes nothing in the [architect]'s repository (GIP §7). Its retro entry, its line for the log of units of work and its open questions go in its report through the [report path], and the [architect] enters them, appending them in the same way (GEM §3.3; GAL §4.4, Session agent). Where the repository that holds the logs takes changes on its main branch only through reviewed merges, the appendix binds a branch or a store for the logs and the open questions that takes direct appends, and they are read from there.
+- **A question is committed when it is asked.** An open question that stands only in a working copy is lost to every other session. The setup creates a folder for open questions, one file per question, and binds its path in the appendix. A session that writes the logs itself commits a question there, on the main branch in the same way as a log entry, at the moment it asks it. An implementation session puts the question in its report, and the [architect] commits it when it reads the report. The question's file says who asked it, whom it waits on and what it blocks, and it is answered or written off with a reason in the same file.
+
+**Measure from the start.** Keep, from the first session, a log with one line per unit of work: the unit, its start and end, the sessions and step agents that ran it, and the rounds it took. A session that writes the logs itself appends its own lines on the main branch as above, not on a unit's branch, where they cannot be read until the branch is merged. An implementation session's lines come in its report, and the [architect] enters them. The log is a plain file, like the other stores (step 5). Keep the platform's session transcripts as well, without their text. Count usage per message id: a transcript repeats a message's lines, so a count per line counts the same message more than once. Note also the platform's usage limit per session or period. A third installation stopped in the middle of an unattended night when it reached that limit.
+
+**A run the owner does not watch — owner decides.** Every checkpoint, round limit and owner decision stops the work until the owner answers. A third installation stopped five times on its first night. Before such a run, the owner can make one standing decision, for one case. The case is the [reviewer]'s round limit under GAL §9.7 p. 1, on a change that is neither a GIP post nor a contract, when every open finding is advisory. Under the decision, the change closes with each finding carried by the order's follow-up item, which names it.
+
+- **What it does not reach.** It does not reach a GIP post's round limit, which is a hard stop that waits for the owner (GIP §5.1, §8). It does not reach a contract's round either, which leaves the contract outside the canonical corpus until a full audit approves it (Contract §8.4; step 4). A blocking finding open at the round limit, old or new, always waits for the owner.
+- **How it is written.** The owner gives the decision in a session before the run. The [architect] writes it to the decision log in the form of an exception entry (step 8): dated, the one case named exactly, no quotation, and its lapse at the run's end. What tells it from a planted entry is that the owner has seen it. It is in the decision log at the commit the run starts from. The [architect]'s start check (step 7) names that commit and the entry on the `Gates:` line of the receipt of the session the owner starts the run in, so the owner sees it before leaving. The decision holds in that session only. A session started later in the run, a restart after a usage limit included, does not use it, because no owner saw its receipt, and at the round limit it waits as it would without the decision. An entry that is not named in the owner's start receipt does not count, whatever its date and wherever it stands, and that includes an entry written during an earlier run nobody watched. Each use is logged as a decision that names the standing entry.
+- **Default.** Recommend the standing decision for a run that will hold more than one change the [reviewer] reviews, and nothing beyond it.
+- **What always waits.** The following wait for the owner whatever the standing decision says: a checkpoint's attestation; a contract becoming canonical (step 11); a change to a contract's meaning; a weakening (GAL §9.5); widening an agent's reach, or an exception to a boundary; anything that cannot be undone, such as a deletion, a rewrite of history already pushed, or a release; and every other decision this document marks **owner decides**. When the run reaches one of these, the question is committed (Parallel work, above), and the run moves on to work that does not depend on the answer.
+
+This is a rule ahead of the standards (step 5).
+
 **The first posts.**
 
 1. Where the repository already holds code (step 2, question 7), the first items bring it in: the [contract author] writes contracts for the behaviour the code has, the [contract auditor] reviews them, and the code is then measured against them through GIP before anything in it changes. Behaviour the owner does not want kept is a finding, not a contract.
@@ -403,7 +432,7 @@ A deliverable produced before the contract for its surface is merged is marked *
 4. **The first post, when it builds the pipeline itself.** If the first post builds what GIP's gates need (the queue store, the test suite, the database the [architect] writes to), it cannot pass them: there is no suite to be green and nowhere to record the post. Do not use the emergency path, which is for a broken gate. Take GIP §3's first post instead: the appendix names the one post, says what replaces each requirement it cannot meet (for example, the tester's new tests become the first baseline and must still be red before implementation), and records who dispatched it and where the dispatch is logged. The replacement lapses when that post is merged, and the post is entered in the queue with its merge commit, its receipts and that record. If the [architect] cannot dispatch until the post exists, the owner starts the session agent with the post's specification, and the decision log records that dispatch in the form of an exception entry (step 8). No route is added for it.
 5. The owner's review of a large bootstrap post is not a reading of its lines. It is a reading of the implementer's interpretations, the steps' receipts and the verifier's mutation results.
 
-**CP2** is the infrastructure built through GIP against the standards and the architecture contract, and the agent files written (step 8).
+**CP2** is the infrastructure built through GIP against the standards, the architecture contract and each tool's infrastructure contract (step 6), and the agent files written (step 8).
 
 ## 11. Domain contracts, the domain, and the first deliverable — CP5 to CP7
 
@@ -465,6 +494,6 @@ An edited copy of a standard cannot be measured against its release.
 - One core file per agent; modules or skills; close and handoff procedures; a bootstrap file per profile A agent.
 - For profile A: the configuration store and the mirror, with the job that runs the mirror at every merge.
 - The stores, as empty files with their headings or as tables: version registry, backlog, done log, decision log, retro log, handoff store, routing table and boundary contract.
-- The starting backlog, opened (step 10).
+- The starting backlog, opened (step 10), the log of units of work on the main branch (step 10, Measure from the start), and the folder for open questions (step 10, Parallel work), each with its path in the appendix.
 - The chat projects set up, each with a test start (step 9).
 - A first entry in the decision log that records the adoption, and a retro entry for the setup session.

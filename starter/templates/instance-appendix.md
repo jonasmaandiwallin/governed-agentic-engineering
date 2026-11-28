@@ -9,7 +9,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.16"
+  template_version: "v0.17"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/instance-appendix.md"
 This license covers the template as published. The file you write from it is your own
@@ -81,8 +81,20 @@ This file binds the GAE standards to one installation. It is written during adop
 |---|---|
 | Architecture contract (ADOPTION.md step 6) | `<path>`, version, attested `<date>` |
 | Contract inventory | `<path>` |
+| Infrastructure contracts (ADOPTION.md step 6, Keep it narrow) | one row per tool built: the tool, the contract's path, attested `<date>`, canonical `<date>` or `not yet` |
 | Checkpoints CP0–CP7: where their definitions and conditions stand | the architecture contract § <section>; in the database: `<table>` |
 | The overview's view and read connection (ADOPTION.md step 8) | `<schema>.system_overview`; connector `<installation> System Overview` |
+
+### Working practice (ADOPTION.md steps 8 and 10)
+
+| Row | Binding |
+|---|---|
+| Git credential per session: which token each session uses, and what it reaches (step 8, Git credentials) | `<session or agent>` → `<token name>`, `<repositories, rights>` |
+| Folder for open questions, one file per question (step 10, Parallel work) | `<path>` |
+| Log of units of work (step 10, Measure from the start) | `<path>` |
+| Where the logs and the open questions take direct appends from the sessions that write them themselves, the [architect] and the specification agents; an implementation session reports through the [report path] (step 10, Parallel work) | `the main branch`, or `<branch or store>` where main takes only reviewed merges |
+| Working copies for parallel work (step 10, Parallel work) | `<where the worktrees stand>`; the hook's test run in one `<date>` |
+| Standing owner decision for a run the owner does not watch (step 10) | `none`, or `used`: the [architect]'s start check reports it on the `Gates:` line (ADOPTION.md step 7), and the decision holds only in the session the owner started the run in; registered in § Registered deviations |
 
 ### Languages and configuration (ADOPTION.md steps 4 and 5)
 
@@ -213,7 +225,7 @@ Separation check: [contract author] ≠ [contract auditor]; the [reviewer] revie
 
 ### Session Start Protocol template (GAL §4.2–§4.3)
 
-One template per agent kind, written out with this installation's paths, commands and operator. Without a [session-start function], say here that the gates are protocol the model executes (GAL §8.2, Who compares). Profile A's template carries the mirror check, the configuration read and the bootstrap check, each reported on the `Gates:` line (ADOPTION.md step 7).
+One template per agent kind, written out with this installation's paths, commands and operator. Without a [session-start function], say here that the gates are protocol the model executes (GAL §8.2, Who compares). Profile A's template carries the mirror check, the configuration read and the bootstrap check, each reported on the `Gates:` line (ADOPTION.md step 7). Where the installation uses the standing owner decision, the [architect]'s template carries its check on the same line (ADOPTION.md steps 7 and 10).
 
 ### Session close (GAL §4.4)
 

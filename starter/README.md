@@ -1,6 +1,6 @@
 ---
 title: "GAE starter"
-version: "v0.8"
+version: "v0.9"
 status: "draft"
 author: "Tooling & Architecture"
 framework:
@@ -20,14 +20,14 @@ ai_disclosure:
     evidence: "The document text itself."
   - role: technical-analysis
     status: complete
-    scope: "The kit's contents were written from the standards and from a second installation of them, set up from this kit."
+    scope: "The kit's contents were written from the standards and from a second and a third installation of them, both set up from this kit."
     evidence: "The reference installation's backlog, not published."
   - role: fact-check
     status: not-applicable
     reason: "The document cites no external source."
   - role: review
     status: complete
-    scope: "Adversarial review of the starter kit at v0.8 in two rounds before its release; the changes in v0.9 in two more rounds; the database templates tested on PostgreSQL 16. The system overview templates of v0.10 tested on PostgreSQL 16 and in a browser engine and reviewed in two rounds; the changes in v0.11 reviewed with the standards they follow, in two rounds; the changes in v0.12 and its templates reviewed with the standards of gae-standards-v0.5, in two rounds."
+    scope: "Adversarial review of the starter kit at v0.8 in two rounds before its release; the changes in v0.9 in two more rounds; the database templates tested on PostgreSQL 16. The system overview templates of v0.10 tested on PostgreSQL 16 and in a browser engine and reviewed in two rounds; the changes in v0.11 reviewed with the standards they follow, in two rounds; the changes in v0.12 and its templates reviewed with the standards of gae-standards-v0.5, in two rounds; the changes in v0.21 and its templates, the write hook and its tests among them, reviewed with the standards of gae-standards-v0.6, in three rounds."
     evidence: "The reference installation's review records, not published."
 license: "CC-BY-4.0"
 repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
@@ -45,7 +45,8 @@ This starter sets GAE up in your own repository, for your own domain. You need n
 ## What you need
 
 - A repository, empty or with code in it.
-- A coding agent with file, git and shell access to it. The templates are written and tested for **Claude Code**. On another coding agent, the setup session binds the same classes in your appendix and records what your platform lacks.
+- A coding agent with file, git and shell access to it. The templates are written and tested for **Claude Code**. The write hook's entry carries `onFailure: block`, which Claude Code documents from v2.1.295 and which makes any failure of the hook block the write. On earlier versions the hook blocks when it fails to start. On another coding agent, the setup session binds the same classes in your appendix and records what your platform lacks.
+- A git token for the agents that reaches only this repository and its product repositories, not your own token, which reaches all of yours (`ADOPTION.md` step 8).
 - One person who is the **owner**. The owner decides intent and confirms what no agent may decide for itself.
 - If you have one, a description of what you are building: what it does, who uses it, and what it must never do. Half a page shortens the setup. Without it, the agent asks you every question in the intake.
 

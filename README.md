@@ -51,7 +51,7 @@ Open a coding agent in your repository, paste the link to this repository, and a
 
 ## Status
 
-The standards and the white papers are early work, and each one carries its own `status` and `version`. `status: draft` on every file means just that: the text may still change in a later release. It does not mean unreviewed; every released file has been approved by its editor, and each document's `ai_disclosure` block says which checks were done. The standards were developed in one installation, Runapp, which is not public, and tried in a second installation in another domain. Both were set up by the framework's originator; no outside adopter has installed GAE yet. `KNOWN-ISSUES.md` lists what is known to be missing or wrong.
+The standards and the white papers are early work, and each one carries its own `status` and `version`. `status: draft` on every file means just that: the text may still change in a later release. It does not mean unreviewed; every released file has been approved by its editor, and each document's `ai_disclosure` block says which checks were done. The standards were developed in one installation, Runapp, which is not public, and tried in a second installation in another domain and a third for a product with code. All three were set up by the framework's originator; no outside adopter has installed GAE yet. `KNOWN-ISSUES.md` lists what is known to be missing or wrong.
 
 ## Releases
 

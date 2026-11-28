@@ -18,7 +18,7 @@ GAE was developed by Jonas Maandi Wallin through the engineering of Runapp, its 
 
 GAE (Governed Agentic Engineering) is a family of standards for building with AI agents. Agents write the specification and the code, and both kinds of agent follow the same rules. A contract is the source of truth, and the implementation is built from it. In a product, the agents build the system and do not run it, so the system stays deterministic. In a knowledge corpus, the agents' governed work (research, evidence, analyses) is itself the deliverable. `starter/ADOPTION.md` step 2 describes both shapes, and an installation can be both.
 
-The standards are early work, each with its own `status` and `version`; they were developed in one installation and tried in a second, both set up by the originator. `KNOWN-ISSUES.md` lists what is known to be missing or wrong. It is the file to read before deciding to install.
+The standards are early work, each with its own `status` and `version`; they were developed in one installation and tried in a second and a third, all set up by the originator. `KNOWN-ISSUES.md` lists what is known to be missing or wrong. It is the file to read before deciding to install.
 
 The standards, in `standards/`:
 
@@ -37,7 +37,7 @@ Each standard names no installation. An installation binds the standards to its 
 
 `whitepapers/` holds twelve papers that explain the standards: an overview (`governed-agentic-engineering.md`), a case study of the reference implementation (`case-study-runapp.md`), and one paper per part. `README.md` § What to read maps each paper to the standards it explains. The papers explain the standards; the standards are the rules.
 
-`starter/` holds what an installation is set up from: `ADOPTION.md`, the procedure; templates for the architecture contract, the contract inventory, the instance appendix, an agent core, a step agent and a chat agent's bootstrap file; database templates for the configuration store and the mirror; templates for the system overview (its data, its page and the script that renders it); and a write hook.
+`starter/` holds what an installation is set up from: `ADOPTION.md`, the procedure; templates for the architecture contract, the contract inventory, the instance appendix, an agent core, a step agent and a chat agent's bootstrap file; database templates for the configuration store and the mirror; templates for the system overview (its data, its page and the script that renders it); and a write hook with its tests.
 
 ## When someone asks what this is
 

@@ -16,7 +16,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.2"
+  template_version: "v0.3"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/step-agent.md"
 This license covers the template as published. The file you write from it is your own
@@ -33,7 +33,8 @@ hooks:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "<path>/hooks/write-only-under.sh <allowed path prefix>"
+          command: "bash \"${CLAUDE_PROJECT_DIR}\"/<path>/hooks/write-only-under.sh <allowed path prefix> || exit 2"
+          onFailure: block
 version: "<YYYY-MM-DD>-a"
 parent_agent: "<AGENT_IDENTITY of the dispatching agent>"
 role: "<a role from GAL §3, Roles>"

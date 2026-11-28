@@ -5,7 +5,9 @@ constitution, unless the instance appendix places it at level 1 beside it. It sa
 appendix, and down to the domain contracts.
 Section order: Contract Standard §4.3. Replace every <...>. Keep a rule in the contract that
 owns it: domain rules (data layers, evidence levels, a graph, a priority formula, a mandate)
-belong in their own contracts, and this one names where they stand.
+and the rules of each tool the installation builds (the queue, the mirror, a gate) belong in
+their own contracts, and this one names where they stand once those contracts are canonical
+(ADOPTION.md step 6, Keep it narrow).
 Delete this comment block when the file is filled in.
 
 gae-template-header:
@@ -14,7 +16,7 @@ gae-template-header:
   editor: "Jonas Maandi Wallin"
   contact: "https://www.linkedin.com/in/jonasmaandiwallin"
   license: "CC-BY-4.0"
-  template_version: "v0.4"
+  template_version: "v0.5"
   repository: "https://github.com/jonasmaandiwallin/governed-agentic-engineering"
   path: "starter/templates/contracts/system-architecture.md"
 This license covers the template as published. The file you write from it is your own
@@ -35,7 +37,7 @@ referenced_by: []
 overrides: []
 superseded_by: null
 evidence_ids: []
-implementation_scope: [<the implementation units this contract governs: the governance stores, the mirror, the queue, the read connection>]
+implementation_scope: [<the implementation units this contract governs directly, for example the governance stores and the read connection; a tool with an infrastructure contract of its own, such as the queue or the mirror, is governed by that contract>]
 last_audit: {}
 ---
 
@@ -64,12 +66,12 @@ This contract says how the system is built. What the system is for and how the w
 5. **Read connection.** <The read-only connection to the system store, held by the database, named `<installation> System Overview`, and who uses it.>
 6. **Corpus design.** <The taxonomy (domains, layers, allowed combinations), one folder per domain, the index with its reading order, and where an engagement's corpus stands.> The contract inventory is `<path>`.
 7. **Checkpoints.** <CP0–CP7 with each one's result and condition (ADOPTION.md, The checkpoints). Their status is computed by the overview's view, which the instance appendix binds (§ Architecture contract and checkpoints).>
-8. **Rules owned elsewhere.** <Each domain rule this contract does not own, and the contract that owns it.>
+8. **Rules owned elsewhere.** <Each domain rule and each tool's rules this contract does not own, and the canonical contract that owns them, by its full title. A part whose contract is not canonical yet is named here with its boundary only; the contract inventory lists the contract to come (ADOPTION.md step 6, Keep it narrow).>
 
 ## Invariants
 
 - Nothing is built before this contract is attested.
-- Infrastructure is built only against the standards and this contract.
+- Infrastructure is built only against the standards, this contract and, for a tool with rules of its own, that tool's infrastructure contract.
 - Domain implementation is built only against its merged contract.
 - <Further invariants of the system's structure.>
 
